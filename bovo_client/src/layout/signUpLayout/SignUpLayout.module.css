@@ -1,0 +1,9 @@
+.signUpContainer {
+    width: 49.125rem;
+    height: 106.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 3.0625rem;
+    background: url("../../assets/background/bg_signup.png") no-repeat center/cover;
+}
