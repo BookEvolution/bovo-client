@@ -1,0 +1,79 @@
+.sideBarContainer {
+    width: 37.5rem;
+    height: 106.5rem;
+    padding: 0 3.0625rem;
+    background: url("../../assets/background/bg_sidebar.png") no-repeat center/auto;
+}
+
+.header {
+    width: 31.375rem;
+    height: 6rem;
+    margin-top: 7rem;
+    margin-bottom: 15rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logoWrapper {
+    width: 12.8125rem;
+    height: 6rem;
+}
+
+.logoImage {
+    width: 100%;
+    height: 100%;
+}
+
+.iconBtn {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.menu {
+    width: 31.375;
+    height: 57rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.listMenu {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: medium;
+}
+
+.menu a {
+    color: black; /* 링크 색상을 검정색으로 설정 */
+}
+
+.bottomList {
+    width: 31.375rem;
+    height: 8.125rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 3.125rem;
+    margin-bottom: 3.25rem;
+}
+
+.bottom_btn {
+    width: 100%;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.item_text {
+    font-size: 2.25rem;
+}
