@@ -1,0 +1,7 @@
+.layout {
+    width: 49.125rem;
+    height: 106.5rem;
+    padding: 0 3.0625rem;
+    background: url("../../assets/background/bg_main.png") no-repeat center/cover;
+    overflow: hidden;
+}
