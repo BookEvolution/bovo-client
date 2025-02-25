@@ -20,7 +20,7 @@ const SideBar = ({ open, toggleDrawer }) => {
         <Drawer open={open} onClose={toggleDrawer} anchor="right">
             <Container className={styles.sideBarContainer}>
                 <Box className={styles.header}>
-                    <Box className={styles.logoWrapper}>
+                    <Box className={styles.logoWrapper} onClick={toggleDrawer}>
                         <Link to="/">
                             <img src={logoImage} alt="logo" className={styles.logoImage}/>
                         </Link>
@@ -31,7 +31,7 @@ const SideBar = ({ open, toggleDrawer }) => {
                 </Box>
                 <ul className={styles.menu}>
                     {menuList.map((item) => (
-                        <li key={item.path} className={styles.listMenu}>
+                        <li key={item.path} className={styles.listMenu} onClick={toggleDrawer}>
                             <Link to={item.path}>
                                 {item.menu}
                             </Link>
@@ -41,13 +41,20 @@ const SideBar = ({ open, toggleDrawer }) => {
                 {/* 서비스 정보 및 로그아웃 메뉴 */}
                 <Container className={styles.bottomList}>
                     {/* 서비스 정보 */}
-                    <ListItem button className={styles.bottom_btn}>
-                        <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-                            <InfoIcon sx={{ fontSize: "2.5rem" }} />
-                        </Box>
-                        <p className={styles.item_text}>
-                            서비스 정보
-                        </p>
+                    <ListItem 
+                        button 
+                        component={Link} 
+                        to="/mypage/service-info" 
+                        className={styles.bottom_btn} 
+                        onClick={toggleDrawer}
+                        sx={{ color: 'text.primary' }}
+                    >
+                            <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+                                <InfoIcon sx={{ fontSize: "2.5rem" }} />
+                            </Box>
+                            <p className={styles.item_text}>
+                                서비스 정보
+                            </p>
                     </ListItem>
 
                     {/* 로그아웃 */}

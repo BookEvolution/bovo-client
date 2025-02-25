@@ -58,7 +58,7 @@ function App() {
             <Route path='/forum/forum-make' element={<ForumMake />} />
             <Route path='/mypage' element={<MyPage />} />
             <Route path='/mypage/myprofile' element={<MyProfile />} />
-            <Route path='/mypage/servie-info' element={<ServiceInfo />} />
+            <Route path='/mypage/service-info' element={<ServiceInfo />} />
             <Route path='/mypage/exp' element={<Exp />} />
             <Route path='/mypage/myprofile/edit' element={<MyProfileEdit />} />
             <Route path='/calendar' element={<Calendar />} />
