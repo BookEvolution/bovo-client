@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Rating } from "@mui/material";
+import axios from "axios";
+import Rating from "@mui/material/Rating";
+import "./Archive.css";
 
-const ArchiveEnd = () => {
+const ArchiveEnd = ({ searchQuery }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -13,7 +14,8 @@ const ArchiveEnd = () => {
     axios
       .get("/archive", { headers: { user_id: 1 } })
       .then((response) => {
-        setBooks(response.data?.books?.filter((book) => book.status === "end") || []);
+        const filteredBooks = response.data?.books?.filter((book) => book.status === "end") || [];
+        setBooks(filteredBooks);
         setLoading(false);
       })
       .catch(() => {
@@ -22,18 +24,23 @@ const ArchiveEnd = () => {
       });
   }, []);
 
+  // 책 목록 필터링
+  const displayedBooks = books.filter((book) =>
+    book.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div>
       {loading ? (
         <div className="loading">도서 목록을 불러오고 있습니다.</div>
       ) : error ? (
         <div className="error">목록을 불러오는 중 오류가 발생했습니다.</div>
-      ) : books.length > 0 ? (
+      ) : displayedBooks.length > 0 ? (
         <div className="book-list">
-          {books.map((book) => (
-            <div 
-              className="book-card" 
-              key={book.book_id} 
+          {displayedBooks.map((book) => (
+            <div
+              className="book-card"
+              key={book.book_id}
               onClick={() => navigate(`/note/${book.book_id}`)}
               style={{ cursor: "pointer" }}
             >
@@ -47,7 +54,7 @@ const ArchiveEnd = () => {
           ))}
         </div>
       ) : (
-        <div className="no-books">등록된 도서가 없습니다.</div>
+        <div className="no-books">검색 결과가 없습니다.</div>
       )}
     </div>
   );

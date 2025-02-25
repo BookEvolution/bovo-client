@@ -13,8 +13,8 @@
             "book_id": 12345,
             "status": "wish",
             "cover": "url",
-            "title": "이름",
-            "author": "저자",
+            "title": "이름이 엄청 길어지면 어떻게 처리하는지 예시",
+            "author": "저자가 엄청 길어지면 어떻게 처리하는지 예시",
             "start_date": "YY. MM. DD",
             "star": 10
         },
@@ -57,6 +57,69 @@
         {
             "book_id": 12345,
             "status": "ing",
+            "cover": "url",
+            "title": "이름",
+            "author": "저자",
+            "start_date": "YY. MM. DD",
+            "star": 10
+        },
+        {
+            "book_id": 12345,
+            "status": "wish",
+            "cover": "url",
+            "title": "이름",
+            "author": "저자",
+            "start_date": "YY. MM. DD",
+            "star": 10
+        },
+        {
+            "book_id": 12345,
+            "status": "wish",
+            "cover": "url",
+            "title": "이름",
+            "author": "저자",
+            "start_date": "YY. MM. DD",
+            "star": 10
+        },
+        {
+            "book_id": 12345,
+            "status": "wish",
+            "cover": "url",
+            "title": "이름",
+            "author": "저자",
+            "start_date": "YY. MM. DD",
+            "star": 10
+        },
+        {
+            "book_id": 12345,
+            "status": "wish",
+            "cover": "url",
+            "title": "이름",
+            "author": "저자",
+            "start_date": "YY. MM. DD",
+            "star": 10
+        },
+        {
+            "book_id": 12345,
+            "status": "wish",
+            "cover": "url",
+            "title": "이름",
+            "author": "저자",
+            "start_date": "YY. MM. DD",
+            "star": 10
+        },
+        {
+            "book_id": 12345,
+            "status": "wish",
+            "cover": "url",
+            "title": "이름",
+            "author": "저자",
+            "start_date": "YY. MM. DD",
+            "star": 10
+        },
+        {
+            "book_id": 12345,
+            "status": "wish",
             "cover": "url",
             "title": "이름",
             "author": "저자",
