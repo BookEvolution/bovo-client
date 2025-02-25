@@ -1,59 +1,154 @@
-.archive-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 2rem;
-  }
-  
-  .loading {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #739cd4;
-  }
-  
-  .book-list {
-    width: 688px;
-    max-height: 50vh;
-    overflow-y: auto;
-    padding-right: 8px;
-  }
-  
-  .book-card {
-    width: 100%;
-    background-color: #e8f1f6;
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-  }
-  
-  .book-cover {
-    width: 80px;
-    height: 112px;
-    border-radius: 8px;
-    margin-right: 24px;
-    object-fit: cover;
-  }
-  
-  .book-info {
-    flex: 1;
-  }
-  
-  .book-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  .book-author {
-    font-size: 1.2rem;
-    color: #666;
-  }
-  
-  .book-date,
-  .book-star {
-    font-size: 1rem;
-    color: #888;
-  }
-  
+.archive-container {    /*페이지 전체*/
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.loading {    /*로딩화면*/
+  font-size: 2rem;
+  font-weight: bold;
+  color: #739cd4;
+}
+
+.book-list {    /*책 목록 화면 전체*/
+  width: 43rem;
+  max-height: 63rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  margin-top: 1rem;
+}
+
+.book-card {    /*책 정보 개별 화면 */
+  width: 39rem;
+  height: 15rem;
+  background-color: #e8f1f6;
+  border-radius: 1.5625rem;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  display: flex;
+  align-items: center;
+}
+
+.book-cover {   /*책 표지*/
+  width: 10rem;
+  height: 15rem;
+  object-fit: cover;
+  background-color: lightgray; /*임시 사이즈와 위치 확인용*/
+}
+
+.book-info {    /*책 정보 텍스트 컨테이너 */
+  flex: 1;
+  margin-left: 4rem;
+  display: block;
+}
+
+.book-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  width: 23rem;
+  height: 4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 2rem;
+  margin: 0rem;
+}
+
+.book-author {
+  font-size: 1.5rem;
+  font-weight: 500;
+  width: 23rem;
+  height: 3.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.7rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.book-date {
+  font-size: 1.25rem;
+  color: gray;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.no-books {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #739cd4;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10rem;
+}
+
+/*읽고 싶음 전용 스타일*/
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.wish-book-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  justify-items: center;
+  width: 43rem;
+  max-height: 63rem;
+  overflow-y: auto;
+  margin-top: 2rem;
+}
+
+.wish-book-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 10rem;
+}
+
+.wish-book-cover {
+  width: 10rem;
+  height: 15rem;
+  object-fit: cover;
+  background-color: lightgray; /*임시 사이즈와 위치 확인용*/
+}
+
+.wish-book-info {
+  text-align: left;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.wish-book-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  width: 10rem;
+  height: 1.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;    /* 한 줄 숨김은 이걸로 */
+  margin: 0;
+}
+
+.wish-book-author {
+  font-size: 1.5rem;
+  width: 10rem;
+  height: 1.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}

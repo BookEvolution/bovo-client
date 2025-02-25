@@ -1,20 +1,42 @@
-import { useState } from "react";
-import { Box } from "@mui/material";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import ArchiveTabs from "./ArchiveTabs";
+import ArchiveIng from "./ArchiveIng";
+import ArchiveEnd from "./ArchiveEnd";
+import ArchiveWish from "./ArchiveWish";
+import "./Archive.css";
 
 const Archive = () => {
   const [currentTab, setCurrentTab] = useState("ing");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [bookCount, setBookCount] = useState(0);
+
+  useEffect(() => {
+    axios
+      .get("/archive", { headers: { user_id: 1 } })
+      .then((response) => {
+        const books = response.data?.books || [];
+        const filteredBooks = books.filter((book) => book.status === currentTab);
+        setBookCount(filteredBooks.length);
+      })
+      .catch(() => {
+        setBookCount(0);
+      });
+  }, [currentTab]);
 
   return (
-    <Box sx={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <ArchiveTabs currentTab={currentTab} setCurrentTab={setCurrentTab} />
-      {/* 탭 불러와서 페이지 동작 확인 */}
-      <Box sx={{ marginTop: "2rem", textAlign: "center" }}>
-        {currentTab === "ing" && <h2>읽는 중</h2>}
-        {currentTab === "end" && <h2>다 읽음</h2>}
-        {currentTab === "wish" && <h2>읽고 싶음</h2>}
-      </Box>
-    </Box>
+    <div className="archive-container">
+      <ArchiveTabs 
+        currentTab={currentTab} 
+        setCurrentTab={setCurrentTab} 
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        bookCount={bookCount}  
+      />
+      {currentTab === "ing" && <ArchiveIng searchQuery={searchQuery} />}
+      {currentTab === "end" && <ArchiveEnd searchQuery={searchQuery} />}
+      {currentTab === "wish" && <ArchiveWish searchQuery={searchQuery} />}
+    </div>
   );
 };
 
