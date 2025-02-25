@@ -47,7 +47,7 @@ const ArchiveTabs = ({ currentTab, setCurrentTab }) => {
         sx={{
           display: "flex",
           alignItems: "center",
-          width: "40rem", // 40으로 줄여도 될 거 같음
+          width: "40rem",
           height: "4rem",
           backgroundColor: "#E8F1F6",
           borderRadius: "1.5625rem",
@@ -59,7 +59,7 @@ const ArchiveTabs = ({ currentTab, setCurrentTab }) => {
         <TextField
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="검색창 그냥 비워둘까요?"
+          placeholder="책 제목을 입력하세요."
           variant="standard"
           sx={{
             width: "100%",
@@ -75,7 +75,7 @@ const ArchiveTabs = ({ currentTab, setCurrentTab }) => {
       {/* 총 몇 권*/}
       <Typography
         sx={{
-          width: "40rem", //검색창 크기랑 맞춰야됨
+          width: "40rem",
           marginTop: "1.5rem",
           fontSize: "1.5rem",
           fontWeight: "bold",
