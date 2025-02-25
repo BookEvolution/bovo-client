@@ -1,0 +1,22 @@
+{
+    "books": [
+        {
+            "book_id": 12345,
+            "status": "end",
+            "cover": "url",
+            "title": "이름",
+            "author": "저자",
+            "start_date": "YY. MM. DD",
+            "star": 10
+        },
+        {
+            "book_id": 12346,
+            "status": "end",
+            "cover": "url",
+            "title": "이름",
+            "author": "저자",
+            "start_date": "YY. MM. DD",
+            "star": 10
+        }
+    ]
+}
