@@ -50,39 +50,41 @@ const SignUpStep1 = () => {
                 </p>
             </div>
 
-            <input
-                type="email"
-                className={styles.inputField}
-                placeholder="이메일"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-                type="password"
-                className={styles.inputField}
-                placeholder="비밀번호"
-                value={password}
-                onChange={handlePasswordChange}
-            />
-            <input
-                type="password"
-                className={styles.inputField}
-                placeholder="비밀번호 확인"
-                value={confirmPassword}
-                onChange={handleConfirmPasswordChange}
-                onBlur={() => setIsTouched(true)}
-            />
-            {isTouched && error && <p className={styles.errorText}>{error}</p>}
+            <div className={styles.inputContainer}>
+                <input
+                    type="email"
+                    className={styles.inputField}
+                    placeholder="example@google.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                    type="password"
+                    className={styles.inputField}
+                    placeholder="영문, 숫자, 특수문자 최소 8자리 이상 조합"
+                    value={password}
+                    onChange={handlePasswordChange}
+                />
+                <input
+                    type="password"
+                    className={styles.inputField}
+                    placeholder="비밀번호 확인"
+                    value={confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                    onBlur={() => setIsTouched(true)}
+                />
+                {isTouched && error && <p className={styles.errorText}>{error}</p>}
 
-            <button
-                className={styles.nextButton}
-                onClick={handleNext}
-                disabled={!email || !password || !confirmPassword}
-            >
-                다음
-            </button>
+                <button
+                    className={styles.nextButton}
+                    onClick={handleNext}
+                    disabled={!email || !password || !confirmPassword}
+                >
+                    다음
+                </button>
+            </div>
 
-            <p className={styles.orText}>다른 방법으로 가입하기</p>
+            <p className={styles.anotherLoginText}>다른 방법으로 가입하기</p>
             <img
                 src={kakaoBtn}
                 alt="카카오 로그인"
