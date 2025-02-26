@@ -4,9 +4,16 @@ import styles from './MyPage.module.css';
 import profile6 from "../../assets/profile/profile_6.png";
 import bedge from "../../assets/bedge/bedge.png";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import MenuList from "../../components/myPageListMenu/MenuList";
 
 const MyPage = () => {
     const navigate = useNavigate();
+    const [logoutOpen, setLogoutOpen] = useState(false);
+
+    const handleLogout = () => {
+        setLogoutOpen(true);
+    };
 
     return (
         <Container className={styles.myPageContainer}>
@@ -110,6 +117,7 @@ const MyPage = () => {
                     </Box>
                 </Box>
             </Container>
+            <MenuList onLogout={handleLogout} />
         </Container>
     );
 };
