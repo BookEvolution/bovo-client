@@ -27,7 +27,7 @@ const BookSearch = () => {
                 params: {
                     query: query,
                     sort: sort, 
-                    size: 20, 
+                    size: 50, 
                 },
                 headers: {
                     Authorization: `KakaoAK ${KAKAO_API_KEY}`,
