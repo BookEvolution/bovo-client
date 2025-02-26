@@ -9,11 +9,11 @@ import { Link } from "react-router-dom";
 
 const SideBar = ({ open, toggleDrawer }) => {
     const menuList = [
-        {path: '/archive', menu: "나의 서재"},
-        {path: '/calendar', menu: "캘린더"},
-        {path: '/forum', menu: "독서 토론방"},
-        {path: '/mypage/exp', menu: "퀘스트"},
-        {path: '/mypage', menu: "마이페이지"},
+        {path: '/archive', sideMenu: "나의 서재"},
+        {path: '/calendar', sideMenu: "캘린더"},
+        {path: '/forum', sideMenu: "독서 토론방"},
+        {path: '/mypage/exp', sideMenu: "퀘스트"},
+        {path: '/mypage', sideMenu: "마이페이지"},
     ]
 
     return (
@@ -33,7 +33,7 @@ const SideBar = ({ open, toggleDrawer }) => {
                     {menuList.map((item) => (
                         <li key={item.path} className={styles.listMenu} onClick={toggleDrawer}>
                             <Link to={item.path}>
-                                {item.menu}
+                                {item.sideMenu}
                             </Link>
                         </li>
                     ))}
