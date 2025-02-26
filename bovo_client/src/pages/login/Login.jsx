@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 import kakaoBtn from "../../assets/button/btn_kakao.png";
 
-const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=YOUR_REST_API_KEY&redirect_uri=http://localhost:3000/auth/kakao/callback&response_type=code`;
+const KAKAO_AUTH_URL = "https://kauth.kakao.com/oauth/authorize?client_id=YOUR_REST_API_KEY&redirect_uri=http://localhost:3000/auth/kakao/callback&response_type=code";
 const Login = () => {
     const navigate = useNavigate(); 
     const [email, setEmail] = useState("");
