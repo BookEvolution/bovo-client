@@ -26,7 +26,7 @@ const MenuList = ({ onLogout }) => {
                     <ListItemButton 
                         key={index}
                         className={styles.menuBtn} 
-                        onClick={onLogout}
+                        onClick={() => onLogout(true)}
                     >
                         <ListItemIcon className={styles.menuIcon}>
                             {item.icon}

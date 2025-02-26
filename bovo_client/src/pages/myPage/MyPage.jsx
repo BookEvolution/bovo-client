@@ -4,15 +4,18 @@ import styles from './MyPage.module.css';
 import profile6 from "../../assets/profile/profile_6.png";
 import bedge from "../../assets/bedge/bedge.png";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import MenuList from "../../components/myPageListMenu/MenuList";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleLogoutModal } from "../../store/logout/LogeoutSlice";
+import LogoutModal from "../../components/logoutModal/LogoutModal";
 
 const MyPage = () => {
     const navigate = useNavigate();
-    const [logoutOpen, setLogoutOpen] = useState(false);
+    const dispatch = useDispatch();
+    const isLogout = useSelector((state) => state.logout.isLogout);
 
-    const handleLogout = () => {
-        setLogoutOpen(true);
+    const handleLogout = (state) => {
+        dispatch(toggleLogoutModal(state));
     };
 
     return (
@@ -118,6 +121,7 @@ const MyPage = () => {
                 </Box>
             </Container>
             <MenuList onLogout={handleLogout} />
+            {isLogout && <LogoutModal />}
         </Container>
     );
 };
