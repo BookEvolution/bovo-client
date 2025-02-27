@@ -20,7 +20,7 @@ const ServiceInfo = () => {
                 <Typography sx={{ fontSize: "1.75rem" }} fontWeight="bold">
                     Designed by Freepik
                 </Typography>
-                <Box className={styles.serviceIntro}>
+                <Box>
                     <Typography  
                         sx={{ fontSize: "1.75rem", 
                               color: "#739CD4", 
@@ -76,8 +76,8 @@ const ServiceInfo = () => {
                         개인정보 보관 기간
                     </Typography>
                     <Typography sx={{ fontSize: "1.25rem", textAlign: "left" }}> 
-                        계정 탈퇴 시 즉시 삭제<br/>
-                        법적 의무가 있는 경우, 해당 기간 동안 보관 후 삭제
+                        1. 계정 탈퇴 시 즉시 삭제<br/>
+                        2. 법적 의무가 있는 경우, 해당 기간 동안 보관 후 삭제
                     </Typography>
                 </Box>
             </Container>
