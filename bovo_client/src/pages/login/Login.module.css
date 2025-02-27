@@ -10,26 +10,34 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1.5rem;
     width: 100%;
 }
 
 .inputField {
-    width: 80%;
-    height: 3rem;
-    padding: 0.75rem;
+    width: 37rem;
+    height: 1.8rem;
+    padding: 2rem;
     border: none;
     background-color: #E8F1F6;
-    font-size: 1.5rem;
-    border-radius: 0.78125rem;
+    font-size: 1.8rem;
+    border-radius: 1.5625rem;
+}
+
+.inputField:focus {
+    outline: none;
+    border: none; 
+    box-shadow: none;
 }
 
 .loginButton {
-    width: 80%;
+    width: 41rem;
+    height: 5rem;
     padding: 0.75rem;
+    margin-top: 2rem;
     background-color: #BDE5F1;
     border: none;
-    border-radius: 0.78125rem;
+    border-radius: 1.5625rem;
     font-size: 2.1875rem;
     color: white;
     font-weight: bold;
@@ -37,11 +45,13 @@
 }
 
 .forgotPassword {
-    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-size: 1.5rem;
     color: gray;
-    display: flex;
-    justify-content: flex-end;
     cursor: pointer;
+    text-align: right; 
+    width: 100%;       
+    margin-right: 5rem; 
 }
 
 .signUpWrapper {
@@ -50,15 +60,15 @@
     gap: 0.75rem;
     width: 100%;
     align-items: center;
-    margin-top: 8.375rem;
+    margin-top: 6rem;
 }
 
 .signUpButton {
     width: 85%;
-    max-width: 25rem;
+    max-width: 24rem;
     height: 6rem;
     padding: 0.75rem;
-    background-color: #728bd4;
+    background-color: #739CD4;
     border: none;
     border-radius: 0.78125rem;
     font-size: 2rem;
