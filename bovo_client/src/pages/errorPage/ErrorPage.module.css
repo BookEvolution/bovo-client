@@ -1,0 +1,18 @@
+.errorContainer {
+    width: 43rem;
+    height: 38.5625rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30.9375rem;
+    gap: 4.1875rem;
+}
+
+.btn {
+    width: 43rem;
+    height: 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
