@@ -1,0 +1,180 @@
+.myPageContainer {
+    width: 43rem;
+    height: 75.375rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2.625rem;
+}
+
+.profileImgWrapper {
+    width: 16rem;
+    height: 16rem;
+    background-color: #E8F1F6;
+    border-radius: 1.5625rem;
+    display: flex;
+    align-items: flex-end;  
+    justify-content: center;
+    margin-bottom: 0.3125rem;
+}
+
+.profileImg {
+    display: block;
+    width: 13rem;
+    height: 13rem;
+}
+
+.nickNameWrapper {
+    width: 16rem;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.levelContianer {
+    width: 16rem;
+    height: 3.125rem;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.levelWrapper {
+    width: 3.125rem;
+    height: 3.125rem;
+    text-align: center;
+}
+
+.lvCountWrapper {
+    width: 5rem;
+    height: 3.125rem;
+    text-align: center;
+}
+
+.expBarContainer {
+    width: 32.75rem;
+    height: 3.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    margin-bottom: 2.5rem;
+}
+
+.expBarWrapper {
+    width: 25rem;
+    height: 3.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.expCountWrapper {
+    width: 7.125rem;
+    height: 3.125rem;
+    display: flex;
+}
+
+.exp {
+    width: 3.125rem;
+    height: 3.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.entireExp {
+    width: 4rem;
+    height: 3.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 독서 성과 관련 CSS */
+.rpContainer {
+    width: 33.75rem;
+    height: 15.625;
+    margin-bottom: 3.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rpHeader {
+    width: 100%;
+    height: 3.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.rpTitle {
+    width: 8.25rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+}
+
+.rpLink {
+    width: 6.875rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+}
+
+.rpContentContainer {
+    width: 33.75rem;
+    height: 12.5rem;
+    padding: 1.75rem 2.1875rem;
+    border-radius: 1.5625rem;
+    background-color: #E8F1F6;
+}
+
+.rpContentWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 3.375rem;
+}
+
+.rpBedge {
+    width: 7rem;
+    height: 7rem;
+}
+
+.rpBedge > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rpContent {
+    width: 22.375rem;
+    height: 9rem;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+}
+
+.rpCount {
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.rpText {
+    width: 100%;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}

@@ -7,7 +7,7 @@ import styles from "./SideBar.module.css";
 import logoImage from '../../assets/logo/logo.png';
 import { Link } from "react-router-dom";
 
-const SideBar = ({ open, toggleDrawer }) => {
+const SideBar = ({ open, toggleDrawer, handleLogout }) => {
     const menuList = [
         {path: '/archive', sideMenu: "나의 서재"},
         {path: '/calendar', sideMenu: "캘린더"},
@@ -58,7 +58,11 @@ const SideBar = ({ open, toggleDrawer }) => {
                     </ListItem>
 
                     {/* 로그아웃 */}
-                    <ListItem button className={styles.bottom_btn}>
+                    <ListItem 
+                        button 
+                        className={styles.bottom_btn}
+                        onClick={handleLogout}
+                    >
                         <Box sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
                             <LogoutIcon sx={{ fontSize: "2.5rem" }} />
                         </Box>
@@ -75,7 +79,8 @@ const SideBar = ({ open, toggleDrawer }) => {
 // props 타입 정의
 SideBar.propTypes = {
     open: PropTypes.bool.isRequired, // open은 boolean 타입이고 필수 props
-    toggleDrawer: PropTypes.func.isRequired // toggleDrawer는 함수 타입이고 필수 props
+    toggleDrawer: PropTypes.func.isRequired, // toggleDrawer는 함수 타입이고 필수 props
+    handleLogout: PropTypes.func.isRequired
 };
 
 export default SideBar;
