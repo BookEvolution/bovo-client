@@ -72,6 +72,31 @@
 
 /*list*/
 
+.note-list-header {
+    width: 41rem;
+    height: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.note-list-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-left: 1.5rem;
+}
+
+.note-list-icons {
+    display: flex;
+    font-size: 2.5rem;
+}
+
+.note-card-icons {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 1rem;
+}
 
 .note-list {
     width: 100%;
