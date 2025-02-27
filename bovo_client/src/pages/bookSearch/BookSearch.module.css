@@ -1,0 +1,111 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.searchBar {
+    width: 40rem;
+    margin-top: 1.3rem;
+    margin-bottom: 1rem;
+    border-radius: 1.5rem;
+    display: flex;
+    align-items: center;
+    background-color: #E8F1F6;
+}
+
+/* mui 사용에 따라 css 일부 수정 필요*/
+.searchInput {
+    border: none !important;
+    outline: none !important;
+    background-color: transparent !important;
+}
+
+
+.sortContainer {
+    width: 80%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.sortSelect {
+    min-width: 8rem;
+}
+
+.bookGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    width: 90%;
+    justify-content: center;
+    margin-left: 1.8rem;
+}
+
+.bookItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bookCover {
+    width: 11rem;
+    height: 15rem;
+    /* border-radius: 1rem; */
+    /*border 넣을거면 활성화 시키기*/
+}
+
+.bookInfo {
+    text-align: left;
+    width: 100%;
+    margin-top: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+
+.bookTitle {
+    text-overflow: ellipsis;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; 
+    -webkit-box-orient: vertical;
+
+}
+
+.bookAuthor {
+    color: gray;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical;
+}
+
+.resultContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 1rem 0;
+}
+
+.resultCount {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.sortSelect {
+    min-width: 10rem;
+}
+
+.noResultContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+}
+
