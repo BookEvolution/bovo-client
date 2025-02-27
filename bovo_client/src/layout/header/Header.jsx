@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Box, Container, IconButton } from "@mui/material";
 import styles from "./Header.module.css";
 import logoImage from "../../assets/logo/logo.png"
@@ -7,7 +8,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import SideBar from "../sideBar/SideBar";
 
-const Header = () => {
+const Header = ({onLogout}) => {
     const location = useLocation(); // 현재 경로 가져오기
     const isMainPage = location.pathname === "/"; // 메인 페이지 여부 확인
     const [open, setOpen] = useState(false); // 사이드바 열림 상태 관리
@@ -15,6 +16,11 @@ const Header = () => {
     const toggleDrawer = () => {
         setOpen(!open); // 사이드바 열기/닫기 토글
     };
+
+    const handleLogout = () => {
+        toggleDrawer();
+        onLogout(true);
+    }
 
     return (
         <Container className={styles.header}>
@@ -36,11 +42,14 @@ const Header = () => {
                 </Box>
             </Box>
             {/* 사이드바 컴포넌트 */}
-            <SideBar open={open} toggleDrawer={toggleDrawer} />
+            <SideBar open={open} toggleDrawer={toggleDrawer} handleLogout={handleLogout}/>
         </Container>
     );
 };
 
 
-
 export default Header;
+
+Header.propTypes = {
+    onLogout: PropTypes.func.isRequired, // onLogout은 필수 함수형 prop
+};
