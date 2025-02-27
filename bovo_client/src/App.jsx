@@ -45,15 +45,15 @@ function App() {
             <Route path='/search/search-detail' element={<BookSearchDetail />} />
             <Route path='/archive' element={<Archive />} />
             {/* <Route path='/archive/:isbn' element={<Note />} /> */}
-            <Route path='/archive/note' element={<Note />} />
+            <Route path='/note/:book_id' element={<Note />} />
             {/* <Route path='/archive/:isbn/:noteId' element={<NoteDetail />} /> */}
-            <Route path='/archive/note/note-detail' element={<NoteDetail />} />
+            <Route path='/note/note-detail/:note_id' element={<NoteDetail />} />
             {/* <Route path='/archive/:isbn/note-record' element={<NoteRecord />} /> */}
-            <Route path='/archive/note/note-record' element={<NoteRecord />} />
+            <Route path='/note/note-record' element={<NoteRecord />} />
             {/* <Route path='/archive/:isbn/note-combine' element={<NoteCombine />} /> */}
-            <Route path='/archive/note/note-combine' element={<NoteCombine />} />
+            <Route path='/note/note-combine' element={<NoteCombine />} />
             {/* <Route path='/archive/:isbn/note-array' element={<NoteArr />} /> */}
-            <Route path='/archive/note/note-array' element={<NoteArr />} />
+            <Route path='/note/note-array' element={<NoteArr />} />
             <Route path='/forum' element={<Forum />} />
             <Route path='/forum/forum-make' element={<ForumMake />} />
             <Route path='/mypage' element={<MyPage />} />
