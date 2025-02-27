@@ -28,7 +28,7 @@ const LogoutModal = () => {
             }}
         >
             <DialogTitle
-                sx={{fontSize: "2rem", fontWeight: "bold" }}
+                sx={{fontSize: "3rem", fontWeight: "bold" }}
             >
                 로그아웃
             </DialogTitle>
@@ -37,7 +37,8 @@ const LogoutModal = () => {
                     width: "31.25rem",
                     height: "3.125rem",
                     display: "flex",
-                    alignItems: "center"
+                    alignItems: "center",
+                    overflow: "hidden"
                 }}
             >
                 <p className={styles.logoutDiscription}>
@@ -61,7 +62,7 @@ const LogoutModal = () => {
                         borderRadius: "1.5rem",
                         backgroundColor: "white",
                         color: "#739CD4",
-                        fontSize: "1.75rem",
+                        fontSize: "2rem",
                         letterSpacing: "0",
                         textAlign: "center",
                     }}  
@@ -75,7 +76,7 @@ const LogoutModal = () => {
                         borderRadius: "1.5rem",
                         backgroundColor: "#739CD4",
                         color: "white",
-                        fontSize: "1.75rem",
+                        fontSize: "2rem",
                         letterSpacing: "0",
                         textAlign: "center",
                     }} 

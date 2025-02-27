@@ -9,10 +9,10 @@ import styles from "./MenuList.module.css";
 import { Link } from "react-router-dom";
 
 const menuItem = [
-    { text: "내 프로필", icon: <AccountBoxIcon sx={{fontSize: "2rem"}} />, path: "/mypage/myprofile" },
-    { text: "독서 캘린더", icon: <EventIcon sx={{fontSize: "2rem"}} />, path: "/calendar" },
-    { text: "서비스 정보", icon: <InfoIcon sx={{fontSize: "2rem"}} />, path: "/mypage/service-info" },
-    { text: "로그 아웃", icon: <ExitToAppIcon sx={{fontSize: "2rem"}} />, path: "", action: "logout" },
+    { text: "내 프로필", icon: <AccountBoxIcon sx={{fontSize: "3rem"}} />, path: "/mypage/myprofile" },
+    { text: "독서 캘린더", icon: <EventIcon sx={{fontSize: "3rem"}} />, path: "/calendar" },
+    { text: "서비스 정보", icon: <InfoIcon sx={{fontSize: "3rem"}} />, path: "/mypage/service-info" },
+    { text: "로그 아웃", icon: <ExitToAppIcon sx={{fontSize: "3rem"}} />, path: "", action: "logout" },
 ];
 
 const MenuList = ({ onLogout }) => {
@@ -33,10 +33,10 @@ const MenuList = ({ onLogout }) => {
                         </ListItemIcon>
                         <ListItemText 
                             primary={item.text}
-                            primaryTypographyProps={{fontSize: "1.5rem"}} 
+                            primaryTypographyProps={{fontSize: "1.8rem"}}
                         />
-                        <Box sx={{width: "2rem", height: "2rem"}}>
-                            <ChevronRightIcon sx={{ color: "#739CD4", fontSize: "2rem" }} />
+                        <Box sx={{width: "2rem", height: "2rem", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            <ChevronRightIcon sx={{ color: "#739CD4", fontSize: "3rem" }} />
                         </Box>
                     </ListItemButton>
                 ) : (
@@ -53,8 +53,8 @@ const MenuList = ({ onLogout }) => {
                             primary={item.text}
                             primaryTypographyProps={{fontSize: "1.5rem"}} 
                         />
-                        <Box sx={{width: "2rem", height: "2rem"}}>
-                            <ChevronRightIcon sx={{ color: "#739CD4", fontSize: "2rem" }} />
+                        <Box sx={{width: "2rem", height: "2rem", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                            <ChevronRightIcon sx={{ color: "#739CD4", fontSize: "3rem" }} />
                         </Box>
                     </ListItemButton>
                 )
