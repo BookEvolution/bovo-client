@@ -39,7 +39,7 @@ const NoteInfo = () => {
   }, [book_id]);
 
   if (!book) {
-    return <p className="loading">도서 정보를 불러오는 중...</p>;
+    return <p className="loading">도서 정보를 불러오는 중</p>;
   }
 
   const handleOpenSheet = () => setOpenSheet(true);
