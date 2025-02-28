@@ -12,7 +12,7 @@ import BookSearchDetail from './pages/bookSearchDetail/BookSearchDetail'
 import Archive from './pages/archive/Archive'
 import Note from './pages/note/Note'
 import NoteDetail from './pages/noteDetail/NoteDetail'
-import NoteRecord from './pages/noteRecord/NoteRecord'
+import NoteEdit from './pages/noteEdit/NoteEdit'
 import NoteCombine from './pages/noteCombine/NoteCombine'
 import NoteArr from './pages/noteArr/NoteArr'
 import Forum from './pages/forum/Forum'
@@ -48,9 +48,10 @@ function App() {
             {/* <Route path='/archive/:isbn' element={<Note />} /> */}
             <Route path='/note/:book_id' element={<Note />} />
             {/* <Route path='/archive/:isbn/:noteId' element={<NoteDetail />} /> */}
-            <Route path='/note/note-detail/:note_id' element={<NoteDetail />} />
-            {/* <Route path='/archive/:isbn/note-record' element={<NoteRecord />} /> */}
-            <Route path='/note/note-record' element={<NoteRecord />} />
+            <Route path='/note/note-detail/:memo_id' element={<NoteDetail />} />
+            {/* <Route path='/archive/:isbn/note-edit' element={<NoteEdit />} /> */}
+            <Route path='/note/note-edit' element={<NoteEdit />} />
+            <Route path='/note/note-edit/:memo_id' element={<NoteEdit />} />
             {/* <Route path='/archive/:isbn/note-combine' element={<NoteCombine />} /> */}
             <Route path='/note/note-combine' element={<NoteCombine />} />
             {/* <Route path='/archive/:isbn/note-array' element={<NoteArr />} /> */}
