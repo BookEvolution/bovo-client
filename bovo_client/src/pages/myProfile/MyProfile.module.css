@@ -1,0 +1,75 @@
+.myProfileContainer {
+    width: 43rem;
+    height: 73.75rem;
+    margin-top: 4.3125rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5.3125rem;
+}
+
+.profileImgWrapper {
+    width: 15rem;
+    height: 15rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background-color: #E8F1F6;
+    border-radius: 1.5625rem;
+}
+
+.profileImg {
+    width: 12rem;
+    height: 12rem;
+}
+
+.profileInfoContainer {
+    width: 100%;
+    height: 34.375rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3.125rem;
+}
+
+.profileInfoWrapper {
+    width: 100%;
+    height: 6.25rem;
+    padding: 0 1.5rem;
+    border-radius: 0.625rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #E8F1F6;
+    border-radius: 0.625rem;
+}
+
+.imgWrapper {
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bedgeImg {
+    width: 100%;
+    height: 100%;
+}
+
+.btnWrapper {
+    width: 100%;
+    height: 13.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+}
+
+.btn {
+    width: 100%;
+    height: 6.25rem;
+}
