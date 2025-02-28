@@ -41,8 +41,7 @@ const SideBar = ({ open, toggleDrawer, handleLogout }) => {
                 {/* 서비스 정보 및 로그아웃 메뉴 */}
                 <Container className={styles.bottomList}>
                     {/* 서비스 정보 */}
-                    <ListItem 
-                        button 
+                    <ListItem  
                         component={Link} 
                         to="/mypage/service-info" 
                         className={styles.bottom_btn} 
@@ -59,7 +58,7 @@ const SideBar = ({ open, toggleDrawer, handleLogout }) => {
 
                     {/* 로그아웃 */}
                     <ListItem 
-                        button 
+                        component='button' 
                         className={styles.bottom_btn}
                         onClick={handleLogout}
                     >
