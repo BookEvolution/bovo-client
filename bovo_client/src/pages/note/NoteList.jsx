@@ -45,27 +45,24 @@ const NoteList = () => {
     navigate(`/note/note-detail/${memo_id}`);
   };
 
+  const navigateToNoteEdit = () => {
+    navigate("/note/note-edit");
+  };
+
   if (loading) {
     return <p className={styles.loading}>메모를 불러오는 중입니다.</p>;
   }
 
   return (
-    <Box className={styles.noteList}>
+    <Box className={styles.noteListContainer}>
       <Box className={styles.header}>
         <p className={styles.listTitle}>노트 기록</p>
         <Box className={styles.listIcons}>
           <IconButton>
-            <ListAltOutlinedIcon 
-            sx={{
-              fontSize: "2.5rem",
-              color: "black" 
-              }} />
+            <ListAltOutlinedIcon sx={{ fontSize: "2.5rem", color: "black" }} />
           </IconButton>
-          <IconButton>
-            <AddBoxOutlinedIcon 
-            sx={{
-              fontSize: "2.5rem",
-              color: "black" }} />
+          <IconButton onClick={navigateToNoteEdit}>
+            <AddBoxOutlinedIcon sx={{ fontSize: "2.5rem", color: "black" }} />
           </IconButton>
         </Box>
       </Box>
@@ -92,18 +89,10 @@ const NoteList = () => {
 
                 <Box className={styles.cardIcons}>
                   <IconButton onClick={(e) => handleEdit(e, memo.memo_id)}>
-                    <EditNoteIcon 
-                    sx={{ 
-                      fontSize: "3rem",
-                      color: "#739CD4"
-                      }} />
+                    <EditNoteIcon sx={{ fontSize: "3rem", color: "#739CD4" }} />
                   </IconButton>
                   <IconButton onClick={(e) => handleDelete(e, memo.memo_id)}>
-                    <DeleteOutlineIcon 
-                    sx={{ 
-                      fontSize: "2.5rem", 
-                      color: "#739CD4"
-                      }} />
+                    <DeleteOutlineIcon sx={{ fontSize: "2.5rem", color: "#739CD4" }} />
                   </IconButton>
                 </Box>
               </Box>

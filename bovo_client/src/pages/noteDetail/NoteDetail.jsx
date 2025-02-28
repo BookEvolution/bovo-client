@@ -1,48 +1,159 @@
 import { useState, useEffect } from "react";
-import { Box, Button, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Box, Typography, Button, Paper } from "@mui/material";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./NoteDetail.css";
+import DeleteModal from "../../components/deleteModal/DeleteModal";
 
 const NoteDetail = () => {
   const { memo_id } = useParams();
   const [memo, setMemo] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     axios
-      .get(`/memos/${memo_id}`, { headers: { user_id: 1 } })
+      .get("/archive", { headers: { user_id: 1 } })
       .then((response) => {
-        setMemo(response.data);
+        if (!response.data || !response.data.books) {
+          setMemo(null);
+          return;
+        }
+
+        const foundMemo = response.data.books
+          .flatMap((book) => book.memos || [])
+          .find((memo) => Number(memo.memo_id) === Number(memo_id));
+
+        setMemo(foundMemo || null);
       })
       .catch(() => setMemo(null))
       .finally(() => setLoading(false));
   }, [memo_id]);
 
   if (loading) {
-    return <p className="loading">불러오는 중...</p>;
+    return <Typography>메모를 불러오는 중입니다.</Typography>;
+  }
+
+  if (!memo) {
+    return <Typography>해당 메모를 찾을 수 없습니다.</Typography>;
   }
 
   return (
-    <Box className="note-detail-container">
-      {/* 날짜 (YY.MM.DD) */}
-      <Box className="note-date">
-        <Typography>{memo?.memo_date}</Typography>
-        <div className="note-divider"></div>
+    <Box display="flex" flexDirection="column" alignItems="center" p={4}>
+      {/* 날짜 및 가로줄 */}
+      <Box display="flex" alignItems="center" width="100%" maxWidth="41rem">
+        <Typography sx={{ fontSize: "2rem", fontWeight: "bold" }}>
+          {memo.memo_date}
+        </Typography>
+        <Box flexGrow={1} mx={2} height={2} bgcolor="#739CD4"></Box>
       </Box>
 
-      <Box className="note-question">
-        <Typography>{memo?.memo_Q}</Typography>
+      {/* 질문 박스 */}
+      <Paper
+        elevation={0}
+        sx={{
+          width: "41rem",
+          height: "68.5rem",
+          backgroundColor: "#E8F1F6",
+          borderRadius: "20px",
+          mt: 4,
+          position: "relative",
+        }}
+      >
+        {/* 세로줄 + 질문 */}
+        <Box display="flex" alignItems="center">
+          {/* 세로줄 */}
+          <Box 
+            sx={{ 
+              width: "0.5rem", 
+              height: "8rem", 
+              backgroundColor: "#739CD4", 
+              marginLeft: "2rem",
+            }} 
+          />
+          
+          {/* 질문 */}
+          <Typography 
+            color="black" 
+            sx={{ 
+              display: "flex",
+              alignItems: "center",
+              height: "8rem",
+              fontSize: "2rem",
+              fontWeight: "bold",
+              margin: "2rem",
+            }}
+          >
+            {memo.memo_Q}
+          </Typography>
+        </Box>
+
+        {/* 답변 박스 */}
+        <Paper
+          elevation={0}
+          sx={{
+            width: "38rem",
+            height: "55rem",
+            backgroundColor: "white",
+            borderBottomLeftRadius: "20px",
+            borderBottomRightRadius: "20px",
+            overflowY: "auto",
+            position: "absolute",
+            bottom: "1.5rem",
+            left: "50%",
+            transform: "translateX(-50%)",
+          }}
+        >
+          <Typography 
+            sx={{ 
+              fontSize: "1.5rem",
+              margin : "1.5rem",
+            }}
+          >
+            {memo.memo_A}
+          </Typography>
+        </Paper>
+      </Paper>
+
+      {/* 버튼 - 우측 정렬 */}
+      <Box display="flex" gap={2} mt={3} width="41rem" justifyContent="flex-end">
+        <Button
+          variant="contained"
+          disableElevation
+          onClick={() => setIsModalOpen(true)} // 모달 열기
+          sx={{
+            width: "15rem",
+            height: "5rem",
+            borderRadius: "1.25rem",
+            backgroundColor: "#E8F1F6",
+            color: "red",
+            fontSize: "1.5rem",
+          }}
+        >
+          삭제하기
+        </Button>
+        <Button
+          variant="contained"
+          disableElevation
+          sx={{
+            width: "15rem",
+            height: "5rem",
+            borderRadius: "1.25rem",
+            backgroundColor: "#E8F1F6",
+            color: "black",
+            fontSize: "1.5rem",
+          }}
+        >
+          수정하기
+        </Button>
       </Box>
 
-      <Box className="note-answer">
-        <Typography>{memo?.memo_A}</Typography>
-      </Box>
+      {/* 삭제 모달 */}
 
-      <Box className="note-actions">
-        <Button className="delete-btn">삭제하기</Button>
-        <Button className="edit-btn">수정하기</Button>
-      </Box>
+      <DeleteModal 
+        open={isModalOpen} 
+        onClose={() => setIsModalOpen(false)}
+        memoId={memo_id}
+      />
     </Box>
   );
 };
