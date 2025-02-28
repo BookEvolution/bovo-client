@@ -6,6 +6,7 @@ import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DeleteModal from "../../components/deleteModal/DeleteModal";
 import "./Note.css";
 
 const NoteList = () => {
@@ -13,6 +14,8 @@ const NoteList = () => {
   const navigate = useNavigate();
   const [memos, setMemos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedMemoId, setSelectedMemoId] = useState(null); // 선택된 메모 ID 저장
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
 
   useEffect(() => {
     axios
@@ -34,7 +37,8 @@ const NoteList = () => {
 
   const handleDelete = (e, memo_id) => {
     e.stopPropagation();
-    console.log(`메모 삭제: ${memo_id}`);
+    setSelectedMemoId(memo_id); // 삭제할 메모 ID 저장
+    setIsModalOpen(true); // 모달 열기
   };
 
   const navigateToDetail = (memo_id) => {
@@ -51,16 +55,10 @@ const NoteList = () => {
         <p className="note-list-title">노트 기록</p>
         <Box className="note-list-icons">
           <IconButton>
-            <ListAltOutlinedIcon sx={{ 
-                fontSize: "2.5rem",
-                color: "black" 
-                }} />
+            <ListAltOutlinedIcon sx={{ fontSize: "2.5rem", color: "black" }} />
           </IconButton>
           <IconButton>
-            <AddBoxOutlinedIcon sx={{ 
-                fontSize: "2.5rem",
-                color: "black"
-                }} />
+            <AddBoxOutlinedIcon sx={{ fontSize: "2.5rem", color: "black" }} />
           </IconButton>
         </Box>
       </Box>
@@ -87,16 +85,14 @@ const NoteList = () => {
 
                 <Box className="note-card-icons">
                   <IconButton onClick={(e) => handleEdit(e, memo.memo_id)}>
-                    <EditNoteIcon sx={{ 
-                        fontSize: "2.5rem",
-                        color: "#739CD4"
-                        }} />
+                    <EditNoteIcon
+                      sx={{ fontSize: "2.5rem", color: "#739CD4" }}
+                    />
                   </IconButton>
                   <IconButton onClick={(e) => handleDelete(e, memo.memo_id)}>
-                    <DeleteOutlineIcon sx={{ 
-                        fontSize: "2.5rem",
-                        color: "#739CD4"
-                        }} />
+                    <DeleteOutlineIcon
+                      sx={{ fontSize: "2.5rem", color: "#739CD4" }}
+                    />
                   </IconButton>
                 </Box>
               </Box>
@@ -104,6 +100,19 @@ const NoteList = () => {
           ))}
         </Box>
       )}
+
+      {/* 삭제 모달 */}
+      <DeleteModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        memoId={selectedMemoId}
+        onDelete={(memoId) => {
+        console.log("삭제된 메모 ID:", memoId);
+        setMemos((prevMemos) => prevMemos.filter((memo) => memo.memo_id !== memoId));
+        setIsModalOpen(false);
+        }}
+      />
+
     </Box>
   );
 };
