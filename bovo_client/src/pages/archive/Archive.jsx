@@ -4,7 +4,7 @@ import ArchiveTabs from "./ArchiveTabs";
 import ArchiveIng from "./ArchiveIng";
 import ArchiveEnd from "./ArchiveEnd";
 import ArchiveWish from "./ArchiveWish";
-import "./Archive.css";
+import styles from './Archive.module.css';
 
 const Archive = () => {
   const [currentTab, setCurrentTab] = useState("ing");
@@ -25,7 +25,7 @@ const Archive = () => {
   }, [currentTab]);
 
   return (
-    <div className="archive-container">
+    <div className={styles.container}>
       <ArchiveTabs 
         currentTab={currentTab} 
         setCurrentTab={setCurrentTab} 
