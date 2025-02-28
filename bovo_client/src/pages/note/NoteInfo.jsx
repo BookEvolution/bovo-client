@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import NoteBottomSheet from "./NoteBottomSheet";
-import "./Note.css";
+import styles from "./Note.module.css";
 
 const statusLabels = { 
   ing: "읽는 중", 
@@ -39,7 +39,7 @@ const NoteInfo = () => {
   }, [book_id]);
 
   if (!book) {
-    return <p className="loading">도서 정보를 불러오는 중</p>;
+    return <p className={styles.loading}>도서 정보를 불러오는 중</p>;
   }
 
   const handleOpenSheet = () => setOpenSheet(true);
@@ -47,13 +47,13 @@ const NoteInfo = () => {
 
   return (
     <>
-      <Box className="note-info">
+      <Box className={styles.info}>
         <img 
-          className="note-book-cover" 
+          className={styles.bookcover} 
           src={book.cover} 
           alt={book.title} 
         />
-        <Box className="note-book-details">
+        <Box className={styles.details}>
           <Box 
             sx={{ 
               display: "flex", 
@@ -89,10 +89,10 @@ const NoteInfo = () => {
               <EditIcon sx={{ fontSize: "2rem" }} />
             </IconButton>
           </Box>
-          <p className="note-book-title">{book.title}</p>
-          <p className="note-book-author">{book.author}</p>
-          <Rating value={book.star} readOnly className="note-star-rating" />
-          <p className="note-book-date">
+          <p className={styles.bookTitle}>{book.title}</p>
+          <p className={styles.author}>{book.author}</p>
+          <Rating value={book.star} readOnly className={styles.starRating} />
+          <p className={styles.bookDate}>
             {book.start_date} - {book.end_date}
           </p>
         </Box>
