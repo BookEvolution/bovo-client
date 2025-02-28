@@ -32,7 +32,7 @@ const NoteList = () => {
 
   const handleEdit = (e, memo_id) => {
     e.stopPropagation();
-    console.log(`메모 수정: ${memo_id}`);
+    navigate(`/note/note-edit/${memo_id}`);
   };
 
   const handleDelete = (e, memo_id) => {
