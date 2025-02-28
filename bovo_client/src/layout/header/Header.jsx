@@ -32,12 +32,12 @@ const Header = ({onLogout}) => {
                     {isMainPage && ( // 메인 페이지일 때만 렌더링
                         <IconButton sx={{ padding: 0 }} className={styles.iconBtn}>
                             <Link to="/search">
-                                <SearchIcon sx={{ fontSize: "2.5rem", color: "#739CD4" }} />
+                                <SearchIcon sx={{ fontSize: "3rem", color: "#739CD4" }} />
                             </Link>
                         </IconButton>
                     )}
                     <IconButton sx={{ padding: 0 }} className={styles.iconBtn} onClick={toggleDrawer}>
-                        <MenuIcon sx={{ fontSize: "2.5rem", color: "#739CD4" }}/>
+                        <MenuIcon sx={{ fontSize: "3.2rem", color: "#739CD4" }}/>
                     </IconButton>
                 </Box>
             </Box>
