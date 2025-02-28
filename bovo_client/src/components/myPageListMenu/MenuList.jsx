@@ -51,7 +51,7 @@ const MenuList = ({ onLogout }) => {
                         </ListItemIcon>
                         <ListItemText 
                             primary={item.text}
-                            primaryTypographyProps={{fontSize: "1.5rem"}} 
+                            primaryTypographyProps={{fontSize: "1.8rem"}} 
                         />
                         <Box sx={{width: "2rem", height: "2rem", display: "flex", alignItems: "center", justifyContent: "center"}}>
                             <ChevronRightIcon sx={{ color: "#739CD4", fontSize: "3rem" }} />
