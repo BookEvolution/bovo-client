@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
 import LoginLayout from './layout/loginLayout/LoginLayout'
 import Login from './pages/login/Login'
@@ -24,6 +24,7 @@ import ServiceInfo from './pages/serviceInfo/ServiceInfo'
 import Exp from './pages/exp/Exp'
 import MyProfileEdit from './pages/myProfileEdit/MyProfileEdit'
 import Calendar from './pages/calendar/Calendar'
+import ErrorPage from './pages/errorPage/ErrorPage'
 
 function App() {
 
@@ -62,8 +63,10 @@ function App() {
             <Route path='/mypage/exp' element={<Exp />} />
             <Route path='/mypage/myprofile/edit' element={<MyProfileEdit />} />
             <Route path='/calendar' element={<Calendar />} />
+            <Route path='/404' element={<ErrorPage />} />
           </Route>
           <Route path='/forum/forum-chat' element={<ForumChat />} />
+          <Route path='/*' element={<Navigate to={"/404"} />} />
         </Routes>
       </BrowserRouter>
     </>
