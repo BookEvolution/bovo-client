@@ -1,21 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Box, Typography, Button, Paper } from "@mui/material";
 
-const NoteEdit = ({ memo = { 
-        memo_Q: "제목을 입력해주세요.", 
-        memo_A: "내용을 입력해주세요." 
-    } }) => {
-  const [loadedMemo, setLoadedMemo] = useState(null);
-
-  useEffect(() => {
-    if (memo) {
-      setLoadedMemo(memo);
-    }
-  }, [memo]);
-
-  if (!loadedMemo) {
-    return <Typography sx={{ fontSize: "2rem", color: "gray" }}>오류</Typography>;
-  }
+const NoteEdit = ({ memo = { memo_Q: "제목을 입력해주세요.", memo_A: "내용을 입력해주세요." } }) => {
+  const [loadedMemo, setLoadedMemo] = useState({
+    memo_Q: memo.memo_Q || "",
+    memo_A: memo.memo_A || "",
+  });
 
   return (
     <Box 
@@ -58,7 +48,12 @@ const NoteEdit = ({ memo = {
       </Box>
 
       {/* 기록하기 텍스트 */}
-      <Typography sx={{ marginTop: "2rem", fontSize: "2.5rem", fontWeight: "bold", color: "black", alignSelf: "flex-start" }}>
+      <Typography sx={{ 
+        marginTop: "2rem", 
+        fontSize: "2.5rem", 
+        fontWeight: "bold", 
+        color: "black", 
+        alignSelf: "flex-start" }}>
         기록하기
       </Typography>
 
@@ -74,12 +69,36 @@ const NoteEdit = ({ memo = {
           position: "relative",
         }}
       >
-        {/* 세로줄 + 질문 */}
+        {/* 세로줄 + 질문 입력 */}
         <Box display="flex" alignItems="center">
-          <Box sx={{ width: "0.25rem", height: "6rem", backgroundColor: "#739CD4", marginLeft: "2rem" }} />
-          <Typography color="black" sx={{ display: "flex", alignItems: "center", height: "6rem", fontSize: "2rem", fontWeight: "bold", margin: "2rem" }}>
-            {loadedMemo.memo_Q}
-          </Typography>
+          <Box sx={{ 
+            width: "0.25rem",
+            height: "6rem", 
+            backgroundColor: "#739CD4", 
+            marginLeft: "2rem" 
+          }} />
+          <textarea
+            value={loadedMemo.memo_Q}
+            onChange={(e) => {
+              if (e.target.value.length <= 32) {
+                setLoadedMemo({ ...loadedMemo, memo_Q: e.target.value });
+              }
+            }}
+            placeholder="제목을 입력해주세요."
+            style={{
+              width: "35rem",
+              fontSize: "2rem",
+              fontWeight: "bold",
+              fontFamily: "unset",
+              color: "black",
+              border: "none",
+              background: "transparent",
+              resize: "none",
+              outline: "none",
+              overflow: "hidden",
+              margin: "2rem",
+            }}
+          />
         </Box>
 
         {/* 답변 박스 */}
@@ -98,9 +117,22 @@ const NoteEdit = ({ memo = {
             transform: "translateX(-50%)",
           }}
         >
-          <Typography sx={{ fontSize: "1.5rem", margin: "1.5rem" }}>
-            {loadedMemo.memo_A}
-          </Typography>
+          <textarea
+            value={loadedMemo.memo_A}
+            onChange={(e) => setLoadedMemo({ ...loadedMemo, memo_A: e.target.value })}
+            placeholder="내용을 입력해주세요."
+            style={{
+              width: "92%",
+              height: "92%",
+              fontFamily: "unset",
+              fontSize: "1.5rem",
+              color: "black",
+              border: "none",
+              resize: "none",
+              outline: "none",
+              padding: "1.5rem",
+            }}
+          />
         </Paper>
       </Paper>
 
@@ -122,7 +154,6 @@ const NoteEdit = ({ memo = {
       >
         기록하기
       </Button>
-
     </Box>
   );
 };

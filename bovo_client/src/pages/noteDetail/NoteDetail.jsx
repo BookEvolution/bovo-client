@@ -114,7 +114,7 @@ const NoteDetail = () => {
         </Paper>
       </Paper>
 
-      {/* 버튼 - 우측 정렬 */}
+      {/* 버튼 */}
       <Box display="flex" gap={2} mt={3} width="41rem" justifyContent="flex-end">
         <Button
           variant="contained"
