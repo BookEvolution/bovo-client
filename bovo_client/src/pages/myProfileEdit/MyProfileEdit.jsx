@@ -3,8 +3,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import profile6 from "../../assets/profile/profile_6.png";
 import styles from "./MyProfileEdit.module.css";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import ProfileBottomSheet from "../../components/profileImgBottomSheet/ProfileBottomSheet";
  
 const MyProfileEdit = () => {
+    const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
+    const [selectedProfile, setSelectedProfile] = useState("");
     const {register, handleSubmit, watch, formState: {isSubmitting, errors, isValid }} = useForm({mode : "onChange", defaultValues: { nickname: "", password: "", confirmPassword: "" }}); //프로필 수정 유효성 검사
 
     const nameRegex = /^\S+$/;
@@ -18,7 +22,10 @@ const MyProfileEdit = () => {
 
     return (
         <Container className={styles.myProfileEditContainer}>
-            <Box className={styles.profileImgWrapper}>
+            <Box 
+                className={styles.profileImgWrapper}
+                onClick={() => setBottomSheetOpen(true)}
+            >
                 <Box className={styles.iconWrapper}>
                     <SearchIcon sx={{fontSize: "3.8rem", color: "#739CD4" }}/>
                 </Box>
@@ -192,6 +199,12 @@ const MyProfileEdit = () => {
                     확인
                 </Button>
             </form>
+            <ProfileBottomSheet 
+                open={bottomSheetOpen} 
+                onClose={() => setBottomSheetOpen(false)}
+                onSelectProfile={setSelectedProfile} // 선택한 프로필 전달
+                selectedProfile={selectedProfile} // 기본 선택된 프로필 전달
+            />
         </Container>
     );
 };
