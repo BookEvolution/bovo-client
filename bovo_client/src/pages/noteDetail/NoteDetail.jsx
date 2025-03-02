@@ -6,6 +6,7 @@ import DeleteModal from "../../components/deleteModal/DeleteModal";
 
 const NoteDetail = () => {
   const { memo_id } = useParams();
+  const navigate = useNavigate();
   const [memo, setMemo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,6 +29,29 @@ const NoteDetail = () => {
       .catch(() => setMemo(null))
       .finally(() => setLoading(false));
   }, [memo_id]);
+
+  // 메모 삭제
+  const handleDeleteMemo = (memoId) => {
+    console.log(`시도하는 메모 삭제 ID: ${memoId}`);
+    
+    axios
+      .delete(`/memos/${memoId}`, { headers: { user_id: 1 } })
+      .then((response) => {
+        console.log("삭제 성공:", response);
+        navigate('/archive');
+      })
+      .catch((error) => {
+        console.error("메모 삭제 실패:", error);
+      })
+      .finally(() => {
+        setIsModalOpen(false);
+      });
+  };
+
+  // 메모 수정 페이지로
+  const handleEditMemo = () => {
+    navigate(`/note/note-edit/${memo_id}`);
+  };
 
   if (loading) {
     return <Typography>메모를 불러오는 중입니다.</Typography>;
@@ -114,12 +138,12 @@ const NoteDetail = () => {
         </Paper>
       </Paper>
 
-      {/* 버튼 - 우측 정렬 */}
+      {/* 버튼 */}
       <Box display="flex" gap={2} mt={3} width="41rem" justifyContent="flex-end">
         <Button
           variant="contained"
           disableElevation
-          onClick={() => setIsModalOpen(true)} // 모달 열기
+          onClick={() => setIsModalOpen(true)}
           sx={{
             width: "15rem",
             height: "5rem",
@@ -134,6 +158,7 @@ const NoteDetail = () => {
         <Button
           variant="contained"
           disableElevation
+          onClick={handleEditMemo}
           sx={{
             width: "15rem",
             height: "5rem",
@@ -148,11 +173,11 @@ const NoteDetail = () => {
       </Box>
 
       {/* 삭제 모달 */}
-
       <DeleteModal 
         open={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
         memoId={memo_id}
+        onDelete={handleDeleteMemo}
       />
     </Box>
   );
