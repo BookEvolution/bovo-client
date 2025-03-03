@@ -5,7 +5,7 @@ import BookSearchBar from "./BookSearchBar";
 import BookList from "./BookList";
 import styles from "./BookSearch.module.css";
 
-const KAKAO_API_KEY = "563b070f600c9756881de5dd8104fbfb"; //레이아웃 확인을 위해 임의로 등록한 REST API 키 
+const KAKAO_API_KEY = "563b070f600c9756881de5dd8104fbfb";
 
 const BookSearch = () => {
     const [books, setBooks] = useState([]); 
@@ -19,18 +19,16 @@ const BookSearch = () => {
             return;
         }
         
-        // API 요청 나중에 백엔드랑 하겠습니다
-        //무한 스크롤은 다음날 진행 예정
         setLoading(true);
         try {
-            const response = await axios.get("https://dapi.kakao.com/v3/search/book", {
+            const response = await axios.get("https://dapi.kakao.com/v3/search/book?target=title", {
                 params: {
                     query: query,
                     sort: sort, 
                     size: 50, 
                 },
                 headers: {
-                    Authorization: `KakaoAK ${KAKAO_API_KEY}`,
+                    Authorization: `KakaoAK 563b070f600c9756881de5dd8104fbfb`,
                 },
             });
 
