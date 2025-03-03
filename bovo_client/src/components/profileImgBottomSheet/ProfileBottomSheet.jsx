@@ -1,4 +1,5 @@
-import { Box, Button, Container, Drawer, Typography } from "@mui/material";
+import PropTypes from "prop-types";
+import { Box, Button, Container, Drawer } from "@mui/material";
 import styles from "./ProfileBottomSheet.module.css";
 import profile1 from "../../assets/profile/profile_1.png";
 import profile2 from "../../assets/profile/profile_2.png";
@@ -25,9 +26,17 @@ const ProfileBottomSheet = ({ open, onClose, onSelectProfile, selectedProfile })
         setActiveProfile(selectedProfile);
     }, [selectedProfile, open]); // BottomSheet이 열릴 때 상태를 업데이트
 
+    // 프로필 이미지 선택시 활성화
     const handleSelectProfile = (profile) => {
         setActiveProfile(profile);
-        onSelectProfile(profile); // 부모 컴포넌트로 선택한 프로필 전달
+    };
+
+    // 확인 버튼 클릭시 반영
+    const handleConfirm = () => {
+        if (activeProfile) {
+            onSelectProfile(activeProfile); // 부모 컴포넌트로 전달
+        }
+        onClose(); // 바텀시트 닫기
     };
 
     return (
@@ -53,17 +62,17 @@ const ProfileBottomSheet = ({ open, onClose, onSelectProfile, selectedProfile })
             <Box className={styles.header} onClick={onClose}/>
             <Container className={styles.profileEditContainer}>
                 <Box className={styles.profileImgContainer}>
-                    {profileImages.map(({ key, src }) => (
+                    {profileImages.map((profile) => (
                         <Box 
-                            key={key} 
+                            key={profile.key} 
                             className={styles.profileImgWrapper} 
                             sx={{
-                                backgroundColor: activeProfile === key ? "#BDE5F1" : "#FFFFFF"
+                                backgroundColor: activeProfile.key === profile.key ? "#BDE5F1" : "#FFFFFF"
                             }}
-                            onClick={() => handleSelectProfile(key)}
+                            onClick={() => handleSelectProfile(profile)}
                         >
                             <Box className={styles.profileImg}>
-                                <img src={src} alt={key} />
+                                <img src={profile.src} alt={profile.key} />
                             </Box>
                         </Box>
                     ))}
@@ -79,13 +88,20 @@ const ProfileBottomSheet = ({ open, onClose, onSelectProfile, selectedProfile })
                             fontSize: "1.5rem", 
                             lineHeight: "0.015rem" 
                         }} 
-                    onClick={onClose}
+                    onClick={handleConfirm}
                 >
                     선택하기
                 </Button>
             </Container>
         </Drawer>
     );
+};
+
+ProfileBottomSheet.propTypes = {
+    open: PropTypes.bool,
+    onClose: PropTypes.func,
+    onSelectProfile: PropTypes.func,
+    selectedProfile: PropTypes.string,
 };
 
 export default ProfileBottomSheet;
