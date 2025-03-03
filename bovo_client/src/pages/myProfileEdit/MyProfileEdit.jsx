@@ -8,7 +8,7 @@ import ProfileBottomSheet from "../../components/profileImgBottomSheet/ProfileBo
  
 const MyProfileEdit = () => {
     const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
-    const [selectedProfile, setSelectedProfile] = useState("");
+    const [selectedProfile, setSelectedProfile] = useState({ key: "profile_6", src: profile6 });
     const {register, handleSubmit, watch, formState: {isSubmitting, errors, isValid }} = useForm({mode : "onChange", defaultValues: { nickname: "", password: "", confirmPassword: "" }}); //프로필 수정 유효성 검사
 
     const nameRegex = /^\S+$/;
@@ -30,7 +30,7 @@ const MyProfileEdit = () => {
                     <SearchIcon sx={{fontSize: "3.8rem", color: "#739CD4" }}/>
                 </Box>
                 <Box className={styles.profileImg}>
-                    <img src={profile6} alt="프로필 대체 이미지" />
+                    <img src={selectedProfile.src} alt="프로필 대체 이미지" />
                 </Box>
             </Box>
             <form
