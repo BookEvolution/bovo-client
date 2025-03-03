@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'; // PropTypes 임포트
 import { Box, Button, Container, Typography } from "@mui/material";
 import profile6 from "../../assets/profile/profile_6.png";
-import bedge from "../../assets/bedge/bedge.png";
+import bedge from "../../assets/bedge/bedge6.png";
 import styles from "./MyProfile.module.css";
 import { Link } from 'react-router-dom';
 import { useState } from 'react';

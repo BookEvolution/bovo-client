@@ -2,7 +2,7 @@ import { Container, Box, Typography, LinearProgress, Link } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add";
 import styles from './MyPage.module.css';
 import profile6 from "../../assets/profile/profile_6.png";
-import bedge from "../../assets/bedge/bedge.png";
+import bedge from "../../assets/bedge/bedge6.png";
 import { useNavigate } from "react-router-dom";
 import MenuList from "../../components/myPageListMenu/MenuList";
 import { useDispatch, useSelector } from "react-redux";
