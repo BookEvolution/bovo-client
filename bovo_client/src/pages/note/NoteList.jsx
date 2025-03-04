@@ -49,6 +49,10 @@ const NoteList = () => {
     navigate("/note/note-edit");
   };
 
+  const navigateToNoteCombine = () => {
+    navigate(`/note/note-combine/${book_id}`);
+  };
+
   if (loading) {
     return <p className={styles.loading}>메모를 불러오는 중입니다.</p>;
   }
@@ -58,7 +62,7 @@ const NoteList = () => {
       <Box className={styles.header}>
         <p className={styles.listTitle}>노트 기록</p>
         <Box className={styles.listIcons}>
-          <IconButton>
+          <IconButton onClick={navigateToNoteCombine}>
             <ListAltOutlinedIcon sx={{ fontSize: "2.5rem", color: "black" }} />
           </IconButton>
           <IconButton onClick={navigateToNoteEdit}>

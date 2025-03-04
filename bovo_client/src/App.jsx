@@ -54,7 +54,7 @@ function App() {
             <Route path='/note/note-edit' element={<NoteEdit />} />
             <Route path='/note/note-edit/:memo_id' element={<NoteEdit />} />
             {/* <Route path='/archive/:isbn/note-combine' element={<NoteCombine />} /> */}
-            <Route path='/note/note-combine' element={<NoteCombine />} />
+            <Route path='/note/note-combine/:book_id' element={<NoteCombine />} />
             {/* <Route path='/archive/:isbn/note-array' element={<NoteArr />} /> */}
             <Route path='/note/note-array' element={<NoteArr />} />
             <Route path='/forum' element={<Forum />} />
