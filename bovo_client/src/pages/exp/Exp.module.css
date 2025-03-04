@@ -1,0 +1,112 @@
+.expPageConainer {
+    width: 43rem;
+    height: 78.625rem;
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.expContainer {
+    width: 43rem;
+    height: 36.25rem;
+}
+
+.expAndBedgeHeader {
+    width: 43rem;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.iconWrapper {
+    width: 2rem;
+    height: 2rem;
+    padding-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.questContainer {
+    width: 100%;
+    height: 31.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.questWrapper {
+    width: 17.75rem;
+    height: 10.375rem;
+    margin: 2.625rem 1.875rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.questTitle {
+    width: 100%;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+}
+
+.questCount {
+    width: 6.25rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.questBtn {
+    width: 17.75rem;
+    height: 2.25rem;
+}
+
+.bedgeListContainer {
+    width: 100%;
+    height: 42.5rem;
+}
+
+.bedgeList {
+    width: 100%;
+    height: 37.5rem;
+    border-radius: 1.5625rem;
+    background-color: #E8F1F6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bedgeContainer {
+    width: 34rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    row-gap: 5rem;
+    column-gap: 4.5rem;
+}
+
+.bedgeWrapper {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 3.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bedgeImg {
+    width: 5rem;
+    height: 5rem;
+}
+
+.bedgeImg > img {
+    width: 100%;
+    height: 100%;
+}
