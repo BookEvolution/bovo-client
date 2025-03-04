@@ -54,6 +54,7 @@ const MyProfileEdit = () => {
                             placeholder="새로운 닉네임을 입력하세요"
                             variant="outlined"
                             fullWidth
+                            InputProps={{ autoComplete: "username" }}
                             {...register('nickname', {
                                 validate: (value) => (value.trim() === "" ? "닉네임을 입력하세요." : true), 
                                 pattern: { value: nameRegex, message: "닉네임에 공백을 포함할 수 없습니다." },
@@ -106,6 +107,7 @@ const MyProfileEdit = () => {
                                 pattern: { value: passwordRegex, 
                                         message: "특수문자 및 공백을 포함할 수 없습니다." },
                             })}
+                            InputProps={{ autoComplete: "new-password" }}
                             error={!!errors.password}
                             sx={{
                                 backgroundColor: "#E8F1F6",
@@ -149,6 +151,7 @@ const MyProfileEdit = () => {
                             type="password"
                             placeholder="비밀번호를 다시 입력하세요"
                             fullWidth
+                            InputProps={{ autoComplete: "new-password" }}
                             {...register("confirmPassword", {
                                 required: true,
                                 pattern: { value: passwordRegex, message: "특수문자 및 공백을 포함할 수 없습니다." },
