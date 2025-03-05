@@ -10,8 +10,14 @@ import bedge6 from '../../assets/bedge/bedge6.png';
 import bedge7 from '../../assets/bedge/bedge7.png';
 import bedge8 from '../../assets/bedge/bedge8.png';
 import bedge9 from '../../assets/bedge/bedge9.png';
+import { useState } from "react";
+import QuestInfoModal from "../../components/questInfoModal/QuestInfoModal";
+import BedgeInfoModal from "../../components/bedgeInfoModal/BedgeInfoModal";
 
 const Exp = () => {
+    const [openQuestModal, setOpenQuestModal] = useState(false); // quest info 모달 상태 추가
+    const [openBedgeModal, setOpenBedgeModal] = useState(false); // bedge info 모달 상태 추가
+
     const questList = [
         {title: "출석", count: 7},
         {title: "커뮤니티 참여", count: 7},
@@ -31,6 +37,24 @@ const Exp = () => {
         {key: "bedge9", src: bedge9, active: false},
     ]
 
+    // questInfoModal 관련 함수
+    const handleOpenQuestModal = () => {
+        setOpenQuestModal(true);
+    };
+
+    const handleCloseQuestModal = () => {
+        setOpenQuestModal(false);
+    };
+
+    // bedgeInfoModal 관련 함수
+    const handleOpenBedgeModal = () => {
+        setOpenBedgeModal(true);
+    };
+
+    const handleCloseBedgeModal = () => {
+        setOpenBedgeModal(false);
+    };
+
     return (
         <Box className={styles.expPageConainer}>
             <Box className={styles.expContainer}>
@@ -41,7 +65,7 @@ const Exp = () => {
                     >
                         퀘스트 항목
                     </Typography>
-                    <Box className={styles.iconWrapper}>
+                    <Box className={styles.iconWrapper} onClick={handleOpenQuestModal}>
                         <InfoIcon sx={{fontSize: "2rem"}}/>
                     </Box>
                 </Box>
@@ -120,7 +144,7 @@ const Exp = () => {
                     >
                         지난주 독서 성과
                     </Typography>
-                    <Box className={styles.iconWrapper}>
+                    <Box className={styles.iconWrapper} onClick={handleOpenBedgeModal}>
                         <InfoIcon sx={{fontSize: "2rem"}}/>
                     </Box>
                 </Box>
@@ -149,6 +173,8 @@ const Exp = () => {
                     </Box>
                 </Box>
             </Box>
+            <QuestInfoModal open={openQuestModal} onClose={handleCloseQuestModal} />
+            <BedgeInfoModal open={openBedgeModal} onClose={handleCloseBedgeModal} />
         </Box>
     );
 };
