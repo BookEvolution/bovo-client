@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Button, Paper, Tooltip } from "@mui/material";
+import { Box, Typography, Button, Paper } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import NoteTemplate from "../../components/templateModal/NoteTemplate";
@@ -197,7 +197,6 @@ const NoteEdit = () => {
                 marginLeft: "2rem" 
               }} />
 
-              <Tooltip title="제목을 수정할 수 있습니다 (최대 36자)" placement="top" arrow>
                 <textarea
                   value={loadedMemo.memo_Q}
                   onChange={(e) => {
@@ -224,7 +223,6 @@ const NoteEdit = () => {
                     transition: "border-bottom 0.3s ease",
                   }}
                 />
-              </Tooltip>
 
               {/* 제목 글자 수 */}
               <Typography 
