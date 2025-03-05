@@ -1,39 +1,80 @@
 import React, { useState, useEffect } from "react";
 import { Box, Paper, Typography, Button, IconButton } from "@mui/material";
-import { DndContext, closestCenter } from "@dnd-kit/core";
-import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { 
+  DndContext, 
+  closestCenter, 
+  KeyboardSensor, 
+  PointerSensor, 
+  useSensor, 
+  useSensors,
+  DragOverlay
+} from "@dnd-kit/core";
+import { 
+  arrayMove, 
+  SortableContext, 
+  sortableKeyboardCoordinates, 
+  verticalListSortingStrategy, 
+  useSortable
+} from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import CloseIcon from "@mui/icons-material/Close";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 
 const CombineModal = ({ open, onClose, memos, setMemos }) => {
   const [items, setItems] = useState([]);
+  const [activeId, setActiveId] = useState(null);
 
   useEffect(() => {
-    console.log("받은 기록", memos);
     if (memos && Array.isArray(memos) && memos.length > 0) {
       setItems(memos);
     } else {
-      console.warn("기록 데이터 없음");
       setItems([]);
     }
   }, [memos]);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 3, 
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
+
   const handleDragEnd = (event) => {
     const { active, over } = event;
-    if (!active || !over || active.id === over.id) return;
+    
+    if (active && over && active.id !== over.id) {
+      setItems((currentItems) => {
+        const oldIndex = currentItems.findIndex(
+          (item) => String(item.memo_id) === String(active.id)
+        );
+        const newIndex = currentItems.findIndex(
+          (item) => String(item.memo_id) === String(over.id)
+        );
 
-    const oldIndex = items.findIndex((item) => String(item.memo_id) === String(active.id));
-    const newIndex = items.findIndex((item) => String(item.memo_id) === String(over.id));
-
-    if (oldIndex !== -1 && newIndex !== -1) {
-      const newItems = arrayMove(items, oldIndex, newIndex);
-      setItems(newItems);
-      setMemos(newItems);
+        const updatedItems = arrayMove(currentItems, oldIndex, newIndex);
+        setMemos(updatedItems);
+        return updatedItems;
+      });
     }
+
+    setActiveId(null);
+  };
+
+  const handleDragCancel = () => {
+    setActiveId(null);
   };
 
   if (!open) return null;
+
+  const activeItem = items.find(item => String(item.memo_id) === String(activeId));
 
   return (
     <Box
@@ -47,6 +88,7 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        zIndex: 1000,
       }}
       onClick={onClose}
     >
@@ -57,7 +99,7 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           height: "55rem",
           backgroundColor: "#E8F1F6",
           borderRadius: "1.25rem",
-          padding: "0rem",
+          padding: "1rem",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -66,14 +108,22 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <Box display="flex" justifyContent="space-between" width="100%">
-          <Typography sx={{ fontSize: "1.5rem", fontWeight: "bold" }}>순서 변경하기</Typography>
+        <Box display="flex" justifyContent="space-between" width="100%" mb={2}>
+          <Typography sx={{ fontSize: "1.5rem", fontWeight: "bold" }}>
+            순서 변경하기
+          </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
         </Box>
 
-        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <DndContext 
+          sensors={sensors}
+          collisionDetection={closestCenter} 
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onDragCancel={handleDragCancel}
+        >
           <SortableContext 
             items={items.map((item) => String(item.memo_id))} 
             strategy={verticalListSortingStrategy}
@@ -86,26 +136,40 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem",
-                maxHeight: "35rem"
               }}
             >
-              {items.slice(0, 5).map((memo) => (
-                <SortableItem key={memo.memo_id} memo={memo} />
+              {items.map((memo) => (
+                <SortableItem 
+                  key={memo.memo_id} 
+                  memo={memo} 
+                />
               ))}
             </Box>
           </SortableContext>
+
+          <DragOverlay>
+            {activeId ? (
+              <SortableItem 
+                memo={activeItem} 
+                isDragging 
+              />
+            ) : null}
+          </DragOverlay>
         </DndContext>
 
         <Button
           variant="contained"
           disableElevation
           sx={{
-            backgroundColor: "#E8F1F6",
-            color: "#739CD4",
+            backgroundColor: "#739CD4",
+            color: "white",
             fontSize: "1.5rem",
             borderRadius: "1.25rem",
             width: "10rem",
             height: "3rem",
+            "&:hover": {
+              backgroundColor: "#5a7fad",
+            },
           }}
         >
           정렬하기
@@ -115,22 +179,34 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
   );
 };
 
-const SortableItem = ({ memo }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: String(memo.memo_id) });
+const SortableItem = ({ memo, isDragging }) => {
+  const { 
+    attributes, 
+    listeners, 
+    setNodeRef, 
+    transform, 
+    transition,
+    isDragging: isSorting 
+  } = useSortable({ 
+    id: String(memo.memo_id) 
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    width: "100%",
+    opacity: isDragging || isSorting ? 0.5 : 1,
   };
 
   return (
     <Paper
       ref={setNodeRef}
+      {...listeners} 
+      {...attributes}
+      style={style}
       sx={{
         width: "34rem",
         height: "8rem",
-        padding: "0rem",
+        padding: "1rem",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
@@ -138,7 +214,6 @@ const SortableItem = ({ memo }) => {
         backgroundColor: "white",
         cursor: "grab",
       }}
-      style={style}
     >
       <Box>
         <Typography sx={{ fontSize: "1.2rem", fontWeight: "bold" }}>
@@ -148,7 +223,6 @@ const SortableItem = ({ memo }) => {
           기록 작성 일 : {memo.memo_date || "YY.MM.DD"}
         </Typography>
       </Box>
-      
       <IconButton {...listeners} {...attributes} sx={{ cursor: "grab" }}>
         <DragHandleIcon sx={{ color: "gray" }} />
       </IconButton>
