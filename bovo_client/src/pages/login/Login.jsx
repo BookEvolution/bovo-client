@@ -5,11 +5,13 @@ import axios from "axios";
 import kakaoBtn from "../../assets/button/btn_kakao.png";
 
 const API_URL = ""; 
-const CLIENT_ID = "3b94e5d2a73bbc7a2961819922e17b23"; 
-const REDIRECT_URI = "http://localhost:5173/auth/kakao/callback"; 
+const CLIENT_ID = ""; 
+const REDIRECT_URI = ""; 
+
+axios.defaults.withCredentials = true;
 
 const handleKakaoLogin = () => {
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    const kakaoAuthUrl = '';
     window.location.href = kakaoAuthUrl; 
 };
 
@@ -19,6 +21,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+    const [accessToken, setAccessToken] = useState(null);
 
     const handleSignUp = () => {
         navigate("/sign-up/step1");
@@ -28,11 +31,19 @@ const Login = () => {
         setEmailError("");
         setPasswordError("");
 
+        // refreshToken을 httpOnly + secure 쿠키에 저장
+        // accessToken을 JSON 응답으로 받아 상태(state)로 관리
+        // API 요청 시 Authorization 헤더에 accessToken 포함
+        // CSRF 방어를 위해 withCredentials: true 적용
+        // 백엔드: HTTP 응답 Set-Cookie 헤더에 refreshToken 값을 설정하고 accessToken을 JSON에 담아 보내줘야 함
+        // 현재 의논해야 할 것들 : 백엔드 URL, CSRF 토큰 보내주는거 어떻게할지
         try {
-            const response = await axios.post(`${API_URL}/login`, { email, password });
+            const response = await axios.post(`/login`, { email, password } ,{ withCredentials: true });
 
             if (response.status === 200) {
                 console.log("로그인 성공:", response.data);
+                setAccessToken(response.data.accessToken);
+                axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
                 navigate("/");
             }
         } catch (error) {
