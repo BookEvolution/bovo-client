@@ -1,27 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Typography, Container } from "@mui/material";
 import axios from "axios";
 import kakaoBtn from "../../assets/button/btn_kakao.png";
 
-const API_URL = ""; 
-const CLIENT_ID = ""; 
-const REDIRECT_URI = ""; 
 
 axios.defaults.withCredentials = true;
 
-const handleKakaoLogin = () => {
-    const kakaoAuthUrl = '';
-    window.location.href = kakaoAuthUrl; 
-};
-
 const Login = () => {
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
-    const [accessToken, setAccessToken] = useState(null);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleSignUp = () => {
         navigate("/sign-up/step1");
@@ -30,37 +22,43 @@ const Login = () => {
     const handleLogin = async () => {
         setEmailError("");
         setPasswordError("");
+    
 
-        // refreshToken을 httpOnly + secure 쿠키에 저장
-        // accessToken을 JSON 응답으로 받아 상태(state)로 관리
-        // API 요청 시 Authorization 헤더에 accessToken 포함
-        // CSRF 방어를 위해 withCredentials: true 적용
-        // 백엔드: HTTP 응답 Set-Cookie 헤더에 refreshToken 값을 설정하고 accessToken을 JSON에 담아 보내줘야 함
-        // 현재 의논해야 할 것들 : 백엔드 URL, CSRF 토큰 보내주는거 어떻게할지
         try {
-            const response = await axios.post(`/login`, { email, password } ,{ withCredentials: true });
+            const response = await axios.post(
+                `https://5a5f-112-158-33-80.ngrok-free.app/login`,
+                { email, password },
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
 
             if (response.status === 200) {
                 console.log("로그인 성공:", response.data);
-                setAccessToken(response.data.accessToken);
-                axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
                 navigate("/");
             }
         } catch (error) {
+            console.error("로그인 오류:", error);
             if (error.response) {
-                const status = error.response.status;
-                if (status === 404) {
-                    setEmailError("등록되지 않은 이메일입니다."); 
-                } else if (status === 401) {
-                    setPasswordError("비밀번호가 일치하지 않습니다.");
+                console.log("응답 데이터:", error.response.data);
+                console.log("응답 상태 코드:", error.response.status);
+                
+                if (error.response.status === 404) {
+                    setErrorMessage("등록되지 않은 이메일입니다.");
+                } else if (error.response.status === 401) {
+                    setErrorMessage("비밀번호가 일치하지 않습니다.");
                 } else {
-                    setEmailError("로그인 중 오류가 발생했습니다.");
+                    setErrorMessage("로그인 중 오류가 발생했습니다.");
                 }
             } else {
-                setEmailError("서버 연결 실패"); 
+                setErrorMessage("서버와의 연결에 실패했습니다.");
             }
         }
     };
+
 
     return (
         <Container sx={{ maxWidth: "45rem"}}>
@@ -187,7 +185,6 @@ const Login = () => {
                         }}
                     >
                         <img 
-                            onClick={handleKakaoLogin}
                             src={kakaoBtn} 
                             alt="카카오 로그인" 
                             style={{ width: "25rem", boxShadow: "none", cursor: "pointer" }} 
