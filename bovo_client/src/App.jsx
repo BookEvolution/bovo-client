@@ -14,7 +14,6 @@ import Note from './pages/note/Note'
 import NoteDetail from './pages/noteDetail/NoteDetail'
 import NoteEdit from './pages/noteEdit/NoteEdit'
 import NoteCombine from './pages/noteCombine/NoteCombine'
-import NoteArr from './pages/noteArr/NoteArr'
 import Forum from './pages/forum/Forum'
 import ForumMake from './pages/forumMake/ForumMake'
 import ForumChat from './pages/forumChat/ForumChat'
@@ -55,8 +54,6 @@ function App() {
             <Route path='/note/note-edit/:memo_id' element={<NoteEdit />} />
             {/* <Route path='/archive/:isbn/note-combine' element={<NoteCombine />} /> */}
             <Route path='/note/note-combine/:book_id' element={<NoteCombine />} />
-            {/* <Route path='/archive/:isbn/note-array' element={<NoteArr />} /> */}
-            <Route path='/note/note-array' element={<NoteArr />} />
             <Route path='/forum' element={<Forum />} />
             <Route path='/forum/forum-make' element={<ForumMake />} />
             <Route path='/mypage' element={<MyPage />} />

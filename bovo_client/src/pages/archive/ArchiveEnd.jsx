@@ -42,7 +42,6 @@ const ArchiveEnd = ({ searchQuery }) => {
               className={styles.bookcard}
               key={book.book_id}
               onClick={() => navigate(`/note/${book.book_id}`)}
-              style={{ cursor: "pointer" }}
             >
               <img className={styles.bookcover} src={book.cover} alt={book.title} />
               <div className={styles.bookinfo}>
