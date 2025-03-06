@@ -5,11 +5,11 @@ import { useParams } from "react-router-dom";
 import CombineModal from "./CombineModal";
 
 const NoteCombine = () => {
-  const { book_id } = useParams();
-  const [memos, setMemos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [bookInfo, setBookInfo] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const { book_id } = useParams(); // URL에서 book_id 가져오기
+  const [memos, setMemos] = useState([]); // 메모 목록 상태
+  const [loading, setLoading] = useState(true); // 데이터 로딩 상태
+  const [bookInfo, setBookInfo] = useState(null); // 책 정보 상태
+  const [modalOpen, setModalOpen] = useState(false); // 모달 상태
 
   useEffect(() => {
     if (!book_id) {
@@ -20,6 +20,7 @@ const NoteCombine = () => {
 
     const fetchBookData = async () => {
       try {
+        // API 요청하여 데이터 가져오기
         const response = await axios.get("/archive", { headers: { user_id: 1 } });
         console.log("Full API 응답:", response.data);
 
@@ -29,6 +30,7 @@ const NoteCombine = () => {
           return;
         }
 
+        // book_id와 일치하는 책 찾기
         const foundBook = response.data.books.find(
           (book) => Number(book.book_id) === Number(book_id)
         );
@@ -36,8 +38,8 @@ const NoteCombine = () => {
         console.log("찾은 책:", foundBook);
 
         if (foundBook) {
-          setBookInfo(foundBook);
-          const bookMemos = foundBook.memos || [];
+          setBookInfo(foundBook); // 책 정보 저장
+          const bookMemos = foundBook.memos || []; // 메모 리스트 저장
           console.log("책의 메모:", bookMemos);
           setMemos(bookMemos);
         } else {
@@ -55,6 +57,7 @@ const NoteCombine = () => {
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
+      {/* 책 정보 및 제목 표시 */}
       <Paper
         elevation={0}
         sx={{
@@ -86,6 +89,7 @@ const NoteCombine = () => {
           </Box>
         )}
 
+        {/* 메모 리스트 영역 */}
         <Paper
           elevation={0}
           sx={{
@@ -101,14 +105,17 @@ const NoteCombine = () => {
           }}
         >
           {loading ? (
+            // 데이터 로딩 중 메시지
             <Typography sx={{ fontSize: "1.5rem", color: "blue", textAlign: "center", mt: "2rem" }}>
               데이터 불러오는 중
             </Typography>
           ) : memos.length === 0 ? (
+            // 메모가 없는 경우 메시지
             <Typography sx={{ fontSize: "1.5rem", color: "red", textAlign: "center", mt: "2rem" }}>
               기록이 없습니다.
             </Typography>
           ) : (
+            // 메모 리스트 표시
             <Box width="100%" p={2}>
               {memos.map((memo) => (
                 <Box key={memo.memo_id} sx={{ marginBottom: "1rem", textAlign: "left", padding: "1rem" }}>
@@ -125,7 +132,8 @@ const NoteCombine = () => {
         </Paper>
       </Paper>
 
-      <Box width="41rem" display="flex" justifyContent="flex-end" mt={1}>
+      {/* 순서 변경하기 버튼 */}
+      <Box width="41rem" display="flex" justifyContent="flex-end" mt={2}>
         <Button
           variant="contained"
           disableElevation
@@ -146,6 +154,7 @@ const NoteCombine = () => {
         </Button>
       </Box>
 
+      {/* 순서 변경 모달 */}
       {modalOpen && memos.length > 0 && (
         <CombineModal open={modalOpen} onClose={() => setModalOpen(false)} memos={memos} setMemos={setMemos} />
       )}
