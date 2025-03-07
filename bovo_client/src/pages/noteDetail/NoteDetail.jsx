@@ -95,7 +95,7 @@ const NoteDetail = () => {
             }} 
           />
           
-          {/* 질문 */}
+          {/* 제목 */}
           <Typography 
             color="black" 
             sx={{ 
@@ -111,7 +111,7 @@ const NoteDetail = () => {
           </Typography>
         </Box>
 
-        {/* 답변 박스 */}
+        {/* 내용 */}
         <Paper
           elevation={0}
           sx={{
