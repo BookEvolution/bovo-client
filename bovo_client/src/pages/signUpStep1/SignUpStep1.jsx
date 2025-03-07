@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Typography, Container } from "@mui/material";
-import ProfileSelectModal from "./ProfileSelectModal";
+import ProfileBottomSheet from "../../components/profileImgBottomsheet/ProfileBottomSheet";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import logo from "../../assets/logo/logo.png";
 
-const API_URL = ""; // 백엔드 API
+const API_URL = import.meta.env.VITE_BACKEND_API_URL;
+
 
 const SignUpStep1 = () => {
     const navigate = useNavigate();
@@ -19,33 +20,33 @@ const SignUpStep1 = () => {
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
     const checkNickname = async () => {
         if (!nickname.trim()) return;
         try {
-            const response = await axios.post(`${API_URL}/check-nickname`, { nickname });
-            if (response.data.exists) {
-                setNicknameError(response.data.message || "중복된 닉네임입니다.");
-            } else {
-                setNicknameError("");
-            }
+            await axios.post(`${API_URL}/register/nickname`, { nickname }); 
+            setNicknameError("");
         } catch (error) {
-            console.error("닉네임 확인 실패", error);
+            if (error.response && error.response.status === 400) {
+                setNicknameError(error.response.data.message);
+            } else {
+                console.error("닉네임 확인 실패", error);
+            }
         }
     };
 
     const checkEmail = async () => {
         if (!email.trim()) return;
         try {
-            const response = await axios.post(`${API_URL}/check-email`, { email });
-            if (response.data.exists) {
-                setEmailError(response.data.message || "이미 가입된 이메일입니다.");
-            } else {
-                setEmailError("");
-            }
+            await axios.post(`${API_URL}/register/email`, { email }); 
+            setEmailError("");
         } catch (error) {
-            console.error("이메일 확인 실패:", error);
+            if (error.response && error.response.status === 400) {
+                setEmailError(error.response.data.message);
+            } else {
+                console.error("이메일 확인 실패:", error);
+            }
         }
     };
 
@@ -66,43 +67,44 @@ const SignUpStep1 = () => {
         }
     };
 
+    const handleProfileSelect = (profile) => {
+        setProfileImage(profile.src);
+        setIsBottomSheetOpen(false);
+    };
+
+    //사용자가 아무것도 입력하지 않은 경우의 검사가 없음 -> 추가 필요
+    //중복 확인 안하고 사용
     const handleSignUp = async () => {
         if (nicknameError || emailError || passwordError || confirmPasswordError) {
             return;
         }
-
+    
         try {
-            const response = await axios.post(`${API_URL}/register`, {
-                profile_img: profileImage,
-                nickname,
+            await axios.post(`${API_URL}/register`, {
                 email,
                 password,
-                pwd_check: confirmPassword,
+                nickname,
+                profile_picture: profileImage,
             });
-
-            if (response.status === 201) {
-                console.log("회원가입 성공:", response.data);
-                navigate("/login");
-            }
+    
+            console.log("회원가입 성공");
+            navigate("/login");
         } catch (error) {
-            if (error.response) {
-                const { status, message } = error.response.data;
-
-                if (status === 400) {
-                    if (message.includes("이메일")) setEmailError(message);
-                    if (message.includes("닉네임")) setNicknameError(message);
-                    if (message.includes("비밀번호")) setPasswordError(message);
-                }
+            if (error.response && error.response.status === 400) {
+                const message = error.response.data.message;
+                if (message.includes("이메일")) setEmailError(message);
+                if (message.includes("닉네임")) setNicknameError(message);
+                if (message.includes("비밀번호")) setPasswordError(message);
             }
         }
     };
-
+    
     return (
         <Container sx={{ width: "45rem", marginTop: "18.26rem" }}>
             <Box display="flex" flexDirection="column" alignItems="center" mb={5}>
                 <Box
                     position="relative"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => setIsBottomSheetOpen(true)}
                     sx={{
                         width: "18.75rem",
                         height: "18.75rem",
@@ -125,7 +127,6 @@ const SignUpStep1 = () => {
                     />
                 </Box>
             </Box>
-
             <Box display="flex" flexDirection="column" gap={5.2}>
                 <TextField
                     fullWidth
@@ -137,8 +138,8 @@ const SignUpStep1 = () => {
                     sx={{ backgroundColor: "#E8F1F6", borderRadius: "1.3rem", "& fieldset": { border: "none" }, padding: "0.8rem 0rem", marginTop:"2.5rem" }}
                     inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft:"2.5rem" } }}
                 />
-                {nicknameError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem"sx={{ margin:"-1.8rem", marginRight:"0.2rem"}}>{nicknameError}</Typography>}
-
+                {nicknameError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{ margin:"-1.8rem", marginRight:"0.2rem" }}>{nicknameError}</Typography>}
+                
                 <TextField
                     fullWidth
                     variant="outlined"
@@ -149,9 +150,9 @@ const SignUpStep1 = () => {
                     sx={{ backgroundColor: "#E8F1F6", borderRadius: "1.3rem", "& fieldset": { border: "none" }, padding: "0.8rem 0rem" }}
                     inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft:"2.5rem" }}}
                 />
-                {emailError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{ margin:"-1.8rem", marginRight:"0.2rem"}}>{emailError}</Typography>}
-
-                <TextField
+                {emailError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{ margin:"-1.8rem", marginRight:"0.2rem" }}>{emailError}</Typography>}
+            
+            <TextField
                     fullWidth
                     type="password"
                     variant="outlined"
@@ -184,7 +185,6 @@ const SignUpStep1 = () => {
                     variant="contained"
                     color="primary"
                     onClick={handleSignUp}
-                    // 버튼 효과랑 그림자 제거 안됨 수정 필요
                     sx={{
                         fontSize: "2.2rem",
                         fontWeight: "600",
@@ -202,7 +202,6 @@ const SignUpStep1 = () => {
                 </Button>
             </Box>
 
-            {/* 하단에 고정 필요 */}
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "7rem" }}>
                 <img src={logo} alt="Bovo 로고" style={{ width: "10rem", marginRight: "1rem" }} />
                 <Typography fontSize="1.8rem" fontWeight= "500" color="#343434" marginLeft="2rem">
@@ -210,8 +209,7 @@ const SignUpStep1 = () => {
                 </Typography>
             </Box>
 
-            {/* 프로필 모달만 완료/회원가입 성공 후 로그인 이동 모달 필요 */}
-            <ProfileSelectModal open={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={setProfileImage} />
+            <ProfileBottomSheet open={isBottomSheetOpen} onClose={() => setIsBottomSheetOpen(false)} onSelectProfile={handleProfileSelect} selectedProfile={profileImage} />
         </Container>
     );
 };

@@ -97,7 +97,7 @@ const Main = () => {
                         <Typography sx={{ fontSize: "1.6rem", color: "#6D6D6D" ,marginTop: "0.5rem"}}>
                             읽기 시작한 날: {currentBook.reading_start_date}
                         </Typography>
-                        <Box sx={{ fontSize: "2.5rem", marginTop: "0.5rem" ,marginTop: "1.7rem"}}>
+                        <Box sx={{ fontSize: "2.5rem", marginTop: "1.7rem"}}>
                             {"⭐".repeat(currentBook.book_score) + "☆".repeat(5 - currentBook.book_score)}
                         </Box>
                     </Box>
