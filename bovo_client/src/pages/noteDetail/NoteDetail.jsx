@@ -95,7 +95,7 @@ const NoteDetail = () => {
             }} 
           />
           
-          {/* 질문 */}
+          {/* 제목 */}
           <Typography 
             color="black" 
             sx={{ 
@@ -111,15 +111,15 @@ const NoteDetail = () => {
           </Typography>
         </Box>
 
-        {/* 답변 박스 */}
+        {/* 내용 */}
         <Paper
           elevation={0}
           sx={{
             width: "38rem",
             height: "55rem",
             backgroundColor: "white",
-            borderBottomLeftRadius: "20px",
-            borderBottomRightRadius: "20px",
+            borderBottomLeftRadius: "1.25rem",
+            borderBottomRightRadius: "1.25rem",
             overflowY: "auto",
             position: "absolute",
             bottom: "1.5rem",

@@ -41,7 +41,6 @@ const ArchiveWish = ({ searchQuery }) => {
               className={styles.wishcard}
               key={book.book_id}
               onClick={() => navigate(`/note/${book.book_id}`)}
-              style={{ cursor: "pointer" }}
             >
               <img className={styles.wishcover} src={book.cover} alt={book.title} />
               <div className={styles.wishinfo}>

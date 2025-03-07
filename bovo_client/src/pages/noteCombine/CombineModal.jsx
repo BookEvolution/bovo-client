@@ -3,22 +3,36 @@ import { Box, Paper, Typography, Button, IconButton } from "@mui/material";
 import { 
   DndContext, 
   closestCenter, 
-  KeyboardSensor, 
-  PointerSensor, 
+  TouchSensor, 
   useSensor, 
   useSensors,
-  DragOverlay
+  DragOverlay,
+  MouseSensor
 } from "@dnd-kit/core";
 import { 
   arrayMove, 
   SortableContext, 
-  sortableKeyboardCoordinates, 
   verticalListSortingStrategy, 
   useSortable
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import CloseIcon from "@mui/icons-material/Close";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
+
+class CustomTouchSensor extends TouchSensor {
+  static activators = [
+    {
+      eventName: 'onTouchStart',
+      handler: ({ nativeEvent: event }) => {
+        if (!event.target.closest('[data-drag-handle="true"]')) {
+          return false;
+        }
+
+        return true;
+      },
+    },
+  ];
+}
 
 const CombineModal = ({ open, onClose, memos, setMemos }) => {
   const [items, setItems] = useState([]);
@@ -32,24 +46,31 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
     }
   }, [memos]);
 
+
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    /*마우스용 */
+    useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 3, 
+        distance: 10,
       },
     }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
+
+    useSensor(CustomTouchSensor, {
+      activationConstraint: {
+        delay: 100, // 실수로 드래그되는 거 방지
+        tolerance: 5,
+      },
     })
   );
 
   const handleDragStart = (event) => {
+    console.log("Drag started:", event);
     setActiveId(event.active.id);
   };
 
   const handleDragEnd = (event) => {
+    console.log("Drag ended:", event);
     const { active, over } = event;
-    
     if (active && over && active.id !== over.id) {
       setItems((currentItems) => {
         const oldIndex = currentItems.findIndex(
@@ -58,17 +79,16 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         const newIndex = currentItems.findIndex(
           (item) => String(item.memo_id) === String(over.id)
         );
-
         const updatedItems = arrayMove(currentItems, oldIndex, newIndex);
         setMemos(updatedItems);
         return updatedItems;
       });
     }
-
     setActiveId(null);
   };
 
   const handleDragCancel = () => {
+    console.log("Drag cancelled");
     setActiveId(null);
   };
 
@@ -95,8 +115,8 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
       <Paper
         elevation={3}
         sx={{
-          width: "43rem",
-          height: "55rem",
+          width: { xs: "95%", sm: "43rem" },
+          height: { xs: "80%", sm: "55rem" },
           backgroundColor: "#E8F1F6",
           borderRadius: "1.25rem",
           padding: "1rem",
@@ -105,16 +125,15 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           alignItems: "center",
           gap: "1rem",
           position: "relative",
+          maxWidth: "100%",
+          maxHeight: "100%",
+          boxSizing: "border-box"
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <Box display="flex" justifyContent="space-between" width="100%" mb={2}>
-          <Typography sx={{ fontSize: "1.5rem", fontWeight: "bold" }}>
-            순서 변경하기
-          </Typography>
-          <IconButton onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
+          <Typography sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem" }, fontWeight: "bold" }}>순서 변경하기</Typography>
+          <IconButton onClick={onClose}><CloseIcon /></IconButton>
         </Box>
 
         <DndContext 
@@ -130,29 +149,26 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           >
             <Box
               sx={{
-                width: "34rem",
-                height: "45rem",
+                width: { xs: "100%", sm: "34rem" },
+                height: { xs: "calc(100% - 8rem)", sm: "45rem" },
                 overflowY: "auto",
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem",
+                touchAction: "auto",
+                WebkitOverflowScrolling: "touch",
+                msOverflowStyle: "-ms-autohiding-scrollbar"
               }}
             >
               {items.map((memo) => (
-                <SortableItem 
-                  key={memo.memo_id} 
-                  memo={memo} 
-                />
+                <SortableItem key={memo.memo_id} memo={memo} />
               ))}
             </Box>
           </SortableContext>
 
           <DragOverlay>
             {activeId ? (
-              <SortableItem 
-                memo={activeItem} 
-                isDragging 
-              />
+              <SortableItem memo={activeItem} isDragging />
             ) : null}
           </DragOverlay>
         </DndContext>
@@ -163,10 +179,10 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           sx={{
             backgroundColor: "#739CD4",
             color: "white",
-            fontSize: "1.5rem",
+            fontSize: { xs: "1.2rem", sm: "1.5rem" },
             borderRadius: "1.25rem",
-            width: "10rem",
-            height: "3rem",
+            width: { xs: "8rem", sm: "10rem" },
+            height: { xs: "2.5rem", sm: "3rem" },
             "&:hover": {
               backgroundColor: "#5a7fad",
             },
@@ -200,30 +216,37 @@ const SortableItem = ({ memo, isDragging }) => {
   return (
     <Paper
       ref={setNodeRef}
-      {...listeners} 
-      {...attributes}
       style={style}
       sx={{
-        width: "34rem",
-        height: "8rem",
+        width: { xs: "100%", sm: "34rem" },
+        height: { xs: "auto", sm: "8rem" },
+        minHeight: "6rem",
         padding: "1rem",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         borderRadius: "1.25rem",
         backgroundColor: "white",
-        cursor: "grab",
+        boxSizing: "border-box",
+
+        touchAction: "auto",
       }}
     >
-      <Box>
-        <Typography sx={{ fontSize: "1.2rem", fontWeight: "bold" }}>
+      <Box sx={{ width: "90%" }}>
+        <Typography sx={{ fontSize: { xs: "1rem", sm: "1.2rem" }, fontWeight: "bold" }}>
           {memo.memo_Q || "제목 없음"}
         </Typography>
-        <Typography sx={{ fontSize: "1rem", color: "gray" }}>
+        <Typography sx={{ fontSize: { xs: "0.8rem", sm: "1rem" }, color: "gray" }}>
           기록 작성 일 : {memo.memo_date || "YY.MM.DD"}
         </Typography>
       </Box>
-      <IconButton {...listeners} {...attributes} sx={{ cursor: "grab" }}>
+
+      <IconButton 
+        {...listeners} 
+        {...attributes} 
+        sx={{ cursor: "grab" }}
+        data-drag-handle="true"
+      >
         <DragHandleIcon sx={{ color: "gray" }} />
       </IconButton>
     </Paper>

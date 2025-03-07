@@ -10,14 +10,15 @@ import DeleteModal from "../../components/deleteModal/DeleteModal";
 import styles from "./Note.module.css";
 
 const NoteList = () => {
-  const { book_id } = useParams();
-  const navigate = useNavigate();
-  const [memos, setMemos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedMemoId, setSelectedMemoId] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { book_id } = useParams(); // URL에서 book_id 가져오기
+  const navigate = useNavigate(); // 페이지 이동
+  const [memos, setMemos] = useState([]); // 메모 리스트 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [selectedMemoId, setSelectedMemoId] = useState(null); // 삭제할 메모 ID 저장
+  const [isModalOpen, setIsModalOpen] = useState(false); // 삭제 모달
 
   useEffect(() => {
+    // 도서 정보에서 해당 책의 메모 목록 가져오기
     axios
       .get("/archive", { headers: { user_id: 1 } })
       .then((response) => {
@@ -31,12 +32,12 @@ const NoteList = () => {
   }, [book_id]);
 
   const handleEdit = (e, memo_id) => {
-    e.stopPropagation();
+    e.stopPropagation(); // 버블링 방지
     navigate(`/note/note-edit/${memo_id}`);
   };
 
   const handleDelete = (e, memo_id) => {
-    e.stopPropagation();
+    e.stopPropagation(); // 버블링 방지
     setSelectedMemoId(memo_id);
     setIsModalOpen(true);
   };
@@ -59,6 +60,7 @@ const NoteList = () => {
 
   return (
     <Box className={styles.noteListContainer}>
+      {/* 헤더 영역 */}
       <Box className={styles.header}>
         <p className={styles.listTitle}>노트 기록</p>
         <Box className={styles.listIcons}>
@@ -71,26 +73,31 @@ const NoteList = () => {
         </Box>
       </Box>
 
+      {/* 메모 목록이 없는 경우 */}
       {memos.length === 0 ? (
         <p className={styles.NOmemos}>작성된 메모가 없습니다.</p>
       ) : (
         <Box className={styles.noteList}>
           {memos.map((memo) => (
             <Box key={memo.memo_id}>
+              {/* 날짜 표시 */}
               <Box className={styles.Datecontainer}>
                 <p className={styles.memoDate}>{memo.memo_date}</p>
                 <div className={styles.dateLine}></div>
               </Box>
 
+              {/* 개별 메모 카드 */}
               <Box
                 className={styles.noteCard}
                 onClick={() => navigateToDetail(memo.memo_id)}
               >
                 <Box className={styles.noteContent}>
+                  {/* 제목 */}
                   {memo.memo_Q && <p className={styles.noteTitle}>{memo.memo_Q}</p>}
                   <p className={styles.noteText}>{memo.memo_A}</p>
                 </Box>
 
+                {/* 수정 및 삭제 아이콘 */}
                 <Box className={styles.cardIcons}>
                   <IconButton onClick={(e) => handleEdit(e, memo.memo_id)}>
                     <EditNoteIcon sx={{ fontSize: "3rem", color: "#739CD4" }} />
@@ -105,6 +112,7 @@ const NoteList = () => {
         </Box>
       )}
 
+      {/* 삭제 모달 */}
       <DeleteModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}

@@ -18,6 +18,7 @@ const NoteEdit = () => {
   const MAX_TITLE_LENGTH = 36;
 
   // 메모 데이터 불러오기
+
   useEffect(() => {
     if (memo_id) {
       setLoading(true);
@@ -61,7 +62,7 @@ const NoteEdit = () => {
 
     console.log("저장할 메모 데이터:", updatedMemo);
 
-    // API
+    // API put도 put인데 그냥 기록할 때 post 하기로 했는데 어떻게 할 것인지 고민
     axios
       .put(`/memos/${memo_id}`, updatedMemo, { headers: { user_id: 1 } })
       .then((response) => {

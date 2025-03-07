@@ -68,6 +68,7 @@ const NoteBottomSheet = ({ open, onClose }) => {
             <Modal 
                 open={open} 
                 onClose={onClose} 
+                disableEnforceFocus
                 sx={{ display: "flex", alignItems: "flex-end", justifyContent: "center" }}
             >
                 <Slide direction="up" in={open} mountOnEnter unmountOnExit>
@@ -216,7 +217,24 @@ const NoteBottomSheet = ({ open, onClose }) => {
                                 />
                             </Box>
                         </LocalizationProvider>
-
+                         {/* 별점 */}
+                        <Typography 
+                        sx={{ 
+                          fontSize: "1.75rem", 
+                          fontWeight: "bold", 
+                          mb: "1.5rem",
+                          mt: "1.5rem"
+                          }}>
+                            별점
+                          </Typography>
+                        <Rating 
+                          name="size-large" 
+                          value={rating / 2} 
+                          precision={0.5} 
+                          size="large" 
+                          onChange={(event, newValue) => setRating(newValue * 2)} 
+                          sx={{ mb: "2rem", fontSize: "5rem" }} 
+                        />
                         {/* 삭제 & 수정 버튼 */}
                         <Box sx={{ 
                           display: "flex", 
