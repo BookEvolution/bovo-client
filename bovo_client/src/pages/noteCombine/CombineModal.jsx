@@ -19,6 +19,21 @@ import { CSS } from "@dnd-kit/utilities";
 import CloseIcon from "@mui/icons-material/Close";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 
+class CustomTouchSensor extends TouchSensor {
+  static activators = [
+    {
+      eventName: 'onTouchStart',
+      handler: ({ nativeEvent: event }) => {
+        if (!event.target.closest('[data-drag-handle="true"]')) {
+          return false;
+        }
+
+        return true;
+      },
+    },
+  ];
+}
+
 const CombineModal = ({ open, onClose, memos, setMemos }) => {
   const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState(null);
@@ -31,33 +46,29 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
     }
   }, [memos]);
 
-  // 센서 설정 개선
+
   const sensors = useSensors(
-    // 마우스 센서 추가 (데스크톱 환경용)
+    /*마우스용 */
     useSensor(MouseSensor, {
-      // 마우스 클릭 후 드래그 활성화까지 필요한 최소 이동 거리
       activationConstraint: {
         distance: 10,
       },
     }),
-    // 모바일 터치 센서 설정 개선
-    useSensor(TouchSensor, {
-      // 롱 프레스 없이 즉시 활성화하되, 최소 이동 거리 설정
+
+    useSensor(CustomTouchSensor, {
       activationConstraint: {
-        delay: 0,
+        delay: 100, // 실수로 드래그되는 거 방지
         tolerance: 5,
       },
     })
   );
 
   const handleDragStart = (event) => {
-    // 콘솔 로그 추가 - 문제 해결에 도움됨
     console.log("Drag started:", event);
     setActiveId(event.active.id);
   };
 
   const handleDragEnd = (event) => {
-    // 콘솔 로그 추가
     console.log("Drag ended:", event);
     const { active, over } = event;
     if (active && over && active.id !== over.id) {
@@ -77,7 +88,6 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
   };
 
   const handleDragCancel = () => {
-    // 콘솔 로그 추가
     console.log("Drag cancelled");
     setActiveId(null);
   };
@@ -99,9 +109,6 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         justifyContent: "center",
         alignItems: "center",
         zIndex: 1000,
-        // 스크롤 방지 (모바일에서 중요)
-        overflow: "hidden",
-        touchAction: "none"
       }}
       onClick={onClose}
     >
@@ -118,7 +125,6 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           alignItems: "center",
           gap: "1rem",
           position: "relative",
-          // 모바일 환경 최적화
           maxWidth: "100%",
           maxHeight: "100%",
           boxSizing: "border-box"
@@ -149,9 +155,9 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem",
-                // 스크롤 가능하지만 드래그 시 스크롤 방지
-                touchAction: "pan-y",
-                WebkitOverflowScrolling: "touch"
+                touchAction: "auto",
+                WebkitOverflowScrolling: "touch",
+                msOverflowStyle: "-ms-autohiding-scrollbar"
               }}
             >
               {items.map((memo) => (
@@ -205,11 +211,6 @@ const SortableItem = ({ memo, isDragging }) => {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging || isSorting ? 0.5 : 1,
-    // 모바일 터치 최적화
-    touchAction: "none",
-    WebkitTouchCallout: "none",
-    WebkitUserSelect: "none",
-    userSelect: "none"
   };
 
   return (
@@ -226,8 +227,9 @@ const SortableItem = ({ memo, isDragging }) => {
         alignItems: "center",
         borderRadius: "1.25rem",
         backgroundColor: "white",
-        cursor: "grab",
-        boxSizing: "border-box"
+        boxSizing: "border-box",
+
+        touchAction: "auto",
       }}
     >
       <Box sx={{ width: "90%" }}>
@@ -238,7 +240,13 @@ const SortableItem = ({ memo, isDragging }) => {
           기록 작성 일 : {memo.memo_date || "YY.MM.DD"}
         </Typography>
       </Box>
-      <IconButton {...listeners} {...attributes} sx={{ cursor: "grab" }}>
+
+      <IconButton 
+        {...listeners} 
+        {...attributes} 
+        sx={{ cursor: "grab" }}
+        data-drag-handle="true"
+      >
         <DragHandleIcon sx={{ color: "gray" }} />
       </IconButton>
     </Paper>
