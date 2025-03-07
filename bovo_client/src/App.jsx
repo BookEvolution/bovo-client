@@ -32,6 +32,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          <Route path='/kakao/bovocallback' element={<KakaoCallback />} />
           <Route path='/login' element={<LoginLayout />}>
             <Route index element={<Login />}/>
           </Route>
