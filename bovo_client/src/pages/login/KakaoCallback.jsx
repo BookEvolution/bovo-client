@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_URL = ""; //백엔드 URL 넣기
+const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
 const KakaoCallback = () => {
     const navigate = useNavigate();
@@ -12,7 +12,7 @@ const KakaoCallback = () => {
         const authCode = urlParams.get("code"); //인가 코드 입력
 
         if (authCode) {
-            axios.post(`${API_URL}/auth/kakao`, { code: authCode }, { withCredentials: true })  // 쿠키 
+            axios.post(`${API_URL}/kakao/bovocallback`, { code: authCode }, { withCredentials: true })  // 쿠키 
                 .then((response) => {
                     const { isNewUser } = response.data;
 
