@@ -3,16 +3,15 @@ import { Box, Paper, Typography, Button, IconButton } from "@mui/material";
 import { 
   DndContext, 
   closestCenter, 
-  KeyboardSensor, 
-  PointerSensor, 
+  TouchSensor, 
   useSensor, 
   useSensors,
-  DragOverlay
+  DragOverlay,
+  MouseSensor
 } from "@dnd-kit/core";
 import { 
   arrayMove, 
   SortableContext, 
-  sortableKeyboardCoordinates, 
   verticalListSortingStrategy, 
   useSortable
 } from "@dnd-kit/sortable";
@@ -32,24 +31,35 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
     }
   }, [memos]);
 
+  // 센서 설정 개선
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    // 마우스 센서 추가 (데스크톱 환경용)
+    useSensor(MouseSensor, {
+      // 마우스 클릭 후 드래그 활성화까지 필요한 최소 이동 거리
       activationConstraint: {
-        distance: 3, 
+        distance: 10,
       },
     }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
+    // 모바일 터치 센서 설정 개선
+    useSensor(TouchSensor, {
+      // 롱 프레스 없이 즉시 활성화하되, 최소 이동 거리 설정
+      activationConstraint: {
+        delay: 0,
+        tolerance: 5,
+      },
     })
   );
 
   const handleDragStart = (event) => {
+    // 콘솔 로그 추가 - 문제 해결에 도움됨
+    console.log("Drag started:", event);
     setActiveId(event.active.id);
   };
 
   const handleDragEnd = (event) => {
+    // 콘솔 로그 추가
+    console.log("Drag ended:", event);
     const { active, over } = event;
-    
     if (active && over && active.id !== over.id) {
       setItems((currentItems) => {
         const oldIndex = currentItems.findIndex(
@@ -58,17 +68,17 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         const newIndex = currentItems.findIndex(
           (item) => String(item.memo_id) === String(over.id)
         );
-
         const updatedItems = arrayMove(currentItems, oldIndex, newIndex);
         setMemos(updatedItems);
         return updatedItems;
       });
     }
-
     setActiveId(null);
   };
 
   const handleDragCancel = () => {
+    // 콘솔 로그 추가
+    console.log("Drag cancelled");
     setActiveId(null);
   };
 
@@ -89,14 +99,17 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         justifyContent: "center",
         alignItems: "center",
         zIndex: 1000,
+        // 스크롤 방지 (모바일에서 중요)
+        overflow: "hidden",
+        touchAction: "none"
       }}
       onClick={onClose}
     >
       <Paper
         elevation={3}
         sx={{
-          width: "43rem",
-          height: "55rem",
+          width: { xs: "95%", sm: "43rem" },
+          height: { xs: "80%", sm: "55rem" },
           backgroundColor: "#E8F1F6",
           borderRadius: "1.25rem",
           padding: "1rem",
@@ -105,16 +118,16 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           alignItems: "center",
           gap: "1rem",
           position: "relative",
+          // 모바일 환경 최적화
+          maxWidth: "100%",
+          maxHeight: "100%",
+          boxSizing: "border-box"
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <Box display="flex" justifyContent="space-between" width="100%" mb={2}>
-          <Typography sx={{ fontSize: "1.5rem", fontWeight: "bold" }}>
-            순서 변경하기
-          </Typography>
-          <IconButton onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
+          <Typography sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem" }, fontWeight: "bold" }}>순서 변경하기</Typography>
+          <IconButton onClick={onClose}><CloseIcon /></IconButton>
         </Box>
 
         <DndContext 
@@ -130,29 +143,26 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           >
             <Box
               sx={{
-                width: "34rem",
-                height: "45rem",
+                width: { xs: "100%", sm: "34rem" },
+                height: { xs: "calc(100% - 8rem)", sm: "45rem" },
                 overflowY: "auto",
                 display: "flex",
                 flexDirection: "column",
                 gap: "1rem",
+                // 스크롤 가능하지만 드래그 시 스크롤 방지
+                touchAction: "pan-y",
+                WebkitOverflowScrolling: "touch"
               }}
             >
               {items.map((memo) => (
-                <SortableItem 
-                  key={memo.memo_id} 
-                  memo={memo} 
-                />
+                <SortableItem key={memo.memo_id} memo={memo} />
               ))}
             </Box>
           </SortableContext>
 
           <DragOverlay>
             {activeId ? (
-              <SortableItem 
-                memo={activeItem} 
-                isDragging 
-              />
+              <SortableItem memo={activeItem} isDragging />
             ) : null}
           </DragOverlay>
         </DndContext>
@@ -163,10 +173,10 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           sx={{
             backgroundColor: "#739CD4",
             color: "white",
-            fontSize: "1.5rem",
+            fontSize: { xs: "1.2rem", sm: "1.5rem" },
             borderRadius: "1.25rem",
-            width: "10rem",
-            height: "3rem",
+            width: { xs: "8rem", sm: "10rem" },
+            height: { xs: "2.5rem", sm: "3rem" },
             "&:hover": {
               backgroundColor: "#5a7fad",
             },
@@ -195,17 +205,21 @@ const SortableItem = ({ memo, isDragging }) => {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging || isSorting ? 0.5 : 1,
+    // 모바일 터치 최적화
+    touchAction: "none",
+    WebkitTouchCallout: "none",
+    WebkitUserSelect: "none",
+    userSelect: "none"
   };
 
   return (
     <Paper
       ref={setNodeRef}
-      {...listeners} 
-      {...attributes}
       style={style}
       sx={{
-        width: "34rem",
-        height: "8rem",
+        width: { xs: "100%", sm: "34rem" },
+        height: { xs: "auto", sm: "8rem" },
+        minHeight: "6rem",
         padding: "1rem",
         display: "flex",
         justifyContent: "space-between",
@@ -213,13 +227,14 @@ const SortableItem = ({ memo, isDragging }) => {
         borderRadius: "1.25rem",
         backgroundColor: "white",
         cursor: "grab",
+        boxSizing: "border-box"
       }}
     >
-      <Box>
-        <Typography sx={{ fontSize: "1.2rem", fontWeight: "bold" }}>
+      <Box sx={{ width: "90%" }}>
+        <Typography sx={{ fontSize: { xs: "1rem", sm: "1.2rem" }, fontWeight: "bold" }}>
           {memo.memo_Q || "제목 없음"}
         </Typography>
-        <Typography sx={{ fontSize: "1rem", color: "gray" }}>
+        <Typography sx={{ fontSize: { xs: "0.8rem", sm: "1rem" }, color: "gray" }}>
           기록 작성 일 : {memo.memo_date || "YY.MM.DD"}
         </Typography>
       </Box>

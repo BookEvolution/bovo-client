@@ -84,7 +84,7 @@ const NoteCombine = () => {
             alignItems: "center", 
             }}>
             <Box sx={{ 
-                width: "0.5rem", 
+                width: "0.3rem", 
                 height: "8rem",
                 mr: "1rem",
                 backgroundColor: "#739CD4" 
