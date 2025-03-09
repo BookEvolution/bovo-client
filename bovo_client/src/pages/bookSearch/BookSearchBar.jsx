@@ -1,4 +1,3 @@
-import React from "react";
 import { TextField, InputAdornment, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "./BookSearch.module.css";
