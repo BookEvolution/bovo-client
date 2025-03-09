@@ -1,8 +1,9 @@
+import PropTypes from "prop-types";
 import { Tabs, Tab, Box, TextField, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 const ArchiveTabs = ({ currentTab, setCurrentTab, searchQuery, setSearchQuery, bookCount }) => {
-  const handleChange = (event, newValue) => {
+  const handleChange = (newValue) => {
     setCurrentTab(newValue);
     setSearchQuery("");
   };
@@ -49,14 +50,14 @@ const ArchiveTabs = ({ currentTab, setCurrentTab, searchQuery, setSearchQuery, b
           marginTop: "2rem",
         }}
       >
-      <SearchIcon 
-        sx={{ 
-          color: "#739CD4", 
-          fontSize: "3rem", 
-          marginRight: "1rem",
-          marginLeft: "1rem"
-        }} 
-      />
+        <SearchIcon 
+          sx={{ 
+            color: "#739CD4", 
+            fontSize: "3rem", 
+            marginRight: "1rem",
+            marginLeft: "1rem"
+          }} 
+        />
         <TextField
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -72,24 +73,33 @@ const ArchiveTabs = ({ currentTab, setCurrentTab, searchQuery, setSearchQuery, b
         />
       </Box>
 
-      {/* 총 권수*/}
+      {/* 총 권수 */}
       {searchQuery === "" && (
-      <Typography
-        sx={{
-          marginTop: "1rem",
-          marginLeft: "2rem",
-          fontSize: "1.5rem",
-          fontWeight: "bold",
-          color: "black",
-          textAlign: "left",
-          width: "43rem",
-        }}
-      >
-        총 {bookCount}권
-      </Typography>
+        <Typography
+          sx={{
+            marginTop: "1rem",
+            marginLeft: "2rem",
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            color: "black",
+            textAlign: "left",
+            width: "43rem",
+          }}
+        >
+          총 {bookCount}권
+        </Typography>
       )}
     </Box>
   );
+};
+
+// PropTypes 정의
+ArchiveTabs.propTypes = {
+  currentTab: PropTypes.string.isRequired,
+  setCurrentTab: PropTypes.func.isRequired,
+  searchQuery: PropTypes.string.isRequired,
+  setSearchQuery: PropTypes.func.isRequired,
+  bookCount: PropTypes.number.isRequired,
 };
 
 export default ArchiveTabs;

@@ -1,28 +1,22 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
+import useBooks from "../hooks/useBooks";
 import ArchiveTabs from "./ArchiveTabs";
 import ArchiveIng from "./ArchiveIng";
 import ArchiveEnd from "./ArchiveEnd";
 import ArchiveWish from "./ArchiveWish";
-import styles from './Archive.module.css';
+import styles from "./Archive.module.css";
 
 const Archive = () => {
+  const { books, loading, error } = useBooks();
   const [currentTab, setCurrentTab] = useState("ing");
   const [searchQuery, setSearchQuery] = useState("");
-  const [bookCount, setBookCount] = useState(0);
 
-  useEffect(() => {
-    axios
-      .get("/archive", { headers: { user_id: 1 } })
-      .then((response) => {
-        const books = response.data?.books || [];
-        const filteredBooks = books.filter((book) => book.status === currentTab);
-        setBookCount(filteredBooks.length);
-      })
-      .catch(() => {
-        setBookCount(0);
-      });
-  }, [currentTab]);
+  const filteredBooks = books.filter((book) => book.status === currentTab);
+  const displayedBooks = searchQuery
+    ? filteredBooks.filter((book) =>
+        book.title.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : filteredBooks;
 
   return (
     <div className={styles.container}>
@@ -31,11 +25,24 @@ const Archive = () => {
         setCurrentTab={setCurrentTab} 
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        bookCount={bookCount}  
+        bookCount={filteredBooks.length}  
       />
-      {currentTab === "ing" && <ArchiveIng searchQuery={searchQuery} />}
-      {currentTab === "end" && <ArchiveEnd searchQuery={searchQuery} />}
-      {currentTab === "wish" && <ArchiveWish searchQuery={searchQuery} />}
+
+      {loading ? (
+        <div className={styles.loading}>도서 목록을 불러오고 있습니다.</div>
+      ) : error ? (
+        <div className={styles.error}>목록을 불러오는 중 오류가 발생했습니다.</div>
+      ) : displayedBooks.length > 0 ? (
+        currentTab === "ing" ? (
+          <ArchiveIng books={displayedBooks} />
+        ) : currentTab === "end" ? (
+          <ArchiveEnd books={displayedBooks} />
+        ) : (
+          <ArchiveWish books={displayedBooks} />
+        )
+      ) : (
+        <div className={styles.nobooks}>검색 결과가 없습니다.</div>
+      )}
     </div>
   );
 };
