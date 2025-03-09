@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Typography, Button, Modal } from "@mui/material";
 
 const NoteCompleteModal = ({ open, onClose, book, onMoveToArchive }) => {

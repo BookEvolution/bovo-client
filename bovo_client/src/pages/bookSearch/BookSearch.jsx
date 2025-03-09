@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { Box, FormControl, MenuItem, Select, Typography } from "@mui/material";
 import BookSearchBar from "./BookSearchBar";
 import BookList from "./BookList";
 import styles from "./BookSearch.module.css";
 
-const KAKAO_API_KEY = "563b070f600c9756881de5dd8104fbfb";
+const SEARCH_API = import.meta.env.VITE_KAKAO_SEARCH_API_KEY;
 
 const BookSearch = () => {
     const [books, setBooks] = useState([]); 
@@ -25,10 +25,11 @@ const BookSearch = () => {
                 params: {
                     query: query,
                     sort: sort, 
-                    size: 50, 
+                    page: 1,
+                    size: 12, 
                 },
                 headers: {
-                    Authorization: `KakaoAK 563b070f600c9756881de5dd8104fbfb`,
+                    Authorization: `KakaoAK ${SEARCH_API}`,
                 },
             });
 

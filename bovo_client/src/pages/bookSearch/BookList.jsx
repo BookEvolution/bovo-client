@@ -1,5 +1,4 @@
-import React from "react";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import styles from "./BookSearch.module.css";
 
