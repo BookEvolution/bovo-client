@@ -1,8 +1,8 @@
+import { bookPropType } from "../../utils/propTypes";
 import PropTypes from "prop-types";
-import { bookPropType } from "../utils/propTypes";
 import { useNavigate } from "react-router-dom";
 import Rating from "@mui/material/Rating";
-import styles from "./components/Archive.module.css";
+import styles from "./Archive.module.css";
 
 const ArchiveEnd = ({ books }) => {
   const navigate = useNavigate();

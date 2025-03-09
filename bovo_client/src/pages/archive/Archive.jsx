@@ -1,10 +1,10 @@
 import { useState } from "react";
-import useBooks from "../hooks/useBooks";
-import ArchiveTabs from "./ArchiveTabs";
-import ArchiveIng from "./ArchiveIng";
-import ArchiveEnd from "./ArchiveEnd";
-import ArchiveWish from "./ArchiveWish";
-import styles from "./Archive.module.css";
+import useBooks from "../../hooks/useBooks";
+import ArchiveTabs from "../../components/archive/ArchiveTabs";
+import ArchiveIng from "../../components/archive/ArchiveIng";
+import ArchiveEnd from "../../components/archive/ArchiveEnd";
+import ArchiveWish from "../../components/archive/ArchiveWish";
+import styles from "../../components/archive/Archive.module.css";
 
 const Archive = () => {
   const { books, loading, error } = useBooks();
