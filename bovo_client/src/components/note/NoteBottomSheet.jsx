@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import useDelete from "../../hooks/useDelete";
 import DeleteModal from "../deleteModal/DeleteModal";
 
 const NoteBottomSheet = ({ open, onClose, book }) => {
@@ -41,6 +42,12 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
     const handleSave = () => {
         onClose();
     };
+
+    const { deleteItem } = useDelete();
+    const handleDeleteBook = () => {
+  deleteItem(book.book_id, "book", () => setOpenDeleteModal(false));
+    };
+
 
     return (
         <>
@@ -283,7 +290,11 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                 </Slide>
             </Modal>
 
-            <DeleteModal open={openDeleteModal} onClose={() => setOpenDeleteModal(false)} />
+            <DeleteModal
+                open={openDeleteModal}
+                 onClose={() => setOpenDeleteModal(false)}
+                onConfirm={handleDeleteBook}
+            />;
         </>
     );
 };

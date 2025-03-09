@@ -8,9 +8,11 @@ import DeleteModal from "../../components/deleteModal/DeleteModal";
 import styles from "./Note.module.css";
 import { bookPropType } from "../../utils/propTypes";
 import { useState } from "react";
+import useDelete from "../../hooks/useDelete";
 
 const NoteList = ({ book }) => {
   const navigate = useNavigate();
+  const { deleteItem } = useDelete();
   const [memos, setMemos] = useState(book.memos || []);
   const [selectedMemoId, setSelectedMemoId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,6 +26,13 @@ const NoteList = ({ book }) => {
     e.stopPropagation();
     setSelectedMemoId(memo_id);
     setIsModalOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    deleteItem(selectedMemoId, "memo", () => {
+      setMemos(memos.filter((memo) => memo.memo_id !== selectedMemoId));
+      setIsModalOpen(false);
+    });
   };
 
   const navigateToNoteCombine = () => {
@@ -78,11 +87,7 @@ const NoteList = ({ book }) => {
       <DeleteModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        memoId={selectedMemoId}
-        onDelete={(memoId) => {
-          setMemos(memos.filter((memo) => memo.memo_id !== memoId));
-          setIsModalOpen(false);
-        }}
+        onConfirm={handleDeleteConfirm}
       />
     </Box>
   );
