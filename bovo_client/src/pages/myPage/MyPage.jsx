@@ -8,15 +8,36 @@ import MenuList from "../../components/myPageListMenu/MenuList";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleLogoutModal } from "../../store/logout/LogeoutSlice";
 import LogoutModal from "../../components/logoutModal/LogoutModal";
+import { useEffect, useState } from "react";
+import { fetchMyPageData } from "../../api/UserApi";
 
 const MyPage = () => {
+    const [userData, setUserData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isLogout = useSelector((state) => state.logout.isLogout);
+    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjIsImlhdCI6MTc0MTUxNzI0NSwiZXhwIjoxNzQxNTIwODQ1fQ.GAzTiYvPtZOUAdxchgQZ-7zVMvDEKoAlJXRct5QGKK0';
 
     const handleLogout = (state) => {
         dispatch(toggleLogoutModal(state));
     };
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+            try {
+                await fetchMyPageData(token);
+            } catch (err) {
+                setError("데이터를 불러오는 중 오류가 발생했습니다.", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <Container className={styles.myPageContainer}>

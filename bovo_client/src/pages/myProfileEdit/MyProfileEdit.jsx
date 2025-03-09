@@ -3,21 +3,51 @@ import SearchIcon from "@mui/icons-material/Search";
 import profile6 from "../../assets/profile/profile_6.png";
 import styles from "./MyProfileEdit.module.css";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileBottomSheet from "../../components/profileImgBottomSheet/ProfileBottomSheet";
+import { editUserProfile, fetchMyProfileEditData } from "../../api/UserApi";
  
 const MyProfileEdit = () => {
     const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
     const [selectedProfile, setSelectedProfile] = useState({ key: "profile_6", src: profile6 });
-    const {register, handleSubmit, watch, formState: {isSubmitting, errors, isValid }} = useForm({mode : "onChange", defaultValues: { nickname: "", password: "", confirmPassword: "" }}); //프로필 수정 유효성 검사
+    const {register, handleSubmit, watch, setValue, formState: {isSubmitting, errors, isValid }} = useForm({mode : "onChange", defaultValues: { nickname: "", password: "", confirmPassword: "" }}); //프로필 수정 유효성 검사
+    const [profileData, setProfileData] = useState(null);
+
+    useEffect(() => {
+        const loadProfileData = async () => {
+            try {
+                const data = await fetchMyProfileEditData(token);
+                setProfileData(data);
+                setValue("nickname", profileData.nickname || "");
+                // setSelectedProfile({ key: data.profileImage, src: data.profileImageUrl }); // 프로필 이미지 설정
+            } catch (error) {
+                console.error("프로필 데이터를 불러오는 중 오류 발생:", error);
+            }
+        };
+
+        loadProfileData();
+    }, []);
 
     const nameRegex = /^\S+$/;
     const passwordRegex = /^[A-Za-z0-9]+$/;
 
     const password = watch("password");
 
-    const onSubmit = (data) => {
-        console.log("입력 데이터:", data);
+    const onSubmit = async (data) => {
+        // 비밀번호가 비어있다면 null로 설정
+        const updatedData = {
+            profile_pictures: selectedProfile.src,
+            nickname: data.nickname,
+            password: data.password || null, // 비밀번호 변경하지 않으면 null
+        };
+    
+        try {
+            const response = await editUserProfile(token, updatedData); // 프로필 수정 요청
+            console.log("수정된 프로필:", response);
+            // 수정 성공 후 UI 업데이트 또는 리디렉션 처리
+        } catch (error) {
+            console.error("프로필 수정 실패:", error);
+        }
     };
 
     return (
