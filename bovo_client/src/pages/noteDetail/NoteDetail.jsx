@@ -1,54 +1,34 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Box, Typography, Button, Paper } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import DeleteModal from "../../components/deleteModal/DeleteModal";
 import useDelete from "../../hooks/useDelete";
+import useBooks from "../../hooks/useBooks";
 
 const NoteDetail = () => {
   const { memo_id } = useParams();
   const navigate = useNavigate();
   const { deleteItem } = useDelete();
-  const [memo, setMemo] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { getMemoById, loading } = useBooks();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    axios
-      .get("/archive", { headers: { user_id: 1 } })
-      .then((response) => {
-        if (!response.data || !response.data.books) {
-          setMemo(null);
-          return;
-        }
-
-        const foundMemo = response.data.books
-          .flatMap((book) => book.memos?.map((m) => ({ ...m, book_id: book.book_id })) || [])
-          .find((memo) => Number(memo.memo_id) === Number(memo_id));
-
-        setMemo(foundMemo || null);
-      })
-      .catch(() => setMemo(null))
-      .finally(() => setLoading(false));
-  }, [memo_id]);
+  const memo = getMemoById(memo_id);
 
   const handleDeleteConfirm = () => {
     if (!memo?.book_id) {
       console.error("book_id를 찾을 수 없음");
       return;
     }
-  
+
     deleteItem(memo_id, "memo", memo.book_id, () => navigate(`/note/${memo.book_id}`));
   };
-  
+
   const handleEditMemo = () => {
     navigate(`/note/note-edit/${memo_id}`);
   };
 
   if (loading) return <Typography>메모를 불러오는 중입니다.</Typography>;
-  if (!loading && !memo) {
-    return <Typography>해당 메모를 찾을 수 없습니다.</Typography>;
-  }  
+  if (!memo) return <Typography>해당 메모를 찾을 수 없습니다.</Typography>;
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" p={4}>
