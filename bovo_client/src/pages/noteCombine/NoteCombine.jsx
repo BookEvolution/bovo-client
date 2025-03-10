@@ -22,28 +22,25 @@ const NoteCombine = () => {
   const bookInfo = book_id ? getBookById(book_id) : null;
   const memos = book_id ? getMemosByBookId(book_id) || [] : [];
 
-  // 컴포넌트가 마운트되거나 memos가 변경될 때 localMemos 업데이트
   useEffect(() => {
-    if (memos && Array.isArray(memos) && memos.length > 0) {
-      setLocalMemos([...memos]);
-    } else {
-      setLocalMemos([]);
+    if (!modalOpen && memos && Array.isArray(memos)) {
+      setLocalMemos([...memos]); // 모달이 닫힌 후에만 localMemos 업데이트
     }
-  }, [memos]);
+  }, [memos, modalOpen]);  
 
   const handleUpdateMemos = (updatedMemos) => {
     if (!updatedMemos || !Array.isArray(updatedMemos)) return;
-    
-    // 로컬 상태 업데이트
-    setLocalMemos(updatedMemos);
-    
-    // 각 메모에 순서 정보를 추가하여 업데이트
+  
+    setLocalMemos(updatedMemos); // 즉시 반영
+  
     updatedMemos.forEach((memo, index) => {
-      if (memo && memo.memo_id) {
+      if (memo.memo_id) {
         updateMemo(memo.memo_id, { ...memo, order: index });
       }
     });
-  };
+  
+    setModalOpen(false); // 모달 닫기
+  };  
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
