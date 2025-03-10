@@ -1,4 +1,4 @@
-import { Box, Paper, Typography, Button, IconButton } from "@mui/material";
+import { Box, Typography, Button, IconButton } from "@mui/material";
 import { DndContext, closestCenter, DragOverlay } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import CloseIcon from "@mui/icons-material/Close";
@@ -39,8 +39,7 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
       }}
       onClick={handleCancel} 
     >
-      <Paper
-        elevation={3}
+      <Box
         sx={{
           width: { xs: "95%", sm: "43rem" },
           height: { xs: "80%", sm: "55rem" },
@@ -59,7 +58,7 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <Box display="flex" justifyContent="space-between" width="100%" mb={2}>
-          <Typography sx={{ fontSize: "1.5rem", fontWeight: "bold" }}>순서 변경하기</Typography>
+          <Typography sx={{ fontSize: "2rem", fontWeight: "bold" }}>순서 변경하기</Typography>
           <IconButton onClick={handleCancel}><CloseIcon /></IconButton>
         </Box>
 
@@ -108,7 +107,7 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         >
           정렬하기
         </Button>
-      </Paper>
+      </Box>
     </Box>
   );
 };
