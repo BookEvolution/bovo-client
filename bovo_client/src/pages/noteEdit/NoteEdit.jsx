@@ -1,98 +1,76 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, Button, Paper } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import NoteTemplate from "../../components/templateModal/NoteTemplate";
+import useBooks from "../../hooks/useBooks";
 
 const NoteEdit = () => {
   const { memo_id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const { getMemoById, updateMemo, createMemo, loading } = useBooks();
+  const memo = getMemoById(memo_id);
+
   const [loadedMemo, setLoadedMemo] = useState({
     memo_Q: "",
     memo_A: "",
-    memo_date: new Date().toLocaleDateString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit" })
+    memo_date: new Date().toLocaleDateString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit" }),
   });
+
   const [titleFocused, setTitleFocused] = useState(false);
   const [templateModalOpen, setTemplateModalOpen] = useState(false);
   const MAX_TITLE_LENGTH = 36;
 
-  // 메모 데이터 불러오기
-
   useEffect(() => {
-    if (memo_id) {
-      setLoading(true);
-      axios
-        .get("/archive", { headers: { user_id: 1 } })
-        .then((response) => {
-          if (!response.data || !response.data.books) {
-            return;
-          }
-
-          const foundMemo = response.data.books
-            .flatMap((book) => book.memos || [])
-            .find((memo) => Number(memo.memo_id) === Number(memo_id));
-
-          if (foundMemo) {
-            setLoadedMemo({
-              memo_Q: foundMemo.memo_Q || "",
-              memo_A: foundMemo.memo_A || "",
-              memo_date: foundMemo.memo_date || new Date().toLocaleDateString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit" })
-            });
-          }
-        })
-        .catch((error) => {
-          console.error("메모 불러오기 실패:", error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      setLoading(false);
+    if (memo) {
+      setLoadedMemo({
+        memo_Q: memo.memo_Q || "",
+        memo_A: memo.memo_A || "",
+        memo_date: memo.memo_date || new Date().toLocaleDateString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit" }),
+      });
     }
-  }, [memo_id]);
+  }, [memo]);
 
-  // 수정된 메모 저장
-  const handleSaveMemo = () => {
+  const handleSaveMemo = async () => {
+    if (!loadedMemo.memo_Q || !loadedMemo.memo_A) {
+      console.error("오류: 제목과 내용이 비어있습니다.");
+      return;
+    }
+
     const updatedMemo = {
-      memo_id: memo_id,
       memo_Q: loadedMemo.memo_Q,
-      memo_A: loadedMemo.memo_A
+      memo_A: loadedMemo.memo_A,
     };
 
-    console.log("저장할 메모 데이터:", updatedMemo);
+    let memoIdToNavigate;
 
-    // API put도 put인데 그냥 기록할 때 post 하기로 했는데 어떻게 할 것인지 고민
-    axios
-      .put(`/memos/${memo_id}`, updatedMemo, { headers: { user_id: 1 } })
-      .then((response) => {
-        console.log("메모 수정 성공:", response);
-        navigate(`/note/${memo_id}`); // 상세 페이지로 돌아가기
-      })
-      .catch((error) => {
-        console.error("메모 수정 실패:", error);
-      });
+    if (memo_id) {
+      console.log("수정할 메모:", updatedMemo);
+      const success = await updateMemo(memo_id, updatedMemo);
+      if (success) memoIdToNavigate = memo_id;
+    } else {
+      console.log("새로운 메모 저장:", updatedMemo);
+      const newMemoId = await createMemo("1", updatedMemo); //저거 넘버 가져와야하는데
+      if (newMemoId) memoIdToNavigate = newMemoId;
+    }
+
+    if (memoIdToNavigate) {
+      navigate(`/note/note-detail/${memoIdToNavigate}`);
+      window.location.reload();
+    }
   };
 
-  // 템플릿 모달 열기
-  const handleOpenTemplateModal = () => {
-    setTemplateModalOpen(true);
-  };
-
-  // 템플릿 모달 닫기
-  const handleCloseTemplateModal = () => {
-    setTemplateModalOpen(false);
-  };
-
-  // 선택된 템플릿 적용
+  const handleOpenTemplateModal = () => setTemplateModalOpen(true);
+  const handleCloseTemplateModal = () => setTemplateModalOpen(false);
   const handleApplyTemplate = (templateContent) => {
-    setLoadedMemo({
-      ...loadedMemo,
-      memo_Q: templateContent
-    });
+    setLoadedMemo({ ...loadedMemo, memo_Q: templateContent });
     setTemplateModalOpen(false);
   };
 
+  if (loading) {
+    return <Typography>메모를 불러오는 중입니다.</Typography>;
+  }
+
+  
   return (
     <Box 
       display="flex"
@@ -178,8 +156,7 @@ const NoteEdit = () => {
       ) : (
         <>
           {/* 질문 박스 */}
-          <Paper
-            elevation={0}
+          <Box
             sx={{
               width: "41rem",
               height: "62.75rem",
@@ -240,8 +217,7 @@ const NoteEdit = () => {
             </Box>
 
             {/* 답변 박스 */}
-            <Paper
-              elevation={0}
+            <Box
               sx={{
                 width: "38rem",
                 height: "51rem",
@@ -271,8 +247,8 @@ const NoteEdit = () => {
                   padding: "1.5rem",
                 }}
               />
-            </Paper>
-          </Paper>
+            </Box>
+          </Box>
 
           {/* 기록하기 버튼 */}
           <Button 

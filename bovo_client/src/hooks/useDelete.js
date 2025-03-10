@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useBooks } from "./useBooks";
+import useBooks from "./useBooks";
 
 const useDelete = () => {
   const navigate = useNavigate();
