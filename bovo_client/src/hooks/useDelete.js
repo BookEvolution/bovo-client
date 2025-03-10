@@ -1,35 +1,35 @@
 import { useNavigate } from "react-router-dom";
-import useBooks from "./useBooks";
+import axios from "axios";
 
 const useDelete = () => {
   const navigate = useNavigate();
-  const { deleteMemo, deleteBook } = useBooks();
 
   const deleteItem = async (targetId, targetType, bookId, onSuccess = () => {}) => {
+    const endpoint = targetType === "memo" ? `/memos/${targetId}` : `/books/${targetId}`;
+
     try {
-      let deleteSuccess = false;
+      // 개발 환경에서 Mock 삭제 처리
+      if (import.meta.env.MODE === "development") {
+        console.log(`[Mock] ${targetType} ${targetId} 삭제됨`);
+        onSuccess();
 
-      if (targetType === "memo") {
-        deleteSuccess = await deleteMemo(targetId);
-      } else if (targetType === "book") {
-        deleteSuccess = await deleteBook(targetId);
-      }
-
-      if (!deleteSuccess) {
-        console.error(`${targetType} 삭제 실패`);
+        // 삭제 후 이동 처리
+        if (targetType === "book") navigate("/archive");
+        else navigate(`/note/${bookId}`);
         return;
       }
+
+      // 실제 삭제 API 요청
+      await axios.delete(endpoint, { headers: { user_id: 1 } });
 
       console.log(`${targetType} 삭제 성공`);
       onSuccess();
 
-      if (targetType === "book") {
-        navigate("/archive");
-      } else if (bookId) {
-        navigate(`/note/${bookId}`);
-      }
+      // 삭제 후 리다이렉트 처리
+      if (targetType === "book") navigate("/archive");
+      else if (bookId) navigate(`/note/${bookId}`);
     } catch (error) {
-      console.error("삭제 중 오류 발생:", error);
+      console.error("삭제 실패:", error);
     }
   };
 

@@ -37,15 +37,19 @@ class CustomTouchSensor extends TouchSensor {
 const CombineModal = ({ open, onClose, memos, setMemos }) => {
   const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState(null);
+  // 원본 메모를 복제해서 저장하는 상태 추가
+  const [originalMemos, setOriginalMemos] = useState([]);
 
   useEffect(() => {
     if (memos && Array.isArray(memos) && memos.length > 0) {
-      setItems(memos);
+      // 원본 메모 상태를 저장
+      setOriginalMemos([...memos]);
+      setItems([...memos]);
     } else {
+      setOriginalMemos([]);
       setItems([]);
     }
   }, [memos]);
-
 
   const sensors = useSensors(
     /*마우스용 */
@@ -79,9 +83,8 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         const newIndex = currentItems.findIndex(
           (item) => String(item.memo_id) === String(over.id)
         );
-        const updatedItems = arrayMove(currentItems, oldIndex, newIndex);
-        setMemos(updatedItems);
-        return updatedItems;
+        // 로컬 상태만 변경하고 부모 컴포넌트에는 아직 변경 사항을 알리지 않음
+        return arrayMove(currentItems, oldIndex, newIndex);
       });
     }
     setActiveId(null);
@@ -90,6 +93,20 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
   const handleDragCancel = () => {
     console.log("Drag cancelled");
     setActiveId(null);
+  };
+
+  // 정렬하기 버튼 클릭 시 실행되는 함수
+  const handleApplyOrder = () => {
+    // 정렬된 아이템을 부모 컴포넌트에 전달
+    setMemos(items);
+    onClose();
+  };
+
+  // 취소 시 원래 순서로 돌아가기
+  const handleCancel = () => {
+    // 원본 메모 상태로 복원하고 모달을 닫음
+    setItems(originalMemos);
+    onClose();
   };
 
   if (!open) return null;
@@ -110,7 +127,7 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         alignItems: "center",
         zIndex: 1000,
       }}
-      onClick={onClose}
+      onClick={handleCancel} // 배경 클릭 시 취소 동작
     >
       <Paper
         elevation={3}
@@ -133,7 +150,7 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
       >
         <Box display="flex" justifyContent="space-between" width="100%" mb={2}>
           <Typography sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem" }, fontWeight: "bold" }}>순서 변경하기</Typography>
-          <IconButton onClick={onClose}><CloseIcon /></IconButton>
+          <IconButton onClick={handleCancel}><CloseIcon /></IconButton>
         </Box>
 
         <DndContext 
@@ -176,6 +193,7 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         <Button
           variant="contained"
           disableElevation
+          onClick={handleApplyOrder} // 정렬하기 버튼에 함수 연결
           sx={{
             backgroundColor: "#739CD4",
             color: "white",
@@ -228,7 +246,6 @@ const SortableItem = ({ memo, isDragging }) => {
         borderRadius: "1.25rem",
         backgroundColor: "white",
         boxSizing: "border-box",
-
         touchAction: "auto",
       }}
     >
