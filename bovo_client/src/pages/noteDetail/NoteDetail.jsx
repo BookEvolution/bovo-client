@@ -37,16 +37,18 @@ const NoteDetail = () => {
       console.error("book_id를 찾을 수 없음");
       return;
     }
-
-    deleteItem(memo_id, "memo", () => navigate(`/note/${memo.book_id}`));
+  
+    deleteItem(memo_id, "memo", memo.book_id, () => navigate(`/note/${memo.book_id}`));
   };
-
+  
   const handleEditMemo = () => {
     navigate(`/note/note-edit/${memo_id}`);
   };
 
   if (loading) return <Typography>메모를 불러오는 중입니다.</Typography>;
-  if (!memo) return <Typography>해당 메모를 찾을 수 없습니다.</Typography>;
+  if (!loading && !memo) {
+    return <Typography>해당 메모를 찾을 수 없습니다.</Typography>;
+  }  
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" p={4}>

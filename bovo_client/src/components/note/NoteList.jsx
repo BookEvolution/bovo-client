@@ -29,11 +29,14 @@ const NoteList = ({ book }) => {
   };
 
   const handleDeleteConfirm = () => {
-    deleteItem(selectedMemoId, "memo", () => {
-      setMemos(memos.filter((memo) => memo.memo_id !== selectedMemoId));
+    if (!selectedMemoId) return;
+  
+    deleteItem(selectedMemoId, "memo", book.book_id, () => {
+      setMemos((prevMemos) => (prevMemos ?? []).filter((memo) => memo.memo_id !== selectedMemoId)); // ✅ undefined 방지
       setIsModalOpen(false);
     });
   };
+  
 
   const navigateToNoteCombine = () => {
     navigate(`/note/note-combine/${book.book_id}`);

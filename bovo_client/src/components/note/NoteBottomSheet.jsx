@@ -45,12 +45,16 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
 
     const { deleteItem } = useDelete();
     const handleDeleteBook = () => {
-  deleteItem(book.book_id, "book", () => setOpenDeleteModal(false));
-    };
+        deleteItem(book.book_id, "book", null, () => {
+          setOpenDeleteModal(false);
+          onClose();
+        });
+      };
 
 
     return (
         <>
+            {/* 모달 */}        
             <Modal 
                 open={open} 
                 onClose={onClose} 
@@ -60,7 +64,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                     alignItems: "flex-end", 
                     justifyContent: "center" 
                 }}
-            >
+                >
                 <Slide direction="up" in={open} mountOnEnter unmountOnExit>
                     <Box
                         sx={{
@@ -73,6 +77,17 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                             textAlign: "center",
                         }}
                     >
+                        
+                    {/* 상단 바 */}
+                    <Box 
+                        sx={{
+                            width: "20rem",
+                            height: "0.4rem",
+                            backgroundColor: "#739CD4",
+                            margin: "0 auto 2rem"
+                        }} 
+                    />
+                        {/* 독서 상태 선택 */}
                         <Typography 
                             sx={{ 
                                 fontSize: "1.75rem", 
@@ -82,6 +97,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                         >
                             독서 상태
                         </Typography>
+                        {/* 독서 상태 버튼 */}
                         <ToggleButtonGroup 
                             value={status} 
                             exclusive 
@@ -226,6 +242,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                             </Box>
                         </LocalizationProvider>
 
+                         {/* 별점 */}
                         <Typography 
                             sx={{ 
                                 fontSize: "1.75rem", 
@@ -248,6 +265,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                             }} 
                         />
 
+                         {/* 삭제 수정 버튼 */}
                         <Box 
                             sx={{ 
                                 display: "flex", 
