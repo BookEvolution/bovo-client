@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import CombineModal from "../../components/combimeModal/CombineModal";
+import CombineModal from "../../components/combineModal/CombineModal";
 
 const NoteCombine = () => {
   const { book_id } = useParams(); // URL에서 book_id 가져오기
