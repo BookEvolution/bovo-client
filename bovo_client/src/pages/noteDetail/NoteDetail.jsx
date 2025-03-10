@@ -3,10 +3,12 @@ import { Box, Typography, Button, Paper } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import DeleteModal from "../../components/deleteModal/DeleteModal";
+import useDelete from "../../hooks/useDelete";
 
 const NoteDetail = () => {
   const { memo_id } = useParams();
   const navigate = useNavigate();
+  const { deleteItem } = useDelete();
   const [memo, setMemo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,7 +23,7 @@ const NoteDetail = () => {
         }
 
         const foundMemo = response.data.books
-          .flatMap((book) => book.memos || [])
+          .flatMap((book) => book.memos?.map((m) => ({ ...m, book_id: book.book_id })) || [])
           .find((memo) => Number(memo.memo_id) === Number(memo_id));
 
         setMemo(foundMemo || null);
@@ -30,44 +32,29 @@ const NoteDetail = () => {
       .finally(() => setLoading(false));
   }, [memo_id]);
 
-  // 메모 삭제
-  const handleDeleteMemo = (memoId) => {
-    console.log(`시도하는 메모 삭제 ID: ${memoId}`);
-    
-    axios
-      .delete(`/memos/${memoId}`, { headers: { user_id: 1 } })
-      .then((response) => {
-        console.log("삭제 성공:", response);
-        navigate('/archive');
-      })
-      .catch((error) => {
-        console.error("메모 삭제 실패:", error);
-      })
-      .finally(() => {
-        setIsModalOpen(false);
-      });
+  const handleDeleteConfirm = () => {
+    if (!memo?.book_id) {
+      console.error("book_id를 찾을 수 없음");
+      return;
+    }
+  
+    deleteItem(memo_id, "memo", memo.book_id, () => navigate(`/note/${memo.book_id}`));
   };
-
-  // 메모 수정 페이지로
+  
   const handleEditMemo = () => {
     navigate(`/note/note-edit/${memo_id}`);
   };
 
-  if (loading) {
-    return <Typography>메모를 불러오는 중입니다.</Typography>;
-  }
-
-  if (!memo) {
+  if (loading) return <Typography>메모를 불러오는 중입니다.</Typography>;
+  if (!loading && !memo) {
     return <Typography>해당 메모를 찾을 수 없습니다.</Typography>;
-  }
+  }  
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" p={4}>
       {/* 날짜 및 가로줄 */}
       <Box display="flex" alignItems="center" width="100%" maxWidth="41rem">
-        <Typography sx={{ fontSize: "2rem", fontWeight: "bold" }}>
-          {memo.memo_date}
-        </Typography>
+        <Typography sx={{ fontSize: "2rem", fontWeight: "bold" }}>{memo.memo_date}</Typography>
         <Box flexGrow={1} mx={2} height={2} bgcolor="#739CD4"></Box>
       </Box>
 
@@ -85,20 +72,10 @@ const NoteDetail = () => {
       >
         {/* 세로줄 + 질문 */}
         <Box display="flex" alignItems="center">
-          {/* 세로줄 */}
-          <Box 
-            sx={{ 
-              width: "0.5rem", 
-              height: "8rem", 
-              backgroundColor: "#739CD4", 
-              marginLeft: "2rem",
-            }} 
-          />
-          
-          {/* 제목 */}
-          <Typography 
-            color="black" 
-            sx={{ 
+          <Box sx={{ width: "0.5rem", height: "8rem", backgroundColor: "#739CD4", marginLeft: "2rem" }} />
+          <Typography
+            color="black"
+            sx={{
               display: "flex",
               alignItems: "center",
               height: "8rem",
@@ -127,14 +104,7 @@ const NoteDetail = () => {
             transform: "translateX(-50%)",
           }}
         >
-          <Typography 
-            sx={{ 
-              fontSize: "1.5rem",
-              margin : "1.5rem",
-            }}
-          >
-            {memo.memo_A}
-          </Typography>
+          <Typography sx={{ fontSize: "1.5rem", margin: "1.5rem" }}>{memo.memo_A}</Typography>
         </Paper>
       </Paper>
 
@@ -173,11 +143,9 @@ const NoteDetail = () => {
       </Box>
 
       {/* 삭제 모달 */}
-      <DeleteModal 
-        open={isModalOpen} 
-        onClose={() => setIsModalOpen(false)}
-        memoId={memo_id}
-        onDelete={handleDeleteMemo}
+      <DeleteModal open={isModalOpen} 
+      onClose={() => setIsModalOpen(false)} 
+      onConfirm={handleDeleteConfirm} 
       />
     </Box>
   );

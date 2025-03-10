@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Box, Typography, Button, Paper } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
