@@ -1,7 +1,8 @@
+import PropTypes from "prop-types";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
-import styles from "./DeleteModal.module.css";
 
-const DeleteModal = ({ open, onClose, memoId, onDelete }) => {
+const DeleteModal = ({ open, onClose, onConfirm }) => {
+
   return (
     <Dialog
       open={open}
@@ -29,11 +30,12 @@ const DeleteModal = ({ open, onClose, memoId, onDelete }) => {
           display: "flex",
           alignItems: "center",
           overflow: "hidden",
+          fontSize: "1.5rem",
+          justifyContent: "center",
+          textAlign: "center",
         }}
       >
-        <p className={styles.deleteDescription}>
-          삭제할 경우 이전 기록은 복구할 수 없습니다.
-        </p>
+        삭제할 경우 이전 기록은 복구할 수 없습니다.
       </DialogContent>
       <DialogActions
         sx={{
@@ -45,7 +47,7 @@ const DeleteModal = ({ open, onClose, memoId, onDelete }) => {
         }}
       >
         <Button
-          onClick={onClose} // 모달 닫기
+          onClick={onClose}
           sx={{
             width: "12.5rem",
             height: "5rem",
@@ -53,14 +55,12 @@ const DeleteModal = ({ open, onClose, memoId, onDelete }) => {
             backgroundColor: "white",
             color: "#739CD4",
             fontSize: "2rem",
-            letterSpacing: "0",
-            textAlign: "center",
           }}
         >
           취소
         </Button>
         <Button
-          onClick={() => onDelete(memoId)}
+          onClick={onConfirm}
           sx={{
             width: "12.5rem",
             height: "5rem",
@@ -68,8 +68,6 @@ const DeleteModal = ({ open, onClose, memoId, onDelete }) => {
             backgroundColor: "#739CD4",
             color: "white",
             fontSize: "2rem",
-            letterSpacing: "0",
-            textAlign: "center",
           }}
         >
           삭제
@@ -79,4 +77,10 @@ const DeleteModal = ({ open, onClose, memoId, onDelete }) => {
   );
 };
 
-export default DeleteModal;
+DeleteModal.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onConfirm: PropTypes.func.isRequired,
+  };
+  
+  export default DeleteModal;

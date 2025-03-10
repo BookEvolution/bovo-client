@@ -1,14 +1,16 @@
+import PropTypes from "prop-types";
 import { Tabs, Tab, Box, TextField, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 const ArchiveTabs = ({ currentTab, setCurrentTab, searchQuery, setSearchQuery, bookCount }) => {
   const handleChange = (event, newValue) => {
     setCurrentTab(newValue);
-    setSearchQuery("");
+    setSearchQuery(""); //
   };
 
   return (
     <Box sx={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+      {/* 탭 메뉴 */}
       <Tabs
         value={currentTab}
         onChange={handleChange}
@@ -47,49 +49,46 @@ const ArchiveTabs = ({ currentTab, setCurrentTab, searchQuery, setSearchQuery, b
           backgroundColor: "#E8F1F6",
           borderRadius: "1.5625rem",
           marginTop: "2rem",
+          padding: "0 1rem",
         }}
       >
-      <SearchIcon 
-        sx={{ 
-          color: "#739CD4", 
-          fontSize: "3rem", 
-          marginRight: "1rem",
-          marginLeft: "1rem"
-        }} 
-      />
+        <SearchIcon sx={{ color: "#739CD4", fontSize: "3rem", marginRight: "1rem" }} />
         <TextField
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="책 제목을 검색하세요"
           variant="standard"
-          sx={{
-            width: "85%",
-            fontSize: "1.5rem",
-            "& input": {
-              fontSize: "1.5rem",
-            },
-          }}
+          fullWidth
+          sx={{ fontSize: "1.5rem", "& input": { fontSize: "1.5rem" } }}
         />
       </Box>
 
-      {/* 총 권수*/}
-      {searchQuery === "" && (
-      <Typography
-        sx={{
-          marginTop: "1rem",
-          marginLeft: "2rem",
-          fontSize: "1.5rem",
-          fontWeight: "bold",
-          color: "black",
-          textAlign: "left",
-          width: "43rem",
-        }}
-      >
-        총 {bookCount}권
-      </Typography>
+      {/* 총 권수 표시 */}
+      {!searchQuery && (
+        <Typography
+          sx={{
+            marginTop: "1rem",
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            color: "black",
+            textAlign: "left",
+            width: "43rem",
+          }}
+        >
+          총 {bookCount}권
+        </Typography>
       )}
     </Box>
   );
+};
+
+// PropTypes 정의
+ArchiveTabs.propTypes = {
+  currentTab: PropTypes.string.isRequired,
+  setCurrentTab: PropTypes.func.isRequired,
+  searchQuery: PropTypes.string.isRequired,
+  setSearchQuery: PropTypes.func.isRequired,
+  bookCount: PropTypes.number.isRequired,
 };
 
 export default ArchiveTabs;
