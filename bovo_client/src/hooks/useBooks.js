@@ -1,65 +1,162 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 const useBooks = () => {
-  const [books, setBooks] = useState([]); // books 초기값을 빈 배열로 설정
+  const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const response = await axios.get("/archive", { headers: { user_id: 1 } });
-        setBooks(response.data?.books || []); // 데이터가 없을 경우 빈 배열을 설정
-      } catch (error) {
-        console.error("도서 목록 불러오기 실패:", error);
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBooks();
+ 
+  const fetchBooks = useCallback(async () => {
+    try {
+      setLoading(true);
+      console.log("도서 데이터 불러오기 시작");
+      const response = await axios.get("/archive", { headers: { user_id: 1 } });
+      const fetchedBooks = response.data?.books || [];
+      //console.log("불러온 도서 데이터:", fetchedBooks);
+      setBooks(fetchedBooks);
+      setError(false);
+    } catch (error) {
+      console.error("도서 목록 불러오기 실패:", error);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // 특정 책 가져오기
-  const getBookById = (book_id) => books.find(book => String(book.book_id) === String(book_id)) || null;
+  useEffect(() => {
+    fetchBooks();
+  }, [fetchBooks]);
 
-  // 특정 책의 메모 목록 가져오기
-  const getMemosByBookId = (book_id) => {
+  // 특정 책 가져오기
+  const getBookById = useCallback((book_id) => {
+    console.log("getBookById 호출, book_id:", book_id);
+    //console.log("현재 books 상태:", books);
+    const book = books.find(book => String(book.book_id) === String(book_id)) || null;
+    //console.log("찾은 book:", book);
+    return book;
+  }, [books]);
+
+
+
+//특정 책의 정보 가져오기
+
+  /* 
+  오류 안 보이는 버전 1
+    const getMemosByBookId = useCallback((book_id) => {
+    console.log("book_id:", book_id);
     const book = getBookById(book_id);
-    return book && Array.isArray(book.memos) ? book.memos : [];
-  };
+    const memos = book && Array.isArray(book.memos) ? book.memos : [];
+    console.log("찾은 memos:", memos);
+    return memos;
+  }, [getBookById]);
+
+  백엔드에 order 보내는 버전 기준 2
+  const getMemosByBookId = useCallback((book_id) => {
+    console.log("book_id:", book_id);
+    const book = getBookById(book_id);
+    let memos = book && Array.isArray(book.memos) ? book.memos : [];
+  
+    memos = [...memos].sort((a, b) => (a.order ?? a.memo_id) - (b.order ?? b.memo_id));
+  
+    console.log("정렬된 memos:", memos);
+    return memos;
+  }, [getBookById]); */
+  
+  //특정 책의 정보 가져오기
+  const getMemosByBookId = useCallback((book_id) => {
+    console.log("book_id:", book_id);
+    const book = getBookById(book_id);
+    let memos = book && Array.isArray(book.memos) ? book.memos : [];
+  
+    // 로컬 스토리지에서 order 정보 불러오기 (프론트 확인용)
+    const storedMemos = localStorage.getItem(`memos_order_${book_id}`);
+    if (storedMemos) {
+      console.log("로컬 스토리지에서 불러온 memos:", JSON.parse(storedMemos));
+      memos = JSON.parse(storedMemos);
+    }
+  
+    // order 값 기준으로 정렬
+    memos = [...memos].sort((a, b) => (a.order ?? a.memo_id) - (b.order ?? b.memo_id));
+  
+    console.log("정렬된 memos:", memos);
+    return memos;
+  }, [getBookById]);  
+
 
   // 특정 메모 가져오기
-  const getMemoById = (memo_id) => {
-    for (const book of books || []) {
-      if (!book.memos) continue;
+  const getMemoById = useCallback((memo_id) => {
+    console.log("memo_id:", memo_id);
+    console.log("현재 books 상태:", books);
+    
+    if (!memo_id) {
+      console.error("getMemoById오류: memo_id가 없습니다");
+      return null;
+    }
+    
+    if (!books || books.length === 0) {
+      console.log("getMemoById: books 데이터가 없거나 로딩 중입니다");
+      return null;
+    }
+    
+    for (const book of books) {
+      console.log("검색 중인 book:", book.book_id);
+      
+      if (!book.memos || !Array.isArray(book.memos)) {
+        console.log(`book ${book.book_id}에 memos가 없거나 배열이 아닙니다`);
+        continue;
+      }
+      
       const memo = book.memos.find(memo => String(memo.memo_id) === String(memo_id));
       if (memo) {
+        console.log("메모를 찾았습니다:", memo);
         return { ...memo, book_id: book.book_id }; // book_id 포함하여 반환
       }
     }
+    
+    console.log("메모를 찾지 못했습니다:", memo_id);
     return null;
-  };
+  }, [books]);
 
   // 새로운 메모 추가
-  const createMemo = async (book_id, newMemo) => {
+  const createMemo = useCallback(async (book_id, newMemo) => {
     if (!book_id) {
       console.error("오류: book_id가 없습니다.");
       return false;
     }
 
-    const memo_id = Date.now().toString(); // 새로운 memo_id 생성
-    const memoToSave = { ...newMemo, memo_id };
+    // book_id가 유효한지 확인
+    const bookExists = getBookById(book_id);
+    if (!bookExists) {
+      console.error(`오류: ID가 ${book_id}인 책이 존재하지 않습니다.`);
+      return false;
+    }
 
-    // 개발 환경에서 Mock 데이터 처리
+    const memo_id = Date.now().toString(); // 새로운 memo_id 생성
+    const memo_date = new Date().toLocaleDateString("ko-KR", {
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    
+    const memoToSave = { 
+      ...newMemo, 
+      memo_id,
+      memo_date,
+    };
+
+    /* 개발 환경에서 Mock 데이터 처리 */
     if (import.meta.env.MODE === "development") {
       console.log("새 메모 추가됨:", memoToSave);
       setBooks(prevBooks =>
         prevBooks.map(book =>
-          book.book_id === book_id
-            ? { ...book, memos: [...book.memos, memoToSave] }
+          String(book.book_id) === String(book_id)
+            ? { 
+                ...book, 
+                memos: Array.isArray(book.memos) 
+                  ? [...book.memos, memoToSave] 
+                  : [memoToSave] 
+              }
             : book
         )
       );
@@ -71,8 +168,13 @@ const useBooks = () => {
 
       setBooks(prevBooks =>
         prevBooks.map(book =>
-          book.book_id === book_id
-            ? { ...book, memos: [...book.memos, memoToSave] }
+          String(book.book_id) === String(book_id)
+            ? { 
+                ...book, 
+                memos: Array.isArray(book.memos) 
+                  ? [...book.memos, memoToSave] 
+                  : [memoToSave] 
+              }
             : book
         )
       );
@@ -82,10 +184,10 @@ const useBooks = () => {
       console.error("메모 생성 실패:", error);
       return false;
     }
-  };
+  }, [getBookById]);
 
   // 메모 삭제
-  const deleteMemo = async (memo_id) => {
+  const deleteMemo = useCallback(async (memo_id) => {
     if (!memo_id) {
       console.error("삭제 오류: memo_id가 없음");
       return false;
@@ -97,7 +199,9 @@ const useBooks = () => {
       setBooks((prevBooks) =>
         prevBooks.map(book => ({
           ...book,
-          memos: book.memos.filter(memo => String(memo.memo_id) !== String(memo_id)),
+          memos: Array.isArray(book.memos) 
+            ? book.memos.filter(memo => String(memo.memo_id) !== String(memo_id))
+            : []
         }))
       );
       return true;
@@ -108,7 +212,9 @@ const useBooks = () => {
       setBooks((prevBooks) =>
         prevBooks.map(book => ({
           ...book,
-          memos: book.memos.filter(memo => String(memo.memo_id) !== String(memo_id)),
+          memos: Array.isArray(book.memos) 
+            ? book.memos.filter(memo => String(memo.memo_id) !== String(memo_id))
+            : []
         }))
       );
       return true;
@@ -116,12 +222,19 @@ const useBooks = () => {
       console.error("메모 삭제 실패:", error);
       return false;
     }
-  };
+  }, []);
 
   // 메모 수정
-  const updateMemo = async (memo_id, updatedMemo) => {
+  const updateMemo = useCallback(async (memo_id, updatedMemo) => {
     if (!memo_id) {
       console.error("수정 오류: memo_id가 없음");
+      return false;
+    }
+
+    // 메모가 존재하는지 확인
+    const existingMemo = getMemoById(memo_id);
+    if (!existingMemo) {
+      console.error(`오류: ID가 ${memo_id}인 메모가 존재하지 않습니다.`);
       return false;
     }
 
@@ -131,9 +244,13 @@ const useBooks = () => {
       setBooks((prevBooks) =>
         prevBooks.map(book => ({
           ...book,
-          memos: book.memos.map(memo =>
-            String(memo.memo_id) === String(memo_id) ? { ...memo, ...updatedMemo } : memo
-          ),
+          memos: Array.isArray(book.memos) 
+            ? book.memos.map(memo =>
+                String(memo.memo_id) === String(memo_id) 
+                  ? { ...memo, ...updatedMemo } 
+                  : memo
+              )
+            : []
         }))
       );
       return true;
@@ -144,9 +261,13 @@ const useBooks = () => {
       setBooks((prevBooks) =>
         prevBooks.map(book => ({
           ...book,
-          memos: book.memos.map(memo =>
-            String(memo.memo_id) === String(memo_id) ? { ...memo, ...updatedMemo } : memo
-          ),
+          memos: Array.isArray(book.memos) 
+            ? book.memos.map(memo =>
+                String(memo.memo_id) === String(memo_id) 
+                  ? { ...memo, ...updatedMemo } 
+                  : memo
+              )
+            : []
         }))
       );
       return true;
@@ -154,6 +275,11 @@ const useBooks = () => {
       console.error("메모 수정 실패:", error);
       return false;
     }
+  }, [getMemoById]);
+
+  // 데이터 새로고침 함수 추가
+  const refreshData = () => {
+    fetchBooks();
   };
 
   return { 
@@ -165,7 +291,8 @@ const useBooks = () => {
     getMemoById, 
     createMemo,
     deleteMemo, 
-    updateMemo 
+    updateMemo,
+    refreshData
   };
 };
 

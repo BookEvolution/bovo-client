@@ -14,6 +14,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import useDelete from "../../hooks/useDelete";
 import DeleteModal from "../deleteModal/DeleteModal";
+import useUpdateMemo from "../../hooks/useUpdateMemo";
 
 const NoteBottomSheet = ({ open, onClose, book }) => {
     console.log("book:", book); // book 값 확인
@@ -39,10 +40,6 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
         if (newStatus !== null) setStatus(newStatus);
     };
 
-    const handleSave = () => {
-        onClose();
-    };
-
     const { deleteItem } = useDelete();
     const handleDeleteBook = () => {
         deleteItem(book.book_id, "book", null, () => {
@@ -51,14 +48,35 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
         });
       };
 
+      const { updateMemo } = useUpdateMemo();
+
+      const handleSave = async () => {
+          if (!book) return;
+      
+          try {
+              const updatedMemo = {
+                  status,
+                  start_date: startDate ? startDate.format("YYYY-MM-DD") : null,
+                  end_date: endDate ? endDate.format("YYYY-MM-DD") : null,
+                  star: rating
+              };
+      
+              await updateMemo(book.book_id, updatedMemo); // 수정 API 요청
+              console.log("수정 완료");
+              onClose(); // 모달 닫기
+          } catch (error) {
+              console.error("수정 실패:", error);
+          }
+      };
 
     return (
         <>
             {/* 모달 */}        
             <Modal 
                 open={open} 
-                onClose={onClose} 
-                disableEnforceFocus
+                onClose={onClose}
+                disableAutoFocus    //자꾸 오류 생겨서 넣어둠
+                disableEnforceFocus //얘도
                 sx={{ 
                     display: "flex", 
                     alignItems: "flex-end", 
@@ -67,6 +85,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                 >
                 <Slide direction="up" in={open} mountOnEnter unmountOnExit>
                     <Box
+                    aria-hidden="false" //오류 생겨서 넣어둠
                         sx={{
                             width: "100%",
                             maxWidth: "45.5rem",
