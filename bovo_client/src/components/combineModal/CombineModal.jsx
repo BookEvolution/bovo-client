@@ -6,12 +6,12 @@ import SortableItem from "./SortableItem";
 import useCombineModal from "../../hooks/useCombineModal";
 import PropTypes from "prop-types";
 
-
 const CombineModal = ({ open, onClose, memos, setMemos }) => {
   const {
     items,
     activeId,
     sensors,
+    getActiveItem,
     handleDragStart,
     handleDragEnd,
     handleDragCancel,
@@ -21,7 +21,7 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
 
   if (!open) return null;
 
-  const activeItem = items.find(item => String(item.memo_id) === String(activeId));
+  const activeItem = getActiveItem();
 
   return (
     <Box

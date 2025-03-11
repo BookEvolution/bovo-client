@@ -13,7 +13,7 @@ const useBooks = () => {
       console.log("도서 데이터 불러오기 시작");
       const response = await axios.get("/archive", { headers: { user_id: 1 } });
       const fetchedBooks = response.data?.books || [];
-      console.log("불러온 도서 데이터:", fetchedBooks);
+      //console.log("불러온 도서 데이터:", fetchedBooks);
       setBooks(fetchedBooks);
       setError(false);
     } catch (error) {
@@ -31,28 +31,66 @@ const useBooks = () => {
   // 특정 책 가져오기
   const getBookById = useCallback((book_id) => {
     console.log("getBookById 호출, book_id:", book_id);
-    console.log("현재 books 상태:", books);
+    //console.log("현재 books 상태:", books);
     const book = books.find(book => String(book.book_id) === String(book_id)) || null;
-    console.log("찾은 book:", book);
+    //console.log("찾은 book:", book);
     return book;
   }, [books]);
 
-  // 특정 책의 메모 목록 가져오기
-  const getMemosByBookId = useCallback((book_id) => {
-    console.log("getMemosByBookId 호출, book_id:", book_id);
+
+
+//특정 책의 정보 가져오기
+
+  /* 
+  오류 안 보이는 버전 1
+    const getMemosByBookId = useCallback((book_id) => {
+    console.log("book_id:", book_id);
     const book = getBookById(book_id);
     const memos = book && Array.isArray(book.memos) ? book.memos : [];
     console.log("찾은 memos:", memos);
     return memos;
   }, [getBookById]);
 
+  백엔드에 order 보내는 버전 기준 2
+  const getMemosByBookId = useCallback((book_id) => {
+    console.log("book_id:", book_id);
+    const book = getBookById(book_id);
+    let memos = book && Array.isArray(book.memos) ? book.memos : [];
+  
+    memos = [...memos].sort((a, b) => (a.order ?? a.memo_id) - (b.order ?? b.memo_id));
+  
+    console.log("정렬된 memos:", memos);
+    return memos;
+  }, [getBookById]); */
+  
+  //특정 책의 정보 가져오기
+  const getMemosByBookId = useCallback((book_id) => {
+    console.log("book_id:", book_id);
+    const book = getBookById(book_id);
+    let memos = book && Array.isArray(book.memos) ? book.memos : [];
+  
+    // 로컬 스토리지에서 order 정보 불러오기 (프론트 확인용)
+    const storedMemos = localStorage.getItem(`memos_order_${book_id}`);
+    if (storedMemos) {
+      console.log("로컬 스토리지에서 불러온 memos:", JSON.parse(storedMemos));
+      memos = JSON.parse(storedMemos);
+    }
+  
+    // order 값 기준으로 정렬
+    memos = [...memos].sort((a, b) => (a.order ?? a.memo_id) - (b.order ?? b.memo_id));
+  
+    console.log("정렬된 memos:", memos);
+    return memos;
+  }, [getBookById]);  
+
+
   // 특정 메모 가져오기
   const getMemoById = useCallback((memo_id) => {
-    console.log("getMemoById 호출, memo_id:", memo_id);
+    console.log("memo_id:", memo_id);
     console.log("현재 books 상태:", books);
     
     if (!memo_id) {
-      console.error("getMemoById 오류: memo_id가 없습니다");
+      console.error("getMemoById오류: memo_id가 없습니다");
       return null;
     }
     
@@ -107,7 +145,7 @@ const useBooks = () => {
       memo_date,
     };
 
-    // 개발 환경에서 Mock 데이터 처리
+    /* 개발 환경에서 Mock 데이터 처리 */
     if (import.meta.env.MODE === "development") {
       console.log("새 메모 추가됨:", memoToSave);
       setBooks(prevBooks =>

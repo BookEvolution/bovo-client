@@ -1,46 +1,20 @@
-import { useState, useEffect } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useParams } from "react-router-dom";
 import CombineModal from "../../components/combineModal/CombineModal";
-import useBooks from "../../hooks/useBooks";
+import useNoteCombine from "../../hooks/useNoteCombine";
 
 const NoteCombine = () => {
   const { book_id } = useParams();
-  const [modalOpen, setModalOpen] = useState(false);
-  // 메모 상태 추가
-  const [localMemos, setLocalMemos] = useState([]);
-  
-  const { 
-    loading, 
-    error, 
-    getBookById, 
-    getMemosByBookId,
-    updateMemo
-  } = useBooks();
-
-  // 현재 책 정보와 메모 가져오기
-  const bookInfo = book_id ? getBookById(book_id) : null;
-  const memos = book_id ? getMemosByBookId(book_id) || [] : [];
-
-  useEffect(() => {
-    if (!modalOpen && memos && Array.isArray(memos)) {
-      setLocalMemos([...memos]); // 모달이 닫힌 후에만 localMemos 업데이트
-    }
-  }, [memos, modalOpen]);  
-
-  const handleUpdateMemos = (updatedMemos) => {
-    if (!updatedMemos || !Array.isArray(updatedMemos)) return;
-  
-    setLocalMemos(updatedMemos); // 즉시 반영
-  
-    updatedMemos.forEach((memo, index) => {
-      if (memo.memo_id) {
-        updateMemo(memo.memo_id, { ...memo, order: index });
-      }
-    });
-  
-    setModalOpen(false); // 모달 닫기
-  };  
+  const {
+    loading,
+    error,
+    bookInfo,
+    localMemos,
+    modalOpen,
+    openModal,
+    closeModal,
+    handleUpdateMemos
+  } = useNoteCombine(book_id);
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
@@ -77,9 +51,7 @@ const NoteCombine = () => {
                     backgroundColor: "#739CD4" 
                     }} />
               </Box>
-              <Box sx={{ 
-
-                }}>
+              <Box>
                 <Typography sx={{ 
                     fontSize: "2rem", 
                     fontWeight: "bold", 
@@ -183,7 +155,7 @@ const NoteCombine = () => {
           <Button
             variant="contained"
             disableElevation
-            onClick={() => setModalOpen(true)}
+            onClick={openModal}
             sx={{
               backgroundColor: "#E8F1F6",
               color: "#739CD4",
@@ -201,7 +173,7 @@ const NoteCombine = () => {
       {modalOpen && localMemos && localMemos.length > 0 && (
         <CombineModal 
           open={modalOpen} 
-          onClose={() => setModalOpen(false)} 
+          onClose={closeModal} 
           memos={localMemos} 
           setMemos={handleUpdateMemos}
         />
