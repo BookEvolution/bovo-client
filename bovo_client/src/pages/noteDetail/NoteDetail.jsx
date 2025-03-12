@@ -1,34 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Box, Typography, Button, Paper } from "@mui/material";
-import { useParams, useNavigate } from "react-router-dom";
 import DeleteModal from "../../components/deleteModal/DeleteModal";
-import useDelete from "../../hooks/useDelete";
-import useBooks from "../../hooks/useBooks";
+import { noteDetailData } from "../../api/NoteApi";
+import useBook from "../../hooks/useBook";
 
 const NoteDetail = () => {
-  const { memo_id } = useParams();
+  const { book_id } = useParams();
+  const [searchParams] = useSearchParams();
+  const memo_id = searchParams.get("memoId");
+  const { book } = useBook(book_id);
   const navigate = useNavigate();
-  const { deleteItem } = useDelete();
-  const { getMemoById, loading } = useBooks();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [memo, setMemo] = useState(null);
 
-  const memo = getMemoById(memo_id);
+  console.log(" bookId:", book_id);
+  console.log(" memoId:", memo_id);
 
-  const handleDeleteConfirm = () => {
-    if (!memo?.book_id) {
-      console.error("book_id를 찾을 수 없음");
+  useEffect(() => {
+    if (!book_id || !memo_id) {
+      console.error("bookId 또는 memoId가 없습니다.");
       return;
     }
 
-    deleteItem(memo_id, "memo", memo.book_id, () => navigate(`/note/${memo.book_id}`));
-  };
+    const fetchMemo = async () => {
+      try {
+        const data = await noteDetailData(book_id, memo_id);
 
-  const handleEditMemo = () => {
-    navigate(`/note/note-edit/${memo_id}`);
-  };
+        const updatedMemo = {
+          ...data, // 기존 데이터 유지
+          memo_id: data.memo_id ?? memo_id, // memo_id가 null이면 memoId로 덮어쓰기
+        };
 
-  if (loading) return <Typography>메모를 불러오는 중입니다.</Typography>;
-  if (!memo) return <Typography>해당 메모를 찾을 수 없습니다.</Typography>;
+        console.log("최종 업데이트된 memo:", updatedMemo);
+
+        setMemo(updatedMemo); //새로운 객체 생성 - 오류 자꾸 나서
+      } catch (error) {
+        console.error("API 요청 중 오류 발생:", error);
+      }
+    };
+
+    fetchMemo();
+  }, [book_id, memo_id]);
+
+  if (!memo) return <Typography>기록을 불러오는 중</Typography>;
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" p={4}>
@@ -108,7 +123,7 @@ const NoteDetail = () => {
         <Button
           variant="contained"
           disableElevation
-          onClick={handleEditMemo}
+          onClick={() => navigate(`/note/note-edit/${memo_id}`)}
           sx={{
             width: "15rem",
             height: "5rem",
@@ -121,11 +136,13 @@ const NoteDetail = () => {
           수정하기
         </Button>
       </Box>
-
-      {/* 삭제 모달 */}
-      <DeleteModal open={isModalOpen} 
-      onClose={() => setIsModalOpen(false)} 
-      onConfirm={handleDeleteConfirm} 
+      <DeleteModal
+       open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        targetId={memo_id}
+        targetType="memo"
+        bookId={book?.book_id}
+        onSuccess={() => navigate(`/archive/${book?.book_id}`)}
       />
     </Box>
   );
