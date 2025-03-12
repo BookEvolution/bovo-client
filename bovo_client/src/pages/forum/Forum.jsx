@@ -2,7 +2,8 @@ import { Box, Button, Tab, Tabs } from "@mui/material";
 import styles from "./Forum.module.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import EntireForum from "../../components/forum/EntireForum";
+import EntireForum from "../../components/forum/entireForum/EntireForum";
+import MyForum from "../../components/forum/myForum/MyForum";
 
 const Forum = () => {
     const [value, setValue] = useState(0); // 탭 상태
@@ -53,6 +54,7 @@ const Forum = () => {
                 </Link>
             </Box>
             {value === 0 && <EntireForum />}
+            {value === 1 && <MyForum />}
         </Box>
     );
 };
