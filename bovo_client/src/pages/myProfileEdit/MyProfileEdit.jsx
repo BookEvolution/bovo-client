@@ -4,8 +4,8 @@ import profile6 from "../../assets/profile/profile_6.png";
 import styles from "./MyProfileEdit.module.css";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import ProfileBottomSheet from "../../components/profileImgBottomSheet/ProfileBottomSheet";
 import { editUserProfile, fetchMyProfileEditData } from "../../api/UserApi";
+import ProfileBottomSheet from "../../components/profileImgBottomsheet/ProfileBottomSheet";
  
 const MyProfileEdit = () => {
     const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
@@ -16,9 +16,9 @@ const MyProfileEdit = () => {
     useEffect(() => {
         const loadProfileData = async () => {
             try {
-                const data = await fetchMyProfileEditData(token);
+                const data = await fetchMyProfileEditData();
                 setProfileData(data);
-                setValue("nickname", profileData.nickname || "");
+                setValue("nickname", data.nickname || "");
                 // setSelectedProfile({ key: data.profileImage, src: data.profileImageUrl }); // 프로필 이미지 설정
             } catch (error) {
                 console.error("프로필 데이터를 불러오는 중 오류 발생:", error);
@@ -42,7 +42,7 @@ const MyProfileEdit = () => {
         };
     
         try {
-            const response = await editUserProfile(token, updatedData); // 프로필 수정 요청
+            const response = await editUserProfile(updatedData); // 프로필 수정 요청
             console.log("수정된 프로필:", response);
             // 수정 성공 후 UI 업데이트 또는 리디렉션 처리
         } catch (error) {

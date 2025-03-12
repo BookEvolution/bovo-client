@@ -18,7 +18,6 @@ const MyPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isLogout = useSelector((state) => state.logout.isLogout);
-    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjIsImlhdCI6MTc0MTUxNzI0NSwiZXhwIjoxNzQxNTIwODQ1fQ.GAzTiYvPtZOUAdxchgQZ-7zVMvDEKoAlJXRct5QGKK0';
 
     const handleLogout = (state) => {
         dispatch(toggleLogoutModal(state));
@@ -28,7 +27,7 @@ const MyPage = () => {
 
         const fetchData = async () => {
             try {
-                await fetchMyPageData(token);
+                await fetchMyPageData();
             } catch (err) {
                 setError("데이터를 불러오는 중 오류가 발생했습니다.", err);
             } finally {
