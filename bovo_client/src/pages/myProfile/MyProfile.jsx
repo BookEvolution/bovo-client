@@ -4,8 +4,9 @@ import profile6 from "../../assets/profile/profile_6.png";
 import bedge from "../../assets/bedge/bedge6.png";
 import styles from "./MyProfile.module.css";
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import WithdrawModal from '../../components/withdrawModal/WithdrawModal';
+import { fetchMyProfileData } from '../../api/UserApi';
 
 // ✅ MyProfile 내부에 ProfileInfoItem 컴포넌트 선언
 const ProfileInfoItem = ({ title, content }) => (
@@ -29,6 +30,20 @@ const ProfileInfoItem = ({ title, content }) => (
 const MyProfile = () => {
     // 회원 탈퇴 모달 상태 관리
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await fetchMyProfileData();
+                setUserData(data);
+            } catch (error) {
+                console.error("프로필 데이터를 불러오는 중 오류 발생:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     // 회원 탈퇴 모달 열기
     const openWithdrawModal = () => {

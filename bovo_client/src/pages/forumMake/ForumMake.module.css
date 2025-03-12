@@ -1,0 +1,63 @@
+.forumMakeContainer {
+    width: 100%;
+    height: 75rem;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.6875rem;
+}
+
+.addBookWrapper {
+    width: 15rem;
+    height: 22.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1.5625rem;
+    background-color: #E8F1F6;
+}
+
+.inputBox {
+    width: 38rem;
+    height: 3rem;
+    padding: 1.5rem 2rem;
+    border-radius: 1.5rem;
+    background-color: #E8F1F6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.descriptionInputBox {
+    width: 38rem;
+    height: 5rem;
+    padding: 2.5rem 2rem;
+    border-radius: 1.5rem;
+    background-color: #E8F1F6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inputTitle {
+    min-width: 8rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.secretKeyContainer {
+    width: 100%;
+    height: 8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.makeRoomBtn {
+    width: 20rem;
+    height: 6rem;
+}
