@@ -7,13 +7,18 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DeleteModal from "../../components/deleteModal/DeleteModal";
 import styles from "./Note.module.css";
 import { bookPropType } from "../../utils/propTypes";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useDelete from "../../hooks/useDelete";
 
-const NoteList = ({ book }) => {
+const NoteList = ({ book, memos }) => {
   const navigate = useNavigate();
   const { deleteItem } = useDelete();
-  const [memos, setMemos] = useState(book.memos || []);
+  const [memoList, setMemoList] = useState([]);
+
+  useEffect(() => {
+    setMemoList(memos);
+  }, [memos]);
+
   const [selectedMemoId, setSelectedMemoId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -30,23 +35,22 @@ const NoteList = ({ book }) => {
 
   const handleDeleteConfirm = () => {
     if (!selectedMemoId) return;
-  
+
     deleteItem(selectedMemoId, "memo", book.book_id, () => {
-      setMemos((prevMemos) => (prevMemos ?? []).filter((memo) => memo.memo_id !== selectedMemoId)); // ✅ undefined 방지
+      setMemoList((prevMemos) => prevMemos.filter((memo) => memo.memo_id !== selectedMemoId));
       setIsModalOpen(false);
     });
   };
-  
 
   const navigateToNoteCombine = () => {
-    navigate(`/note/note-combine/${book.book_id}`);
+    navigate(`/archive/${book?.book_id}/memos`);
   };
 
   const navigateToNoteEdit = () => {
     navigate(`/note/note-edit`);
   };
 
-  if (!memos.length) return <p className={styles.NOmemos}>작성된 메모가 없습니다.</p>;
+  if (!memoList.length) return <p className={styles.NOmemos}>작성된 메모가 없습니다.</p>;
 
   return (
     <Box className={styles.noteListContainer}>
@@ -63,7 +67,7 @@ const NoteList = ({ book }) => {
       </Box>
 
       <Box className={styles.noteList}>
-        {memos.map((memo) => (
+        {memoList.map((memo) => (
           <Box key={memo.memo_id}>
             <Box className={styles.Datecontainer}>
               <p className={styles.memoDate}>{memo.memo_date}</p>
@@ -98,6 +102,7 @@ const NoteList = ({ book }) => {
 
 NoteList.propTypes = {
   book: bookPropType.isRequired,
+  memos: bookPropType.isRequired,
 };
 
 export default NoteList;

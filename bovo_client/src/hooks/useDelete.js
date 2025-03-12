@@ -4,7 +4,7 @@ import axios from "axios";
 const useDelete = () => {
   const navigate = useNavigate();
 
-  const deleteItem = async (targetId, targetType, bookId, onSuccess = () => {}) => {
+  const deleteItem = async (targetId, targetType, book_id, onSuccess = () => {}) => {
     const endpoint = targetType === "memo" ? `/memos/${targetId}` : `/books/${targetId}`;
 
     try {
@@ -15,7 +15,7 @@ const useDelete = () => {
 
         // 삭제 후 이동 처리
         if (targetType === "book") navigate("/archive");
-        else navigate(`/note/${bookId}`);
+        else navigate(`/archive/${book_id}`);
         return;
       }
 
@@ -27,7 +27,7 @@ const useDelete = () => {
 
       // 삭제 후 리다이렉트 처리
       if (targetType === "book") navigate("/archive");
-      else if (bookId) navigate(`/note/${bookId}`);
+      else if (book_id) navigate(`/archive/${book_id}`);
     } catch (error) {
       console.error("삭제 실패:", error);
     }
