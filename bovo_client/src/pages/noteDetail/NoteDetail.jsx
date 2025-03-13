@@ -123,7 +123,7 @@ const NoteDetail = () => {
         <Button
           variant="contained"
           disableElevation
-          onClick={() => navigate(`/note/note-edit/${memo_id}`)}
+          onClick={() => navigate(`/archive/edit/${book_id}/${memo_id}`)}
           sx={{
             width: "15rem",
             height: "5rem",

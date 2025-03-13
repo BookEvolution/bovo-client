@@ -13,8 +13,8 @@ import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import DeleteModal from "../deleteModal/DeleteModal";
-import useUpdateMemo from "../../hooks/useUpdateMemo";
 import { useNavigate } from "react-router-dom";
+import { updateBook } from "../../api/NoteApi";
 
 const NoteBottomSheet = ({ open, onClose, book }) => {
     const [status, setStatus] = useState("ing");
@@ -38,24 +38,23 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
         if (newStatus !== null) setStatus(newStatus);
     };
 
-    const { updateMemo } = useUpdateMemo();
     const handleSave = async () => {
         if (!book) return;
         try {
-            const updatedMemo = {
+            const updatedBookData = {
+                book_id: book.book_id,
                 status,
-                start_date: startDate ? startDate.format("YYYY-MM-DD") : null,
-                end_date: endDate ? endDate.format("YYYY-MM-DD") : null,
+                start_date: startDate ? startDate.format("YY.MM.DD") : null,
+                end_date: endDate ? endDate.format("YY.MM.DD") : null,
                 star: rating
             };
-            await updateMemo(book.book_id, updatedMemo);
-            console.log("수정 완료");
+            await updateBook(book.book_id, updatedBookData);
+            console.log("책 정보 수정 완료");
             onClose(); // 모달 닫기
         } catch (error) {
-            console.error("수정 실패:", error);
+            console.error("책 정보 수정 실패:", error);
         }
     };
-
     return (
         <>
             {/* 모달 */}

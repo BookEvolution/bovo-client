@@ -2,138 +2,91 @@ import { useState, useEffect } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import NoteTemplate from "../../components/templateModal/NoteTemplate";
-import useBooks from "../../hooks/useBooks";
+import { noteDetailData, createMemo, updateMemo } from "../../api/NoteApi";
 
 const NoteEdit = () => {
   const { memo_id } = useParams();
   const navigate = useNavigate();
-  const { getMemoById, updateMemo, createMemo, loading } = useBooks();
   
-  // 초기 상태를 빈 값으로 설정
+  const bookId = useParams().book_id || null;
+
+  /**자꾸 오류 생겨서 날짜 직접 넣기 */
+  const formatDate = (date) => {
+    const year = date.getFullYear().toString().slice(-2);
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}.${month}.${day}`;
+  };
+  
+
+
   const [loadedMemo, setLoadedMemo] = useState({
     memo_Q: "",
     memo_A: "",
-    memo_date: new Date().toLocaleDateString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit" }),
-  });
+    memo_date: formatDate(new Date())
+});
 
   const [titleFocused, setTitleFocused] = useState(false);
   const [templateModalOpen, setTemplateModalOpen] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const MAX_TITLE_LENGTH = 36;
   
   useEffect(() => {
-    if (!loading && !isInitialized && memo_id) {
-      try {
-        const fetchedMemo = getMemoById(memo_id);
-        console.log("불러온 메모:", fetchedMemo);
-        
-        if (fetchedMemo) {
-          setLoadedMemo({
-            memo_Q: fetchedMemo.memo_Q || "",
-            memo_A: fetchedMemo.memo_A || "",
-            memo_date: fetchedMemo.memo_date || new Date().toLocaleDateString("ko-KR", {
-              year: "2-digit",
-              month: "2-digit",
-              day: "2-digit",
-            }),
-          });
-          setErrorMessage("");
-        } else {
-          console.error("메모를 찾을 수 없습니다:", memo_id);
-          setErrorMessage(`메모를 찾을 수 없습니다: ${memo_id}`);
+    const fetchData = async () => {
+        if (!bookId) {
+            console.error("bookId가 없습니다.");
+            return;
         }
-      } catch (error) {
-        console.error("메모 불러오기 오류:", error);
-        setErrorMessage("메모 불러오기 중 오류가 발생했습니다.");
-      }
-      setIsInitialized(true);
-    }
-  }, [memo_id, getMemoById, isInitialized, loading]);
-
-  const handleSaveMemo = async () => {
-    if (!loadedMemo.memo_Q || !loadedMemo.memo_A) {
-      console.error("오류: 제목과 내용이 비어있습니다.");
-      setErrorMessage("제목과 내용을 모두 입력해주세요.");
-      return;
-    }
-
-    const updatedMemo = {
-      memo_Q: loadedMemo.memo_Q,
-      memo_A: loadedMemo.memo_A,
-      memo_date: loadedMemo.memo_date,
+        try {
+            const data = await noteDetailData(bookId, memo_id);
+            console.log("데이터 불러옴:", data);
+            setLoadedMemo({
+                memo_Q: data.memo_Q || "",
+                memo_A: data.memo_A || "",
+                memo_date: data.memo_date || formatDate(new Date()),
+            });
+        } catch (error) {
+            console.error("데이터 못 불러옴 (신규 작성시 정상):", error.response?.data || error.message);
+        }
     };
 
-    let memoIdToNavigate;
+    fetchData();
+}, [memo_id, bookId]);
 
-    if (memo_id) {
-      console.log("수정할 메모:", updatedMemo);
-      const success = await updateMemo(memo_id, updatedMemo);
-      if (success) {
-        memoIdToNavigate = memo_id;
-      } else {
-        setErrorMessage("메모 수정에 실패했습니다.");
+
+const handleSaveMemo = async () => {
+    if (!bookId) {
+        console.error("bookId가 없습니다.");
         return;
-      }
-    } else {
-      console.log("새로운 메모 저장:", updatedMemo);
-      
-      // 새 메모 생성 시 book_id 처리
-      const book_id = "default_book_id"; // 실제 사용할 기본값
-      const newMemoId = await createMemo(book_id, updatedMemo);
-      if (newMemoId) {
-        memoIdToNavigate = newMemoId;
-      } else {
-        setErrorMessage("메모 생성에 실패했습니다.");
-        return;
-      }
     }
 
-    if (memoIdToNavigate) {
-      navigate(`/note/note-detail/${memoIdToNavigate}`);
-    } else {
-      setErrorMessage("메모 저장 후 이동에 실패했습니다.");
-    }
-  };
+    const updatedMemoData = {
+        memo_Q: loadedMemo.memo_Q,
+        memo_A: loadedMemo.memo_A,
+        memo_date: formatDate(new Date()),
+    };
 
+    try {
+        if (memo_id) {
+            await updateMemo(bookId, memo_id, updatedMemoData);
+            console.log("메모 수정 완료");
+        } else {
+            await createMemo(bookId, updatedMemoData);
+            console.log("메모 작성 완료");
+        }
+
+        navigate(`/archive/${bookId}`);
+    } catch (error) {
+        console.error("메모 저장 실패:", error.response?.data || error.message);
+    }
+};
+
+ 
   const handleOpenTemplateModal = () => setTemplateModalOpen(true);
   const handleCloseTemplateModal = () => setTemplateModalOpen(false);
   const handleApplyTemplate = (templateContent) => {
     setLoadedMemo({ ...loadedMemo, memo_Q: templateContent });
     setTemplateModalOpen(false);
   };
-
-  // 메인 로딩 화면
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: '80vh' }}>
-        <Typography variant="h5">메모를 불러오는 중입니다...</Typography>
-      </Box>
-    );
-  }
-
-  // 에러 메시지 표시
-  if (errorMessage && !loading && isInitialized) {
-    return (
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" sx={{ height: '80vh' }}>
-        <Typography variant="h5" color="error" sx={{ mb: 2 }}>
-          {errorMessage}
-        </Typography>
-        <Button 
-          variant="contained" 
-          onClick={() => navigate("/note")}
-          sx={{ 
-            backgroundColor: "#BDE5F1", 
-            color: "black",
-            borderRadius: "0.625rem",
-            fontSize: "1.25rem"
-          }}
-        >
-          메모 목록으로 돌아가기
-        </Button>
-      </Box>
-    );
-  }
 
   return (
     <Box 
