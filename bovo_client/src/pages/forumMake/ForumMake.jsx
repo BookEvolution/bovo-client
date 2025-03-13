@@ -226,6 +226,11 @@ const ForumMake = () => {
                 />
             </Box>
             <Box className={styles.secretKeyContainer}>
+                <FormControlLabel 
+                    control={<Switch checked={isPrivate} onChange={handleToggle} />}
+                    label="비밀방 설정"
+                    labelPlacement="start"     
+                />
                 {/* 비밀방 설정 */}
                 <Box 
                     className={styles.inputBox}
@@ -241,7 +246,7 @@ const ForumMake = () => {
                             textAlign: "center",
                         }}
                     >
-                        비밀방
+                        질문
                     </Typography>
                     <TextField
                         fullWidth
@@ -265,11 +270,45 @@ const ForumMake = () => {
                             "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
                         }}
                     />
-                    <FormControlLabel 
-                        control={<Switch checked={isPrivate} onChange={handleToggle} />} 
+                    
+                </Box>
+                <Box 
+                    className={styles.inputBox}
+                    sx={{
+                        backgroundColor: isPrivate ? "#E8F1F6": "#D9D9D9"
+                    }}
+                >
+                    <Typography
+                        className={styles.inputTitle} 
                         sx={{
-                            marginLeft: "1rem",
-                        }}    
+                            fontSize: "1.5rem", 
+                            color: isPrivate ? "rgba(0, 0, 0, 0.5)" : "#000000",
+                            textAlign: "center",
+                        }}
+                    >
+                        답변
+                    </Typography>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        type="password"
+                        disabled={!isPrivate} // ✅ isPrivate가 false이면 비활성화
+                        sx={{
+                            backgroundColor: isPrivate ? "#E8F1F6": "#D9D9D9",
+                            width: "100%",
+                            height: "3rem",  // ✅ 입력창 높이 조정
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            "& input": {
+                                display: "flex",
+                                alignItems: "center", // ✅ Y축 중앙 정렬
+                                fontSize: "1.5rem",
+                                height: "2.5rem", 
+                                padding: "0 1rem", // ✅ 내부 여백 제거
+                            },
+                            "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
+                        }}
                     />
                 </Box>
                 <Typography
@@ -279,7 +318,7 @@ const ForumMake = () => {
                         color: "#739CD4"
                     }}
                 >
-                    비밀방 설정 시 세부 설명에 비밀번호 힌트를 적어주세요!
+                    완독한 사람들만 함께 하고 싶다면 비밀방을 설정하시는 것은 어떨까요?
                 </Typography>
             </Box>
 
