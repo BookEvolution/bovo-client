@@ -29,7 +29,7 @@ const KakaoCallback = () => {
                 const { isNewUser, kakaoId, nickname, profileImage } = response.data;
                 sessionStorage.setItem("kakaoId", kakaoId);
                 sessionStorage.setItem("nickname", nickname);
-                sessionStorage.setItem("profileImage", profileImage);
+                // sessionStorage.setItem("profileImage", profileImage);  //이미지 필요없으면 제거
                 
                 if (isNewUser) {
                     navigate("/sign-up/kakao");

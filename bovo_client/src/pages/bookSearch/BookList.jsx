@@ -11,7 +11,7 @@ const BookList = ({ books, loading, searchTerm }) => {
                 searchTerm.trim() ? (
                     <Box className={styles.noResultContainer}>
                         <Typography className={styles.noResultText}
-                        sx={{ fontSize: "2.7rem" , fontWeight: "500"}}>
+                        sx={{ fontSize: "2.7rem", fontWeight: "500" }}>
                             검색 결과가 없습니다
                         </Typography>
                     </Box>
@@ -34,22 +34,21 @@ const BookList = ({ books, loading, searchTerm }) => {
                             <Box className={styles.bookInfo}>
                                 <Typography 
                                     className={styles.bookTitle} 
-                                    sx={{ fontSize: "1.6rem" , fontWeight: "800", lineHeight:"1.6rem", marginTop: "0.8rem" ,overflow: "hidden",}}
+                                    sx={{ fontSize: "1.6rem", fontWeight: "800", lineHeight: "1.6rem", marginTop: "0.8rem", overflow: "hidden" }}
                                 >
                                     {book.title}
                                 </Typography>
                                 <Typography 
                                     className={styles.bookAuthor}
-                                    sx={{ fontSize: "1.4rem" , fontWeight: "400", lineHeight:"1.6rem", marginTop: "0.8rem",overflow: "hidden",}}
+                                    sx={{ fontSize: "1.4rem", fontWeight: "400", lineHeight: "1.6rem", marginTop: "0.8rem", overflow: "hidden" }}
                                 >
-                                    {book.authors ? book.authors.join(", ") : "저자 정보 없음"}
+                                    {book.authors && book.authors.length > 0 ? book.authors.join(", ") : "저자 정보 없음"}
                                 </Typography>
                             </Box>
                         </Box>
                     ))}
                 </Box>
             )}
-
         </Box>
     );
 };

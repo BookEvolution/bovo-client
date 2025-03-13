@@ -53,7 +53,7 @@ const ForumCompleteModal = ({ open, onClose, book }) => {
                 )}
 
                 <Typography variant="h6" sx={{ fontSize: "2.2rem", fontWeight: "600", marginTop: "1rem", marginBottom: "3rem" }}>
-                    등록 완료!
+                    책 등록 완료!
                 </Typography>
 
                 <Button
@@ -71,7 +71,7 @@ const ForumCompleteModal = ({ open, onClose, book }) => {
                         marginBottom: "1rem",
                     }}
                 >
-                    토론방 만들러가기
+                    토론방 만들기
                 </Button>
             </Box>
         </Modal>
