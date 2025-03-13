@@ -12,6 +12,7 @@ const BookSearchDetail = () => {
     const [isForumModalOpen, setIsForumModalOpen] = useState(false); 
 
     if (!book) {
+        // 이거 디자인 수정하기
         return <Typography className={styles.errorMessage}>책 정보를 찾을 수 없습니다.</Typography>;
     }
 
@@ -36,6 +37,8 @@ const BookSearchDetail = () => {
     };
 
     console.log("BookSearchDetail - book:", book);
+    console.log("BookSearchDetail - location.state:", location.state);
+    
 
     return (
         <Box className={styles.container}>
@@ -124,7 +127,7 @@ const BookSearchDetail = () => {
                         color: "#5F5F5F",
                     }}
                 >
-                    토론방 만들기
+                    토론방 등록
                 </Button>
 
                 <Button
@@ -198,7 +201,7 @@ const BookSearchDetail = () => {
             </Box>
 
             {/* <NoteStateModal open={isModalOpen} onClose={handleCloseModal} book={book}/> */}
-            <NoteStateModal open={isModalOpen} onClose={handleCloseModal} book={{ ...book, id: book.isbn }} />
+            <NoteStateModal open={isModalOpen} onClose={handleCloseModal} book={{book}} />
             <ForumCompleteModal open={isForumModalOpen} onClose={handleCloseForumModal} book={book} />
         </Box>
     );

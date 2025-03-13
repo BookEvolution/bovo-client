@@ -1,67 +1,51 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Box, FormControl, MenuItem, Select, Typography, Button } from "@mui/material";
+import { Box, FormControl, MenuItem, Select, Typography } from "@mui/material";
 import BookSearchBar from "./BookSearchBar";
 import BookList from "./BookList";
 import styles from "./BookSearch.module.css";
 
-const SEARCH_API = import.meta.env.VITE_BACKEND_SEARCH_API_URL;
+// const API_URL = import.meta.env.VITE_BACKEND_SEARCH_API_URL;
+
 
 const BookSearch = () => {
     const [books, setBooks] = useState([]); 
-    const [sort, setSort] = useState("accuracy");
+    const [sort, setSort] = useState("accuracy"); 
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [currentPage, setCurrentPage] = useState(1); 
-    const [hasMore, setHasMore] = useState(true); 
 
-    const fetchBooks = async (query, page = 1) => {
+    const fetchBooks = async (query) => {
         if (!query.trim()) { 
             setBooks([]); 
             return;
         }
-        
+
         setLoading(true);
         try {
-            const response = await axios.get("https://dapi.kakao.com/v3/search/book?target=title", {
-                params: {
-                    query: query,
-                    sort: sort,
-                    page: page, 
-                    size: 10, 
-                },
+            const response = await axios.get(`https://b8be-222-112-255-159.ngrok-free.app/search?query=${encodeURIComponent(query)}&sort=${sort}&size=20`,{
                 headers: {
-                    Authorization: `KakaoAK ${SEARCH_API}`,
-                },
-
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "69420"
+                }
             });
+            console.log("서버에서 받은 데이터:", response.data);
 
-            if (page === 1) {
+            if (response.data && response.data.documents) {
                 setBooks(response.data.documents);
             } else {
-                setBooks((prevBooks) => [...prevBooks, ...response.data.documents]); 
+                console.error("잘못된 API 응답 형식:", response.data);
+                setBooks([]);
             }
-
-
-            setHasMore(response.data.documents.length > 0);
         } catch (error) {
             console.error("도서 검색 API 오류:", error);
+            setBooks([]);
         }
         setLoading(false);
     };
 
-
     useEffect(() => {
-        setCurrentPage(1); 
-        fetchBooks(searchTerm, 1);
+        fetchBooks(searchTerm);
     }, [searchTerm, sort]); 
-
-
-    const loadMoreBooks = () => {
-        const nextPage = currentPage + 1;
-        setCurrentPage(nextPage);
-        fetchBooks(searchTerm, nextPage);
-    };
 
     return (
         <Box className={styles.container}>
@@ -116,28 +100,6 @@ const BookSearch = () => {
             </Box>
 
             <BookList books={books} loading={loading} searchTerm={searchTerm} />
-
-
-            {hasMore && !loading && (
-                <Box sx={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
-                    <Button 
-                        onClick={loadMoreBooks} 
-                        sx={{
-                            fontSize: "1.5rem",
-                            fontWeight: "500",
-                            padding: "0.8rem 2rem",
-                            backgroundColor: "#007BFF",
-                            color: "white",
-                            borderRadius: "5px",
-                            "&:hover": {
-                                backgroundColor: "#0056b3",
-                            }
-                        }}
-                    >
-                        더보기
-                    </Button>
-                </Box>
-            )}
         </Box>
     );
 };

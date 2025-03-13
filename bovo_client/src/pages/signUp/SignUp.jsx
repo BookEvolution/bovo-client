@@ -5,22 +5,25 @@ import ProfileBottomSheet from "../../components/profileImgBottomsheet/ProfileBo
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import logo from "../../assets/logo/logo.png";
+import CompleteSignUpModal from "../../components/signUpCompleteModal/CompleteSignUpModal";
 
 const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
-
-const SignUpStep1 = () => {
+const SignUp = () => {
     const navigate = useNavigate();
     const [profileImage, setProfileImage] = useState("/src/assets/profile/profile_3.png");
     const [nickname, setNickname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [inputError, setInputError] = useState("");
     const [nicknameError, setNicknameError] = useState("");
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
 
     const checkNickname = async () => {
         if (!nickname.trim()) return;
@@ -72,12 +75,17 @@ const SignUpStep1 = () => {
         setIsBottomSheetOpen(false);
     };
 
-    //사용자가 아무것도 입력하지 않은 경우의 검사가 없음 -> 추가 필요
-    //중복 확인 안하고 사용
+    //전체 필드가 입력되고, 에러가 없어야만 회원가입 가능 -> 확인 필요
     const handleSignUp = async () => {
+        if (!nickname || !email || !password || !confirmPassword) {
+            setInputError("모든 필드를 입력해 주세요.");
+            return;
+        } //아무것도 입력 안했을 때 검사 -> 확인 필요
+
+    
         if (nicknameError || emailError || passwordError || confirmPasswordError) {
             return;
-        }
+        } //에러가 없을 때 회원가입 가능 -> 확인 필요
     
         try {
             await axios.post(`${API_URL}/register`, {
@@ -88,7 +96,7 @@ const SignUpStep1 = () => {
             });
     
             console.log("회원가입 성공");
-            navigate("/login");
+            setIsModalOpen(true);
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 const message = error.response.data.message;
@@ -200,9 +208,12 @@ const SignUpStep1 = () => {
                 >
                     회원가입
                 </Button>
+                {inputError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{marginTop:"1rem", marginRight:"0.2rem"}}>{inputError}</Typography>}
             </Box>
 
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "7rem" }}>
+
+            {/* 고정 필요 */}
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "6rem" }}>
                 <img src={logo} alt="Bovo 로고" style={{ width: "10rem", marginRight: "1rem" }} />
                 <Typography fontSize="1.8rem" fontWeight= "500" color="#343434" marginLeft="2rem">
                     소통하는 독서 플랫폼, <br /> 보보에 오신 것을 환영합니다!
@@ -210,8 +221,9 @@ const SignUpStep1 = () => {
             </Box>
 
             <ProfileBottomSheet open={isBottomSheetOpen} onClose={() => setIsBottomSheetOpen(false)} onSelectProfile={handleProfileSelect} selectedProfile={profileImage} />
+            <CompleteSignUpModal open={isModalOpen} handleClose={() => setIsModalOpen(false)} />
         </Container>
     );
 };
 
-export default SignUpStep1;
+export default SignUp;

@@ -1,0 +1,40 @@
+.calendar-container {
+    width: 43rem;
+    background-color: white;
+    border-radius: 8px;
+    margin: auto;
+}
+
+.rbc-calendar,
+.rbc-month-view,
+.rbc-day-bg,
+.rbc-header {
+    border: none !important;
+}
+
+.rbc-header {
+    font-size: 1.3rem !important;
+    font-weight: bold !important;
+    text-align: center !important;
+}
+
+.rbc-day-bg {
+    text-align: center !important;
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    color: #333 !important;
+}
+
+.rbc-off-range-bg {
+    background-color: rgba(225, 225, 225, 0.224) !important;
+}
+
+.rbc-today {
+    background-color: rgba(115, 156, 212, 0.2) !important;
+}
+
+.rbc-event {
+    border-radius: 4px !important;
+    padding: 5px !important;
+    text-align: center !important;
+}
