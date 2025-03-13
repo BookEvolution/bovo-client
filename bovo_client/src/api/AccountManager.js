@@ -1,9 +1,11 @@
-import api from "./Auth";
+import api from "./Auth.js";
 
 export const logout = async () => {
     try {
+        console.log("로그아웃 API 요청 보냄"); // ✅ 로그 추가
         await api.post("/my-page/logout");
-        clearSession(); // 세션 정리 함수 호출
+        console.log("로그아웃 API 요청 성공"); // ✅ 로그 추가
+        clearSession();
     } catch (error) {
         console.error("로그아웃 오류:", error);
     }
@@ -18,7 +20,9 @@ export const withdraw = async (email) => {
             return;
         }
 
-        await api.post("/my-page/profile/delete", { email });
+        await api.delete("/my-page/profile/delete", {
+            data: { email },  // ✅ DELETE 요청 본문에 email 포함
+        });
 
         clearSession(); // 세션 정리 함수 호출
     } catch (error) {
