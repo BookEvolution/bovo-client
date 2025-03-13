@@ -1,0 +1,22 @@
+.modalHeader {
+    width: 36.5625rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+}
+
+.addBtn {
+    width: 35.9375rem;
+    height: 5.3125rem;
+}
+
+.templateList {
+    width: 35.8125rem;
+    height: 43.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    overflow-y: scroll;
+}

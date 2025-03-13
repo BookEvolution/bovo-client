@@ -25,6 +25,7 @@ import MyProfileEdit from './pages/myProfileEdit/MyProfileEdit'
 import Calendar from './pages/calendar/Calendar'
 import ErrorPage from './pages/errorPage/ErrorPage'
 import KakaoCallback from './pages/login/KakaoCallback'
+import ChatLayout from './layout/chatLayout/layout/ChatLayout'
 
 function App() {
 
@@ -66,7 +67,9 @@ function App() {
             <Route path='/404' element={<ErrorPage />} />
           </Route>
           <Route path='/auth/kakao/callback' element={<KakaoCallback />} />
-          <Route path='/forum/forum-chat' element={<ForumChat />} />
+          <Route path='/forum/forum-chat' element={<ChatLayout />}>
+            <Route path='/forum/forum-chat' element={<ForumChat />} />
+          </Route>
           <Route path='/*' element={<Navigate to={"/404"} />} />
         </Routes>
       </BrowserRouter>
