@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Typography, Container } from "@mui/material";
 import axios from "axios";
 import kakaoBtn from "../../assets/button/btn_kakao.png";
+import { setAccessToken, disableInterceptor, enableInterceptor } from "../../api/Auth";  // 인터셉터 비활성화 및 활성화 함수 가져오기
 
 axios.defaults.withCredentials = true;
 
@@ -15,56 +16,56 @@ const Login = () => {
     const [passwordError, setPasswordError] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
-    const refreshAccessToken = async () => {
-        try {
-            const response = await axios.post(
-                "https://3fde-112-158-33-80.ngrok-free.app/refresh-token",
-                {}, 
-                {
-                    withCredentials: true,
-                }
-            );
+    // const refreshAccessToken = async () => {
+    //     try {
+    //         const response = await axios.post(
+    //             "https://3fde-112-158-33-80.ngrok-free.app/refresh-token",
+    //             {}, 
+    //             {
+    //                 withCredentials: true,
+    //             }
+    //         );
 
-            if (response.status === 200) {
-                console.log("Access Token 갱신 성공:", response.data);
-                const newAccessToken = response.data.access_token;
+    //         if (response.status === 200) {
+    //             console.log("Access Token 갱신 성공:", response.data);
+    //             const newAccessToken = response.data.access_token;
 
-                if (newAccessToken) {
-                    sessionStorage.setItem("AccessToken", newAccessToken); 
-                    axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`; 
-                }
-            }
-        } catch (error) {
-            console.error("Access Token 갱신 실패:", error);
-            sessionStorage.removeItem("AccessToken"); 
-            navigate("/login"); 
-        }
-    };
+    //             if (newAccessToken) {
+    //                 sessionStorage.setItem("AccessToken", newAccessToken); 
+    //                 axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`; 
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.error("Access Token 갱신 실패:", error);
+    //         sessionStorage.removeItem("AccessToken"); 
+    //         navigate("/login"); 
+    //     }
+    // };
 
-    axios.interceptors.response.use(
-        (response) => response,
-        async (error) => {
-            const originalRequest = error.config;
+    // axios.interceptors.response.use(
+    //     (response) => response,
+    //     async (error) => {
+    //         const originalRequest = error.config;
     
-            if (error.response && error.response.status === 401 && !originalRequest._retry) {
-                originalRequest._retry = true; 
+    //         if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    //             originalRequest._retry = true; 
     
-                try {
-                    await refreshAccessToken(); 
-                    const newAccessToken = sessionStorage.getItem("AccessToken"); 
-                    axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
+    //             try {
+    //                 await refreshAccessToken(); 
+    //                 const newAccessToken = sessionStorage.getItem("AccessToken"); 
+    //                 axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
                     
-                    originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`; 
-                    return axios(originalRequest);
-                } catch (refreshError) {
-                    console.error("토큰 갱신 중 오류 발생:", refreshError);
-                    return Promise.reject(refreshError); 
-                }
-            }
+    //                 originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`; 
+    //                 return axios(originalRequest);
+    //             } catch (refreshError) {
+    //                 console.error("토큰 갱신 중 오류 발생:", refreshError);
+    //                 return Promise.reject(refreshError); 
+    //             }
+    //         }
     
-            return Promise.reject(error);
-        }
-    );
+    //         return Promise.reject(error);
+    //     }
+    // );
 
     useEffect(() => {
         const accessToken = sessionStorage.getItem("AccessToken");
@@ -81,9 +82,12 @@ const Login = () => {
         setEmailError("");
         setPasswordError("");
 
+        // 인터셉터 비활성화
+        disableInterceptor();
+
         try {
             const response = await axios.post(
-                `https://3fde-112-158-33-80.ngrok-free.app/login`,
+                `https://4e02-165-246-206-167.ngrok-free.app/login`,
                 { email, password },
                 {
                     withCredentials: true,
@@ -96,10 +100,11 @@ const Login = () => {
             if (response.status === 200) {
                 console.log("로그인 성공:", response.data);
 
-                const accessToken = response.data.access_token;
+                const accessToken = response.data.accessToken;
+
                 if (accessToken) {
-                    sessionStorage.setItem("AccessToken", accessToken);
-                    axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+                    sessionStorage.setItem("accessToken", accessToken);
+                    setAccessToken(accessToken); // 만료시간 기본값 3600초 적용
                 }
 
                 navigate("/");
@@ -120,6 +125,9 @@ const Login = () => {
             } else {
                 setErrorMessage("서버와의 연결에 실패했습니다.");
             }
+        } finally {
+            // 로그인 후 인터셉터 다시 활성화
+            enableInterceptor();
         }
     };
 
