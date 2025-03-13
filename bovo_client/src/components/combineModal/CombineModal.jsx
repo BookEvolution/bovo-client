@@ -57,8 +57,17 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <Box display="flex" justifyContent="space-between" width="100%" mb={2}>
-          <Typography sx={{ fontSize: "2rem", fontWeight: "bold" }}>순서 변경하기</Typography>
+        <Box display="flex" 
+        justifyContent="space-between" 
+        width="100%" 
+        mb={2}
+        >
+          <Typography sx={{ 
+            fontSize: "2rem", 
+            fontWeight: "bold" 
+            }}>
+              순서 변경하기
+            </Typography>
           <IconButton onClick={handleCancel}><CloseIcon /></IconButton>
         </Box>
 

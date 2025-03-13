@@ -26,7 +26,7 @@ const NoteList = ({ memos }) => {
 
   const handleEdit = (e, memo_id) => {
     e.stopPropagation();
-    navigate(`/note/note-edit/${memo_id}`);
+    navigate(`/archive/edit/${book_id}/${memo_id}`);
   };
 
   const handleDelete = (e, memo_id) => {
@@ -40,7 +40,7 @@ const NoteList = ({ memos }) => {
   };
 
   const navigateToNoteEdit = () => {
-    navigate(`/note/note-edit`);
+    navigate(`/archive/edit/${book_id}`);
   };
 
   if (!memoList.length) return <p className={styles.NOmemos}>작성된 메모가 없습니다.</p>;

@@ -46,15 +46,15 @@ const TemplateModal = ({ open, onClose, onApplyTemplate }) => {
     setSelectedItem(null);
   };
 
-  // 카테고리별 색상 지정 고민
+  // 카테고리별 색상 지정
   const getCategoryColor = (category) => {
     switch (category) {
       case "공통":
-        return "blue";
+        return "lightblue";
       case "비문학":
-        return "red";
+        return "lightgray";
       case "문학":
-        return "green";
+        return "lightyellow";
     }
   };
 
@@ -67,13 +67,13 @@ const TemplateModal = ({ open, onClose, onApplyTemplate }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        "& .MuiPaper-root": { borderRadius: "1.25rem" }
       }}
     >
       <Box
         sx={{
           width: "42rem",
           height: "55.5rem",
-          borderRadius: "1.25rem", //안 먹히는 이유를 찾자
           backgroundColor: "white",
           position: "relative",
           display: "flex",
@@ -164,7 +164,8 @@ const TemplateModal = ({ open, onClose, onApplyTemplate }) => {
           <List
             sx={{
               width: "34rem",
-              maxHeight: "18.75rem",
+              maxHeight: "30rem",
+              overflowX: "hidden",
               overflowY: "auto",
               borderRadius: "0.625rem",
               marginBottom: "2rem",
@@ -220,6 +221,7 @@ const TemplateModal = ({ open, onClose, onApplyTemplate }) => {
               alignSelf: "center",
               fontSize: "1.5rem",
             }}
+            Disable elevation
             disabled={!selectedItem}
           >
             추가하기
