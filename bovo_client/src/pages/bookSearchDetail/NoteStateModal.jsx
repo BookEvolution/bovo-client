@@ -4,55 +4,51 @@ import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import NoteCompleteModal from "./NoteCompleteModal";
-import axios from "axios"; 
+import axios from "axios";
 
 const API_URL = import.meta.env.VITE_BACKEND_SEARCH_API_URL;
 
 const NoteStateModal = ({ open, onClose, book, userId }) => {
     const [selectedState, setSelectedState] = useState(null);
     const [isRegisterCompleteOpen, setIsRegisterCompleteOpen] = useState(false);
-    const [loading, setLoading] = useState(false); 
 
     const handleSelect = (state) => {
         setSelectedState(state);
     };
 
     console.log("NoteStateModal - book:", book);
-    console.log("NoteStateModal - book?.id:", book?.id);
 
     const handleRegister = async () => {
-        if (!selectedState || !book?.id || !userId) {
-            console.log('데이터 입력 에러');
-            console.log("selectedState:", selectedState);
-            console.log("book?.id:", book?.id);
-            console.log("userId:", userId);
+        if (!selectedState || !book_id || !userId) {
+            console.log("데이터 입력 에러");
             return;
         }
 
-        setLoading(true); 
-
         try {
             const response = await axios.post(
-                `${API_URL}/save/${book.id}`, 
+                `${API_URL}/save/${book_id}`,
                 {
-                    book_id: book.id,
-                    is_complete_reading: selectedState, 
+                    book_id: book_id,
+                    is_complete_reading: selectedState,
                 },
                 {
                     headers: {
-                        user_id: userId, 
+                        user_id: userId,
                         "Content-Type": "application/json",
                     },
                 }
             );
 
             if (response.status === 201) {
-                setIsRegisterCompleteOpen(true); 
+                console.log("도서가 성공적으로 추가됨:", response.data);
+                setIsRegisterCompleteOpen(true);
+            } else if (response.status === 200) {
+                console.log("이미 추가된 도서:", response.data);
+                //이미 내 서재에 추가된 도서입니다. ->  이거 팝업/에러 만들기
             }
         } catch (error) {
             console.error("도서 상태 저장 실패:", error);
-        } finally {
-            setLoading(false);
+            // 책 상태 저장에 실패했습니다. 다시 시도해주세요. -> 팝업/에러 만들기
         }
     };
 
@@ -70,9 +66,9 @@ const NoteStateModal = ({ open, onClose, book, userId }) => {
                         textAlign: "center",
                     }}
                 >
-                    <Box sx={{ width: "15rem", height: "0.3rem", backgroundColor: "#739CD4", borderRadius: "10px", margin: "0 auto 1rem", }} />
+                    <Box sx={{ width: "15rem", height: "0.3rem", backgroundColor: "#739CD4", borderRadius: "10px", margin: "0 auto 1rem" }} />
 
-                    <Typography variant="h6" sx={{ fontSize: "2.1rem", fontWeight: "600", margin: "1.5rem",}}>
+                    <Typography variant="h6" sx={{ fontSize: "2.1rem", fontWeight: "600", margin: "1.5rem" }}>
                         이 책을
                     </Typography>
 
@@ -150,31 +146,27 @@ const NoteStateModal = ({ open, onClose, book, userId }) => {
                     <Button
                         variant="contained"
                         onClick={handleRegister}
-                        disabled={!selectedState || loading} 
+                        disabled={!selectedState}
                         sx={{
                             fontSize: "2.2rem",
                             fontWeight: "600",
-                            backgroundColor: loading ? "#A5D8E8" : "#BDE5F1", 
+                            backgroundColor: "#BDE5F1",
                             padding: "1rem",
                             borderRadius: "0.8rem",
-                            boxShadow:"none",
+                            boxShadow: "none",
                             width: "100%",
                             marginBottom: "1rem",
                             "&:hover": {
-                                backgroundColor: loading ? "#A5D8E8" : "#A5D8E8",
+                                backgroundColor: "#A5D8E8",
                             },
                         }}
                     >
-                        {loading ? "기록 중..." : "기록하기"}
+                        기록하기
                     </Button>
                 </Box>
             </Modal>
 
-            <NoteCompleteModal 
-                open={isRegisterCompleteOpen} 
-                onClose={() => setIsRegisterCompleteOpen(false)} 
-                book={book} 
-            />
+            <NoteCompleteModal open={isRegisterCompleteOpen} onClose={() => setIsRegisterCompleteOpen(false)} book={book} />
         </>
     );
 };
