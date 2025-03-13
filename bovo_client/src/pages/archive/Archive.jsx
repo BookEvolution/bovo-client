@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useBooks from "../../hooks/useBooks";
+import useArchive from "../../hooks/useArchive";
 import ArchiveTabs from "../../components/archive/ArchiveTabs";
 import ArchiveIng from "../../components/archive/ArchiveIng";
 import ArchiveEnd from "../../components/archive/ArchiveEnd";
@@ -7,7 +7,7 @@ import ArchiveWish from "../../components/archive/ArchiveWish";
 import styles from "../../components/archive/Archive.module.css";
 
 const Archive = () => {
-  const { books, loading, error } = useBooks();
+  const { books, loading, error } = useArchive();
   const [currentTab, setCurrentTab] = useState("ing");
   const [searchQuery, setSearchQuery] = useState("");
 

@@ -12,23 +12,21 @@ import dayjs from "dayjs";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import useDelete from "../../hooks/useDelete";
 import DeleteModal from "../deleteModal/DeleteModal";
 import useUpdateMemo from "../../hooks/useUpdateMemo";
+import { useNavigate } from "react-router-dom";
 
 const NoteBottomSheet = ({ open, onClose, book }) => {
-    console.log("book:", book); // book 값 확인
-
     const [status, setStatus] = useState("ing");
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [rating, setRating] = useState(0);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const navigate = useNavigate();
 
     // 기존 데이터 불러오기
     useEffect(() => {
         if (open && book) {
-            console.log(" 실행됨", book);
             setStatus(book.status || "ing");
             setStartDate(book.start_date ? dayjs(book.start_date) : null);
             setEndDate(book.end_date ? dayjs(book.end_date) : null);
@@ -40,38 +38,27 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
         if (newStatus !== null) setStatus(newStatus);
     };
 
-    const { deleteItem } = useDelete();
-    const handleDeleteBook = () => {
-        deleteItem(book.book_id, "book", null, () => {
-          setOpenDeleteModal(false);
-          onClose();
-        });
-      };
-
-      const { updateMemo } = useUpdateMemo();
-
-      const handleSave = async () => {
-          if (!book) return;
-      
-          try {
-              const updatedMemo = {
-                  status,
-                  start_date: startDate ? startDate.format("YYYY-MM-DD") : null,
-                  end_date: endDate ? endDate.format("YYYY-MM-DD") : null,
-                  star: rating
-              };
-      
-              await updateMemo(book.book_id, updatedMemo); // 수정 API 요청
-              console.log("수정 완료");
-              onClose(); // 모달 닫기
-          } catch (error) {
-              console.error("수정 실패:", error);
-          }
-      };
+    const { updateMemo } = useUpdateMemo();
+    const handleSave = async () => {
+        if (!book) return;
+        try {
+            const updatedMemo = {
+                status,
+                start_date: startDate ? startDate.format("YYYY-MM-DD") : null,
+                end_date: endDate ? endDate.format("YYYY-MM-DD") : null,
+                star: rating
+            };
+            await updateMemo(book.book_id, updatedMemo);
+            console.log("수정 완료");
+            onClose(); // 모달 닫기
+        } catch (error) {
+            console.error("수정 실패:", error);
+        }
+    };
 
     return (
         <>
-            {/* 모달 */}        
+            {/* 모달 */}
             <Modal 
                 open={open} 
                 onClose={onClose}
@@ -82,7 +69,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                     alignItems: "flex-end", 
                     justifyContent: "center" 
                 }}
-                >
+            >
                 <Slide direction="up" in={open} mountOnEnter unmountOnExit>
                     <Box
                     aria-hidden="false" //오류 생겨서 넣어둠
@@ -96,8 +83,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                             textAlign: "center",
                         }}
                     >
-                        
-                    {/* 상단 바 */}
+                        {/* 상단 바 */}
                     <Box 
                         sx={{
                             width: "20rem",
@@ -327,11 +313,18 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                 </Slide>
             </Modal>
 
+            {/* 삭제 모달 */}
             <DeleteModal
                 open={openDeleteModal}
-                 onClose={() => setOpenDeleteModal(false)}
-                onConfirm={handleDeleteBook}
-            />;
+                onClose={() => setOpenDeleteModal(false)}
+                targetId={book?.book_id}
+                targetType="book"
+                onSuccess={() => {
+                    setOpenDeleteModal(false);
+                    onClose();
+                    navigate("/archive");
+                }}
+            />
         </>
     );
 };

@@ -1,7 +1,19 @@
 import PropTypes from "prop-types";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
+import useDelete from "../../hooks/useDelete";
 
-const DeleteModal = ({ open, onClose, onConfirm }) => {
+const DeleteModal = ({ open, onClose, targetId, targetType, bookId, onSuccess }) => {
+  const { deleteItem } = useDelete();
+
+  const handleDelete = () => {
+    console.log(`삭제 버튼 클릭 - targetId: ${targetId}, targetType: ${targetType}, bookId: ${bookId}`);
+
+    deleteItem(targetId, targetType, bookId, () => {
+      console.log("삭제 성공, 실행");
+      onSuccess && onSuccess();
+      onClose();
+    });
+  };
 
   return (
     <Dialog
@@ -60,7 +72,7 @@ const DeleteModal = ({ open, onClose, onConfirm }) => {
           취소
         </Button>
         <Button
-          onClick={onConfirm}
+          onClick={handleDelete}
           sx={{
             width: "12.5rem",
             height: "5rem",
@@ -78,9 +90,12 @@ const DeleteModal = ({ open, onClose, onConfirm }) => {
 };
 
 DeleteModal.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onConfirm: PropTypes.func.isRequired,
-  };
-  
-  export default DeleteModal;
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  targetId: PropTypes.string.isRequired,
+  targetType: PropTypes.string.isRequired,
+  bookId: PropTypes.string,
+  onSuccess: PropTypes.func,
+};
+
+export default DeleteModal;

@@ -1,19 +1,26 @@
 import { Box, IconButton } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DeleteModal from "../../components/deleteModal/DeleteModal";
 import styles from "./Note.module.css";
-import { bookPropType } from "../../utils/propTypes";
-import { useState } from "react";
-import useDelete from "../../hooks/useDelete";
+import { useState, useEffect } from "react";
+import useBook from "../../hooks/useBook";
+import PropTypes from "prop-types";
+import { memoPropType } from "../../utils/propTypes";
 
-const NoteList = ({ book }) => {
+const NoteList = ({ memos }) => {
+  const { book_id } = useParams();
   const navigate = useNavigate();
-  const { deleteItem } = useDelete();
-  const [memos, setMemos] = useState(book.memos || []);
+  const { book } = useBook(book_id); 
+  const [memoList, setMemoList] = useState([]);
+
+  useEffect(() => {
+    setMemoList(memos);
+  }, [memos]);
+
   const [selectedMemoId, setSelectedMemoId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -28,25 +35,15 @@ const NoteList = ({ book }) => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
-    if (!selectedMemoId) return;
-  
-    deleteItem(selectedMemoId, "memo", book.book_id, () => {
-      setMemos((prevMemos) => (prevMemos ?? []).filter((memo) => memo.memo_id !== selectedMemoId)); // ✅ undefined 방지
-      setIsModalOpen(false);
-    });
-  };
-  
-
   const navigateToNoteCombine = () => {
-    navigate(`/note/note-combine/${book.book_id}`);
+    navigate(`/archive/${book?.book_id}/memos`);
   };
 
   const navigateToNoteEdit = () => {
     navigate(`/note/note-edit`);
   };
 
-  if (!memos.length) return <p className={styles.NOmemos}>작성된 메모가 없습니다.</p>;
+  if (!memoList.length) return <p className={styles.NOmemos}>작성된 메모가 없습니다.</p>;
 
   return (
     <Box className={styles.noteListContainer}>
@@ -63,13 +60,13 @@ const NoteList = ({ book }) => {
       </Box>
 
       <Box className={styles.noteList}>
-        {memos.map((memo) => (
+        {memoList.map((memo) => (
           <Box key={memo.memo_id}>
             <Box className={styles.Datecontainer}>
               <p className={styles.memoDate}>{memo.memo_date}</p>
               <div className={styles.dateLine}></div>
             </Box>
-            <Box className={styles.noteCard} onClick={() => navigate(`/note/note-detail/${memo.memo_id}`)}>
+            <Box className={styles.noteCard} onClick={() => navigate(`/archive/${book?.book_id}/memo?memoId=${memo.memo_id}`)}>
               <Box className={styles.noteContent}>
                 <p className={styles.noteTitle}>{memo.memo_Q}</p>
                 <p className={styles.noteText}>{memo.memo_A}</p>
@@ -90,14 +87,17 @@ const NoteList = ({ book }) => {
       <DeleteModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onConfirm={handleDeleteConfirm}
+        targetId={selectedMemoId}
+        targetType="memo"
+        bookId={book?.book_id}
+        onSuccess={() => navigate(`/archive/${book?.book_id}`)}
       />
     </Box>
   );
 };
 
 NoteList.propTypes = {
-  book: bookPropType.isRequired,
+  memos: PropTypes.arrayOf(memoPropType).isRequired,
 };
 
 export default NoteList;
