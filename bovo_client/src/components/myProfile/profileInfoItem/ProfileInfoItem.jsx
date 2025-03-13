@@ -9,7 +9,7 @@ const ProfileInfoItem = ({ title, content, src }) => {
             <Typography sx={{ fontSize: "1.75rem" }} fontWeight="bold">
                 {title}
             </Typography>
-            {src ? (
+            {content !== "" ? (
                 <Typography sx={{ fontSize: "1.75rem", textAlign: "right" }}>
                     {content}
                 </Typography>
