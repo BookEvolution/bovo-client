@@ -5,6 +5,7 @@ import Header from "../header/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleLogoutModal } from "../../store/logout/LogeoutSlice";
 import LogoutModal from "../../components/logoutModal/LogoutModal";
+import { logout } from "../../api/AccountManager.js";
 
 const Layout = () => {
     const location = useLocation();  // 현재 경로 가져오기
@@ -18,9 +19,9 @@ const Layout = () => {
 
     // ✅ 로그아웃 핸들러 함수
     const handleLogout = async () => {
-        // await logout(); // 로그아웃 실행
-        dispatch(toggleLogoutModal(false)); // 모달 닫기
-        navigate("/login"); // ✅ 로그인 페이지로 이동
+        await logout();
+        dispatch(toggleLogoutModal(false)); 
+        navigate("/login");
     };
 
     return (

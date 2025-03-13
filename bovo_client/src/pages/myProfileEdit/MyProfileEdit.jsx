@@ -1,27 +1,24 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import profile6 from "../../assets/profile/profile_6.png";
 import styles from "./MyProfileEdit.module.css";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-// import { editUserProfile, fetchMyProfileEditData } from "../../api/UserApi";
+import { editUserProfile, fetchMyProfileEditData } from "../../api/UserApi";
 import ProfileBottomSheet from "../../components/profileImgBottomsheet/ProfileBottomSheet";
 import { useNavigate } from "react-router-dom";
  
 const MyProfileEdit = () => {
     const navigate = useNavigate(); // ✅ useNavigate 추가
     const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
-    const [selectedProfile, setSelectedProfile] = useState({ key: "profile_6", src: profile6 });
+    const [selectedProfile, setSelectedProfile] = useState();
     const {register, handleSubmit, watch, setValue, formState: {isSubmitting, errors }} = useForm({mode : "onChange", defaultValues: { nickname: "", password: "", confirmPassword: "" }}); //프로필 수정 유효성 검사
-    const [profileData, setProfileData] = useState(null);
 
     useEffect(() => {
         const loadProfileData = async () => {
             try {
-                // const data = await fetchMyProfileEditData();
-                // setProfileData(data);
-                // setValue("nickname", data.nickname || "");
-                // setSelectedProfile({ key: data.profileImage, src: data.profileImageUrl }); // 프로필 이미지 설정
+                const data = await fetchMyProfileEditData();
+                setValue("nickname", data.nickname || "");
+                setSelectedProfile({ key: "profileImg", src: data.profile_pictures }); // 프로필 이미지 설정
             } catch (error) {
                 console.error("프로필 데이터를 불러오는 중 오류 발생:", error);
             }
@@ -45,8 +42,8 @@ const MyProfileEdit = () => {
         };
     
         try {
-            // const response = await editUserProfile(updatedData); // 프로필 수정 요청
-            // console.log("수정된 프로필:", response);
+            const response = await editUserProfile(updatedData); // 프로필 수정 요청
+            console.log("수정된 프로필:", response);
             // 수정 성공 후 UI 업데이트 또는 리디렉션 처리
             navigate("/mypage/myprofile"); // ✅ 수정 완료 후 이동
         } catch (error) {

@@ -2,9 +2,7 @@ import api from "./Auth.js";
 
 export const logout = async () => {
     try {
-        console.log("로그아웃 API 요청 보냄"); // ✅ 로그 추가
         await api.post("/my-page/logout");
-        console.log("로그아웃 API 요청 성공"); // ✅ 로그 추가
         clearSession();
     } catch (error) {
         console.error("로그아웃 오류:", error);
