@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://eb77-2406-5900-902b-8631-6d33-afad-ed06-8ac3.ngrok-free.app";
-const token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjcsImlhdCI6MTc0MTc4NjYyOSwiZXhwIjoxNzQxNzkwMjI5fQ.wlfHx69ZznJLxNGppCJ077M3G3l_5qGALp15l-XcSTg";
+const API_URL = "";
+const token = "";
 
 /** 책 삭제 */
 export const deleteBook = async (bookId) => {

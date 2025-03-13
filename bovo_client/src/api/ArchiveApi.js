@@ -3,13 +3,13 @@ import axios from "axios";
 const API_URL = "";
 
 export const archiveData = async ( ) => {
-    const token = sessionStorage.getItem("AccessToken");
+    //const token = sessionStorage.getItem("AccessToken");
     try {
         const response = await axios.get(`${API_URL}/archive`, {
             headers: {
                 "Content-Type": "application/json",
                 "ngrok-skip-browser-warning": "69420",
-                Authorization: `Bearer ${token}`
+                //Authorization: `Bearer ${token}`
             },
             withCredentials: true 
         });

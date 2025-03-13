@@ -50,11 +50,10 @@ function App() {
             <Route path='/archive/:book_id' element={<Note />} />
             {/*<Route path='/note/note-detail/:memo_id' element={<NoteDetail />} />*/}
             <Route path='/archive/:book_id/memo' element={<NoteDetail />} />
-            <Route path='/note/note-edit' element={<NoteEdit />} />
-            <Route path='/note/note-edit/:memo_id' element={<NoteEdit />} />
-            {/*<Route path='/archive/:book_id/memo' element={<NoteEdit />} />
-            <Route path='/archive/:book_id/memo?memoId=:memo_id' element={<NoteEdit />} />
-            {/* <Route path='/archive/:isbn/note-combine' element={<NoteCombine />} /> */}
+            {/*<Route path='/note/note-edit/:memo_id' element={<NoteEdit />} />
+            <Route path='/note/note-edit' element={<NoteEdit />} />*/}
+            <Route path='/archive/edit/:book_id' element={<NoteEdit />} />
+            <Route path='/archive/edit/:book_id/:memo_id' element={<NoteEdit />} />
             <Route path='/archive/:book_id/memos' element={<NoteCombine />} />
             <Route path='/forum' element={<Forum />} />
             <Route path='/forum/forum-make' element={<ForumMake />} />
