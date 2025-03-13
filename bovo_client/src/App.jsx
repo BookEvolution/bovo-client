@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import './App.css'
 import LoginLayout from './layout/loginLayout/LoginLayout'
 import Login from './pages/login/Login'
@@ -26,8 +26,17 @@ import Calendar from './pages/calendar/Calendar'
 import ErrorPage from './pages/errorPage/ErrorPage'
 import KakaoCallback from './pages/login/KakaoCallback'
 import ChatLayout from './layout/chatLayout/layout/ChatLayout'
+// import { useEffect } from 'react'
+// import { enableInterceptor } from "./api/Auth";
 
 function App() {
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //     enableInterceptor(() => {
+  //         navigate("/login"); // 토큰 만료 시 로그인 페이지로 이동
+  //     });
+  // }, [navigate])
 
   return (
     <>

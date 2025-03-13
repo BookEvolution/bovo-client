@@ -1,10 +1,10 @@
 // import axios from "axios";
 
-// let requestInterceptor = null;  // 인터셉터를 저장할 변수
+// let requestInterceptor = null; // 인터셉터 저장 변수
 
 // const api = axios.create({
 //   baseURL: "https://your-api.com",
-//   withCredentials: true, // 쿠키에 있는 refreshToken을 보내기 위해 필요
+//   withCredentials: true, // 쿠키 포함
 // });
 
 // // ✅ accessToken과 만료 시간을 저장하는 함수
@@ -20,41 +20,45 @@
 //   return expiry ? Date.now() > expiry : true;
 // };
 
-// // ✅ 요청 인터셉터 (accessToken 자동 추가 + ngrok 예외처리)
-// api.interceptors.request.use(
-//   async (config) => {
-//     let token = sessionStorage.getItem("accessToken");
+// // ✅ 요청 인터셉터를 설정하는 함수
+// const setupInterceptor = () => {
+//     if (requestInterceptor !== null) return; // 이미 설정되어 있으면 중복 추가 방지
 
-//     // 🔥 accessToken이 만료되었으면 갱신 시도
-//     if (!token || isAccessTokenExpired()) {
-//       try {
-//         const res = await api.post("/refresh"); // refreshToken을 통해 새로운 accessToken 요청
-//         if (res.status === 200) {
-//           token = res.data.accessToken;
-//           setAccessToken(token, res.data.expiresIn); // 새로운 토큰과 만료 시간 저장
-//         }
-//       } catch (error) {
-//         console.error("토큰 갱신 실패. 다시 로그인 필요");
-//         sessionStorage.removeItem("accessToken");
-//         window.location.href = "/login"; // 로그인 화면으로 이동
-//         return Promise.reject(error); // 토큰 갱신 실패 시 더 이상 진행되지 않도록 처리
-//       }
-//     }
+//     requestInterceptor = api.interceptors.request.use(
+//         async (config) => {
+//             let token = sessionStorage.getItem("accessToken");
 
-//     // Authorization 헤더에 토큰 추가
-//     config.headers["Authorization"] = `Bearer ${token}`;
+//             // 🔥 accessToken이 만료되었으면 갱신 시도
+//             if (!token || isAccessTokenExpired()) {
+//                 try {
+//                     const res = await api.post("/refresh");
+//                     if (res.status === 200) {
+//                         token = res.data.accessToken;
+//                         setAccessToken(token);
+//                     }
+//                 } catch (error) {
+//                     console.error("토큰 갱신 실패. 다시 로그인 필요");
+//                     sessionStorage.removeItem("accessToken");
+//                     if (onUnauthorized) onUnauthorized(); // 콜백 호출 (리다이렉트 처리)
+//                     return Promise.reject(error);
+//                 }
+//             }
 
-//     // GET 요청에만 ngrok 헤더 추가
-//     if (config.method === "get") {
-//       config.headers["ngrok-skip-browser-warning"] = "69420";
-//     }
+//             // Authorization 헤더 추가
+//             config.headers["Authorization"] = `Bearer ${token}`;
 
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
+//             // GET 요청에만 ngrok 헤더 추가
+//             if (config.method === "get") {
+//                 config.headers["ngrok-skip-browser-warning"] = "69420";
+//             }
 
-// // 인터셉터를 꺼두는 함수
+//             return config;
+//         },
+//         (error) => Promise.reject(error)
+//     );
+// };
+
+// // ✅ 인터셉터를 비활성화하는 함수
 // export const disableInterceptor = () => {
 //     if (requestInterceptor !== null) {
 //         api.interceptors.request.eject(requestInterceptor);
@@ -62,11 +66,13 @@
 //     }
 // };
 
-// // 인터셉터를 다시 활성화하는 함수
-// export const enableInterceptor = () => {
-//     if (requestInterceptor === null) {
-//         setupInterceptor();
-//     }
+// // ✅ 인터셉터를 다시 활성화하는 함수
+// export const enableInterceptor = (onUnauthorized) => {
+//     setupInterceptor(onUnauthorized);
 // };
 
+// // ✅ 초기 인터셉터 설정
+// setupInterceptor();
+
+// export { setAccessToken, isAccessTokenExpired };
 // export default api;

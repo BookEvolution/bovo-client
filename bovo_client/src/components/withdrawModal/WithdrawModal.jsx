@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'; // PropTypes 임포트
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import styles from './WithdrawModal.module.css';
 
-const WithdrawModal = ({open, onClose}) => {
+const WithdrawModal = ({open, onClose, handleWithdraw}) => {
     return (
         <Dialog 
             open={open} 
@@ -67,6 +67,7 @@ const WithdrawModal = ({open, onClose}) => {
                     취소
                 </Button>
                 <Button 
+                    onClick={handleWithdraw}
                     sx={{
                         width: "12.5rem",
                         height: "5rem",
@@ -89,6 +90,7 @@ const WithdrawModal = ({open, onClose}) => {
 WithdrawModal.propTypes = {
     open: PropTypes.func.isRequired, 
     onClose: PropTypes.func.isRequired,
+    handleWithdraw: PropTypes.func.isRequired
 };
 
 export default WithdrawModal;

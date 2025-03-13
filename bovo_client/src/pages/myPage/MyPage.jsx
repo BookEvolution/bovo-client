@@ -9,7 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleLogoutModal } from "../../store/logout/LogeoutSlice";
 import LogoutModal from "../../components/logoutModal/LogoutModal";
 import { useEffect, useState } from "react";
-import { fetchMyPageData } from "../../api/UserApi";
+// import { fetchMyPageData } from "../../api/UserApi";
+// import { logout } from "../../api/AccountManager"; // ✅ logout 함수 import
 
 const MyPage = () => {
     const [userData, setUserData] = useState(null);
@@ -19,7 +20,7 @@ const MyPage = () => {
     const dispatch = useDispatch();
     const isLogout = useSelector((state) => state.logout.isLogout);
 
-    const handleLogout = (state) => {
+    const handleLogoutModal = (state) => {
         dispatch(toggleLogoutModal(state));
     };
 
@@ -27,7 +28,7 @@ const MyPage = () => {
 
         const fetchData = async () => {
             try {
-                await fetchMyPageData();
+                // await fetchMyPageData();
             } catch (err) {
                 setError("데이터를 불러오는 중 오류가 발생했습니다.", err);
             } finally {
@@ -37,6 +38,13 @@ const MyPage = () => {
 
         fetchData();
     }, []);
+
+    // ✅ 로그아웃 핸들러 함수
+    const handleLogout = async () => {
+        // await logout(); // 로그아웃 실행
+        dispatch(toggleLogoutModal(false)); // 모달 닫기
+        navigate("/login"); // ✅ 로그인 페이지로 이동
+    };
 
     return (
         <Container className={styles.myPageContainer}>
@@ -140,8 +148,8 @@ const MyPage = () => {
                     </Box>
                 </Box>
             </Container>
-            <MenuList onLogout={handleLogout} />
-            {isLogout && <LogoutModal />}
+            <MenuList onLogout={handleLogoutModal} />
+            {isLogout && <LogoutModal handleLogout={handleLogout}/>}
         </Container>
     );
 };
