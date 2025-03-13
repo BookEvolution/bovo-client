@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Typography, Container } from "@mui/material";
 import axios from "axios";
 import kakaoBtn from "../../assets/button/btn_kakao.png";
-import { setAccessToken, disableInterceptor, enableInterceptor } from "../../api/Auth";  // 인터셉터 비활성화 및 활성화 함수 가져오기
+// import api, { disableInterceptor, enableInterceptor } from "../../api/Auth";
 
 axios.defaults.withCredentials = true;
 
@@ -83,7 +83,7 @@ const Login = () => {
         setPasswordError("");
 
         // 인터셉터 비활성화
-        disableInterceptor();
+        // disableInterceptor();
 
         try {
             const response = await axios.post(
@@ -104,7 +104,7 @@ const Login = () => {
 
                 if (accessToken) {
                     sessionStorage.setItem("accessToken", accessToken);
-                    setAccessToken(accessToken); // 만료시간 기본값 3600초 적용
+                    // setAccessToken(accessToken); // 만료시간 기본값 3600초 적용
                 }
 
                 navigate("/");
@@ -127,7 +127,7 @@ const Login = () => {
             }
         } finally {
             // 로그인 후 인터셉터 다시 활성화
-            enableInterceptor();
+            // enableInterceptor();
         }
     };
 

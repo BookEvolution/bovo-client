@@ -34,31 +34,6 @@
     gap: 3.125rem;
 }
 
-.profileInfoWrapper {
-    width: 100%;
-    height: 6.25rem;
-    padding: 0 1.5rem;
-    border-radius: 0.625rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #E8F1F6;
-    border-radius: 0.625rem;
-}
-
-.imgWrapper {
-    width: 4rem;
-    height: 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.bedgeImg {
-    width: 100%;
-    height: 100%;
-}
-
 .btnWrapper {
     width: 100%;
     height: 13.75rem;
