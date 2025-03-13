@@ -35,6 +35,11 @@ const NoteList = ({ memos }) => {
     setIsModalOpen(true);
   };
 
+  const handleDeleteSuccess = (deletedMemoId) => {
+    setMemoList((prev) => prev.filter((memo) => memo.memo_id !== deletedMemoId));
+  };
+  
+
   const navigateToNoteCombine = () => {
     navigate(`/archive/${book?.book_id}/memos`);
   };
@@ -58,15 +63,17 @@ const NoteList = ({ memos }) => {
           </IconButton>
         </Box>
       </Box>
-
-      <Box className={styles.noteList}>
+  
+      <Box className={styles.scrollableNoteList}>
         {memoList.map((memo) => (
           <Box key={memo.memo_id}>
             <Box className={styles.Datecontainer}>
               <p className={styles.memoDate}>{memo.memo_date}</p>
               <div className={styles.dateLine}></div>
             </Box>
-            <Box className={styles.noteCard} onClick={() => navigate(`/archive/${book?.book_id}/memo?memoId=${memo.memo_id}`)}>
+            <Box className={styles.noteCard}
+              sx={{ mb: "1.5rem" }} 
+            onClick={() => navigate(`/archive/${book?.book_id}/memo?memoId=${memo.memo_id}`)}>
               <Box className={styles.noteContent}>
                 <p className={styles.noteTitle}>{memo.memo_Q}</p>
                 <p className={styles.noteText}>{memo.memo_A}</p>
@@ -90,7 +97,7 @@ const NoteList = ({ memos }) => {
         targetId={selectedMemoId}
         targetType="memo"
         bookId={book?.book_id}
-        onSuccess={() => navigate(`/archive/${book?.book_id}`)}
+        onSuccess={() => handleDeleteSuccess(selectedMemoId)}
       />
     </Box>
   );

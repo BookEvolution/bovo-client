@@ -6,11 +6,9 @@ import useBook from "../../hooks/useBook";
 
 const Note = () => {
   const { book_id } = useParams();
-  const { book, memos, loading, error } = useBook(book_id);
+  const { book, memos } = useBook(book_id);
 
-  if (loading) return <p className={styles.loading}>도서 정보를 불러오는 중...</p>;
-  if (error) return <p className={styles.error}>책 정보를 불러오는 중 오류 발생!</p>;
-  if (!book) return <p className={styles.loading}>책 정보를 찾을 수 없습니다.</p>;
+  if (!book) return <p className={styles.loading}>도서 정보를 불러오는 중</p>;
 
   return (
     <div className={styles.noteContainer}>
