@@ -34,7 +34,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <InterceptorWrapper /> {/* useNavigate를 여기에서 사용 */}
+        {/* <InterceptorWrapper /> useNavigate를 여기에서 사용 */}
         <Routes>
           <Route path='/kakao/bovocallback' element={<KakaoCallback />} />
           <Route path='/login' element={<LoginLayout />}>
@@ -66,8 +66,8 @@ function App() {
             <Route path='/404' element={<ErrorPage />} />
           </Route>
           <Route path='/auth/kakao/callback' element={<KakaoCallback />} />
-          <Route path='/forum/forum-chat' element={<ChatLayout />}>
-            <Route path='/forum/forum-chat' element={<ForumChat />} />
+          <Route path='/forum/:roomId' element={<ChatLayout />}>
+            <Route index element={<ForumChat />} />
           </Route>
           <Route path='/*' element={<Navigate to={"/404"} />} />
         </Routes>
