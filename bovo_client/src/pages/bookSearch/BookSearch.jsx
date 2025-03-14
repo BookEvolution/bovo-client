@@ -5,9 +5,6 @@ import BookSearchBar from "./BookSearchBar";
 import BookList from "./BookList";
 import styles from "./BookSearch.module.css";
 
-// const API_URL = import.meta.env.VITE_BACKEND_SEARCH_API_URL;
-
-
 const BookSearch = () => {
     const [books, setBooks] = useState([]); 
     const [sort, setSort] = useState("accuracy"); 
@@ -21,13 +18,23 @@ const BookSearch = () => {
         }
 
         setLoading(true);
+
+        const accessToken = sessionStorage.getItem("AccessToken");
+        if (!accessToken) {
+            console.error("AccessToken 없음, API 요청을 중단합니다.");
+            setLoading(false);
+            return;
+        }
+
         try {
-            const response = await axios.get(`https://b8be-222-112-255-159.ngrok-free.app/search?query=${encodeURIComponent(query)}&sort=${sort}&size=20`,{
+            const response = await axios.get(`https://2cc3-222-112-255-159.ngrok-free.app/search?query=${encodeURIComponent(query)}&sort=${sort}&size=20`, {
                 headers: {
                     "Content-Type": "application/json",
-                    "ngrok-skip-browser-warning": "69420"
-                }
+                    "Authorization": `Bearer ${accessToken}`, 
+                    "ngrok-skip-browser-warning": "69420",
+                },
             });
+
             console.log("서버에서 받은 데이터:", response.data);
 
             if (response.data && response.data.documents) {
@@ -38,6 +45,16 @@ const BookSearch = () => {
             }
         } catch (error) {
             console.error("도서 검색 API 오류:", error);
+
+            if (error.response) {
+                if (error.response.status === 401) {
+                    console.error("AccessToken이 만료되었거나 유효하지 않습니다.");
+                    sessionStorage.removeItem("AccessToken");
+                } else if (error.response.status === 403) {
+                    console.error("API 접근이 금지되었습니다.");
+                }
+            }
+
             setBooks([]);
         }
         setLoading(false);

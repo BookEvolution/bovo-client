@@ -43,7 +43,10 @@ const BookSearchDetail = () => {
     return (
         <Box className={styles.container}>
             <Box className={styles.bookInfoContainer}>
+                <Box>
                 <img src={book.thumbnail || "default_thumbnail.png"} alt={book.title} className={styles.bookCover} />
+                </Box>
+                
                 <Box className={styles.bookDetails}>
                     <Typography className={styles.bookTitle} sx={{
                         fontSize: "2.3rem",
@@ -201,7 +204,7 @@ const BookSearchDetail = () => {
             </Box>
 
             {/* <NoteStateModal open={isModalOpen} onClose={handleCloseModal} book={book}/> */}
-            <NoteStateModal open={isModalOpen} onClose={handleCloseModal} book={{book}} />
+            <NoteStateModal open={isModalOpen} onClose={handleCloseModal} book={book} />
             <ForumCompleteModal open={isForumModalOpen} onClose={handleCloseForumModal} book={book} />
         </Box>
     );
