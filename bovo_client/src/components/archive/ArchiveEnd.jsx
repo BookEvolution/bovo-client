@@ -19,7 +19,7 @@ const ArchiveEnd = ({ books }) => {
           <div className={styles.bookinfo}>
             <p className={styles.booktitle}>{book.title}</p>
             <p className={styles.bookauthor}>{book.author}</p>
-            {book.star !== undefined && <Rating value={book.star} readOnly />}
+            {book.star !== undefined && <Rating value={book.star / 2} precision={0.5} readOnly />}
           </div>
         </div>
       ))}

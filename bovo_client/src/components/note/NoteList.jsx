@@ -39,7 +39,6 @@ const NoteList = ({ memos }) => {
     setMemoList((prev) => prev.filter((memo) => memo.memo_id !== deletedMemoId));
   };
   
-
   const navigateToNoteCombine = () => {
     navigate(`/archive/${book?.book_id}/memos`);
   };
@@ -47,9 +46,6 @@ const NoteList = ({ memos }) => {
   const navigateToNoteEdit = () => {
     navigate(`/archive/edit/${book_id}`);
   };
-
-  if (!memoList.length) return <p className={styles.NOmemos}>작성된 메모가 없습니다.</p>;
-  /**작성된 메모가 없다는 거 띄울 때도 글쓰기 아이콘은 노출되어야함 컨테이너 다시 만들기 */
 
   return (
     <Box className={styles.noteListContainer}>
@@ -65,33 +61,37 @@ const NoteList = ({ memos }) => {
         </Box>
       </Box>
   
-      <Box className={styles.scrollableNoteList}>
-        {memoList.map((memo) => (
-          <Box key={memo.memo_id}>
-            <Box className={styles.Datecontainer}>
-              <p className={styles.memoDate}>{memo.memo_date}</p>
-              <div className={styles.dateLine}></div>
-            </Box>
-            <Box className={styles.noteCard}
-              sx={{ mb: "1.5rem" }} 
-            onClick={() => navigate(`/archive/${book?.book_id}/memo?memoId=${memo.memo_id}`)}>
-              <Box className={styles.noteContent}>
-                <p className={styles.noteTitle}>{memo.memo_Q}</p>
-                <p className={styles.noteText}>{memo.memo_A}</p>
+      {memoList.length > 0 ? (
+        <Box className={styles.scrollableNoteList}>
+          {memoList.map((memo) => (
+            <Box key={memo.memo_id}>
+              <Box className={styles.Datecontainer}>
+                <p className={styles.memoDate}>{memo.memo_date}</p>
+                <div className={styles.dateLine}></div>
               </Box>
-              <Box className={styles.cardIcons}>
-                <IconButton onClick={(e) => handleEdit(e, memo.memo_id)}>
-                  <EditNoteIcon sx={{ fontSize: "3rem", color: "#739CD4" }} />
-                </IconButton>
-                <IconButton onClick={(e) => handleDelete(e, memo.memo_id)}>
-                  <DeleteOutlineIcon sx={{ fontSize: "2.5rem", color: "#739CD4" }} />
-                </IconButton>
+              <Box className={styles.noteCard}
+                sx={{ mb: "1.5rem" }} 
+                onClick={() => navigate(`/archive/${book?.book_id}/memo?memoId=${memo.memo_id}`)}>
+                <Box className={styles.noteContent}>
+                  <p className={styles.noteTitle}>{memo.memo_Q}</p>
+                  <p className={styles.noteText}>{memo.memo_A}</p>
+                </Box>
+                <Box className={styles.cardIcons}>
+                  <IconButton onClick={(e) => handleEdit(e, memo.memo_id)}>
+                    <EditNoteIcon sx={{ fontSize: "3rem", color: "#739CD4" }} />
+                  </IconButton>
+                  <IconButton onClick={(e) => handleDelete(e, memo.memo_id)}>
+                    <DeleteOutlineIcon sx={{ fontSize: "2.5rem", color: "#739CD4" }} />
+                  </IconButton>
+                </Box>
               </Box>
             </Box>
-          </Box>
-        ))}
-      </Box>
-
+          ))}
+        </Box>
+      ) : (
+        <p className={styles.NOmemos}>작성된 메모가 없습니다.</p>
+      )}
+  
       <DeleteModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}

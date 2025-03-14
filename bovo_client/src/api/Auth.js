@@ -4,7 +4,7 @@ let requestInterceptor = null; // 인터셉터 저장 변수
 let onUnauthorizedCallback = null; // 콜백 저장
 
 const api = axios.create({
-  baseURL: "https://626e-112-158-33-80.ngrok-free.app",
+  baseURL: "https://d2ec-112-158-33-80.ngrok-free.app",
   withCredentials: true, // 쿠키 포함
 });
 

@@ -216,7 +216,7 @@ const NoteEdit = () => {
       {/* 스낵바 */}
       <Snackbar 
         open={snackbarOpen} 
-        autoHideDuration={3000} 
+        autoHideDuration={2500} 
         onClose={() => setSnackbarOpen(false)}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >

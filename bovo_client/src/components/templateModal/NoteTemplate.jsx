@@ -123,7 +123,7 @@ const TemplateModal = ({ open, onClose, onApplyTemplate }) => {
         >
           {/* 검색 + 필터 */}
           <Box 
-            sx={{display: "flex",alignItems: "center", gap: "1rem", width: "34rem" }}> {/* 544px */}
+            sx={{display: "flex",alignItems: "center", gap: "1rem", width: "34rem" }}>
             {/* 카테고리 드롭다운 */}
             <Select
               value={categoryFilter}
@@ -222,7 +222,7 @@ const TemplateModal = ({ open, onClose, onApplyTemplate }) => {
               alignSelf: "center",
               fontSize: "1.5rem",
             }}
-            Disable elevation
+            disableElevation
             disabled={!selectedItem}
           >
             추가하기

@@ -13,8 +13,9 @@ const NoteCombine = () => {
     modalOpen,
     openModal,
     closeModal,
-    handleUpdateMemos
   } = useNoteCombine(book_id);
+
+  console.log("데이터:", bookInfo);
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
@@ -172,11 +173,11 @@ const NoteCombine = () => {
 
       {modalOpen && localMemos && localMemos.length > 0 && (
         <CombineModal 
-          open={modalOpen} 
-          onClose={closeModal} 
-          memos={localMemos} 
-          setMemos={handleUpdateMemos}
+        open={modalOpen} 
+        onClose={closeModal} 
+        memos={localMemos} 
         />
+
       )}
     </Box>
   );

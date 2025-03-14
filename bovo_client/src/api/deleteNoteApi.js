@@ -1,7 +1,4 @@
-import axios from "axios";
-
-const API_URL = "https://deb1-2406-5900-902b-8631-4cd9-c81c-a344-e3ef.ngrok-free.app";
-const token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjcsImlhdCI6MTc0MTkxNDU3MCwiZXhwIjoxNzQxOTE4MTcwfQ.MXBAATZYKxrJjcQluk6Y7_-Q7rkLvs4mJcAaCHsnP3k";
+import api from "./Auth.js";
 
 /** 책 삭제 */
 export const deleteBook = async (bookId) => {
@@ -13,13 +10,7 @@ export const deleteBook = async (bookId) => {
   }
 
   try {
-    const response = await axios.delete(`${API_URL}/archive/${bookId}/delete`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      withCredentials: true,
-    });
+    const response = await api.delete(`/archive/${bookId}/delete`);
 
     console.log("책 삭제 성공:", response.data);
     return response.data;
@@ -39,14 +30,8 @@ export const deleteMemo = async (bookId, memoId) => {
   }
 
   try {
-    const response = await axios.delete(`${API_URL}/archive/${bookId}/memo?memoId=${memoId}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      withCredentials: true,
-    });
-
+    const response = await api.delete(`/archive/${bookId}/memo?memoId=${memoId}`);
+    
     console.log("기록 삭제 성공:", response.data);
     return response.data;
   } catch (error) {

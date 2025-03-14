@@ -6,7 +6,7 @@ const useNoteCombine = (bookId) => {
   const [localMemos, setLocalMemos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [bookInfo, setBookInfo] = useState(null);
+  const [bookInfo, setBookInfo] = useState({ title: "", author: "", start_date: "", end_date: "" });
 
   // 메모 데이터 가져오기
   useEffect(() => {
@@ -17,22 +17,25 @@ const useNoteCombine = (bookId) => {
         const data = await noteCombineData(bookId);
         if (data) {
           setBookInfo({
-            title: data.title,
-            author: data.author,
-            start_date: data.start_date,
-            end_date: data.end_date,
+            title: data.title || "책 제목 없음",
+            author: data.author || "저자 없음",
+            start_date: data.start_date || "기간 없음",
+            end_date: data.end_date || "현재",
           });
           setLocalMemos(data.memos || []);
+        } else {
+          setBookInfo({ title: "책 정보 없음", author: "", start_date: "", end_date: "" });
         }
       } catch (err) {
         setError(err);
+        setBookInfo({ title: "책 정보를 불러올 수 없습니다.", author: "", start_date: "", end_date: "" });
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchMemos();
-  }, [bookId]);
+  }, [bookId]);  
 
   // 모달 열고 닫기
   const openModal = () => setModalOpen(true);
