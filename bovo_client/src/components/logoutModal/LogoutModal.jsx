@@ -1,9 +1,10 @@
+import PropTypes from 'prop-types'; // PropTypes 임포트
 import { useDispatch, useSelector } from "react-redux";
 import { toggleLogoutModal } from "../../store/logout/LogeoutSlice";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import styles from './LogoutModal.module.css';
 
-const LogoutModal = () => {
+const LogoutModal = ({ handleLogout }) => {
     const dispatch = useDispatch();
     const isLogout = useSelector((state) => state.logout.isLogout);
 
@@ -70,6 +71,7 @@ const LogoutModal = () => {
                     취소
                 </Button>
                 <Button 
+                    onClick={handleLogout}
                     sx={{
                         width: "12.5rem",
                         height: "5rem",
@@ -89,3 +91,7 @@ const LogoutModal = () => {
 };
 
 export default LogoutModal;
+
+LogoutModal.propTypes = {
+    handleLogout: PropTypes.func.isRequired, // open은 boolean 타입이고 필수 props
+};

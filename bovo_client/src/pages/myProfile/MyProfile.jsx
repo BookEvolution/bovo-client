@@ -1,44 +1,37 @@
 import PropTypes from 'prop-types'; // PropTypes 임포트
-import { Box, Button, Container, Typography } from "@mui/material";
-import profile6 from "../../assets/profile/profile_6.png";
-import bedge from "../../assets/bedge/bedge6.png";
+import { Box, Button, Container } from "@mui/material";
 import styles from "./MyProfile.module.css";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import ProfileInfoItem from "../../components/myProfile/profileInfoItem/ProfileInfoItem";
 import WithdrawModal from '../../components/withdrawModal/WithdrawModal';
 import { fetchMyProfileData } from '../../api/UserApi';
-
-// ✅ MyProfile 내부에 ProfileInfoItem 컴포넌트 선언
-const ProfileInfoItem = ({ title, content }) => (
-    <Box className={styles.profileInfoWrapper}>
-        <Typography sx={{ fontSize: "1.75rem" }} fontWeight="bold">
-            {title}
-        </Typography>
-        {typeof content === "string" ? (
-            <Typography sx={{ fontSize: "1.75rem", textAlign: "right" }}>
-                {content}
-            </Typography>
-        ) : (
-            <Box className={styles.imgWrapper} sx={{ textAlign: "right" }}>
-                {content}
-            </Box>
-        )}
-    </Box>
-);
+import { withdraw } from '../../api/AccountManager.js';
+import bedgeImages from '../../constant/BedgeImg.js';
 
 // MyProfile 페이지지
 const MyProfile = () => {
+    const navigate = useNavigate();
     // 회원 탈퇴 모달 상태 관리
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
     const [userData, setUserData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [userMedalSrc, setUserMedalSrc] = useState(""); // 기본값 설정
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const data = await fetchMyProfileData();
                 setUserData(data);
+                // ✅ `medal`에 해당하는 이미지 찾기
+                const foundMedal = bedgeImages.find((item) => item.key === data.medal)?.src;
+                setUserMedalSrc(foundMedal);
             } catch (error) {
-                console.error("프로필 데이터를 불러오는 중 오류 발생:", error);
+                console.log(error)
+                setError("프로필 데이터를 불러오는 중 오류 발생");
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -56,27 +49,34 @@ const MyProfile = () => {
     };
 
     const myInfoLists = [
-        {title: "닉네임", content: "김구르미"},
-        {title: "이메일", content: "goorm102@naver.com"},
-        {title: "레벨", content: "1"},
-        {
-            title: "지난주 독서성과", 
-            content: <img 
-                          src={bedge} 
-                          alt="독서 성과 이미지" 
-                          className={styles.bedgeImg} 
-                    /> 
-        }
+        {title: "닉네임", content: userData?.nickname || "사용자", src: null},
+        {title: "이메일", content: userData?.email || "알 수 없음", src: null},
+        {title: "레벨", content: userData?.level || 0, src: null},
+        {title: "지난주 독서성과", content: null, src: userMedalSrc}
     ]
+
+    const handleWithdraw = async () => {
+        if (!userData?.email) {
+            console.error("이메일이 존재하지 않습니다.");
+            return;
+        }
+
+        await withdraw(userData.email);
+        // 로그아웃 처리 후 로그인 페이지로 이동
+        navigate("/login");
+    };
+
+    if (loading) return <p>로딩 중...</p>;
+    if (error) return <p>{error}</p>;
 
     return (
         <Container className={styles.myProfileContainer}>
             <Box className={styles.profileImgWrapper}>
-                <img src={profile6} alt="프로필 대체 이미지" className={styles.profileImg}/>
+                <img src={userData.profile_picture} alt="프로필 이미지" className={styles.profileImg}/>
             </Box>
             <Box className={styles.profileInfoContainer}>
-                {myInfoLists.map(({ title, content }) => (
-                    <ProfileInfoItem key={title} title={title} content={content} />
+                {myInfoLists.map(({ title, content, src }) => (
+                    <ProfileInfoItem key={title} title={title} content={content} src={src} />
                 ))}
             </Box>
             <Box className={styles.btnWrapper}>
@@ -107,7 +107,7 @@ const MyProfile = () => {
                 </Button>
             </Box>
             { isWithdrawModalOpen && 
-                <WithdrawModal open={openWithdrawModal} onClose={closeWithdrawModal}/>}
+                <WithdrawModal open={openWithdrawModal} onClose={closeWithdrawModal} handleWithdraw={handleWithdraw}/>}
         </Container>
     );
 };

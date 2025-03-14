@@ -1,24 +1,11 @@
 import PropTypes from "prop-types";
 import { Box, Button, Container, Drawer } from "@mui/material";
 import styles from "./ProfileBottomSheet.module.css";
-import profile1 from "../../assets/profile/profile_1.png";
-import profile2 from "../../assets/profile/profile_2.png";
-import profile3 from "../../assets/profile/profile_3.png";
-import profile4 from "../../assets/profile/profile_4.png";
-import profile5 from "../../assets/profile/profile_5.png";
-import profile6 from "../../assets/profile/profile_6.png";
 import { useEffect, useState } from "react";
+import profileImages from "../../constant/ProfileImg.js";
 
 
 const ProfileBottomSheet = ({ open, onClose, onSelectProfile, selectedProfile }) => {
-    const profileImages = [
-        { key: "profile_1", src: profile1 },
-        { key: "profile_2", src: profile2 },
-        { key: "profile_3", src: profile3 },
-        { key: "profile_4", src: profile4 },
-        { key: "profile_5", src: profile5 },
-        { key: "profile_6", src: profile6 },
-    ];
 
     const [activeProfile, setActiveProfile] = useState(selectedProfile);
 
@@ -67,7 +54,7 @@ const ProfileBottomSheet = ({ open, onClose, onSelectProfile, selectedProfile })
                             key={profile.key} 
                             className={styles.profileImgWrapper} 
                             sx={{
-                                backgroundColor: activeProfile.key === profile.key ? "#BDE5F1" : "#FFFFFF"
+                                backgroundColor: activeProfile?.key === profile.key ? "#BDE5F1" : "#FFFFFF"
                             }}
                             onClick={() => handleSelectProfile(profile)}
                         >
@@ -101,7 +88,7 @@ ProfileBottomSheet.propTypes = {
     open: PropTypes.bool,
     onClose: PropTypes.func,
     onSelectProfile: PropTypes.func,
-    selectedProfile: PropTypes.string,
+    selectedProfile:  PropTypes.object,
 };
 
 export default ProfileBottomSheet;

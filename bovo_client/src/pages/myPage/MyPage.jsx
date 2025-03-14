@@ -1,25 +1,27 @@
 import { Container, Box, Typography, LinearProgress, Link } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import styles from './MyPage.module.css';
-import profile6 from "../../assets/profile/profile_6.png";
-import bedge from "../../assets/bedge/bedge6.png";
 import { useNavigate } from "react-router-dom";
 import MenuList from "../../components/myPageListMenu/MenuList";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleLogoutModal } from "../../store/logout/LogeoutSlice";
 import LogoutModal from "../../components/logoutModal/LogoutModal";
 import { useEffect, useState } from "react";
-import { fetchMyPageData } from "../../api/UserApi";
+import { fetchMyPageData } from "../../api/UserApi.js";
+import { logout } from "../../api/AccountManager"; // ✅ logout 함수 import
+import profileImages from "../../constant/ProfileImg.js";
+import bedgeImages from "../../constant/BedgeImg.js";
 
 const MyPage = () => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [userMedalSrc, setUserMedalSrc] = useState(""); // 뱃지 이미지 상태
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isLogout = useSelector((state) => state.logout.isLogout);
 
-    const handleLogout = (state) => {
+    const handleLogoutModal = (state) => {
         dispatch(toggleLogoutModal(state));
     };
 
@@ -27,7 +29,12 @@ const MyPage = () => {
 
         const fetchData = async () => {
             try {
-                await fetchMyPageData();
+                const data = await fetchMyPageData();
+                setUserData(data); // ✅ 받아온 데이터를 상태에 저장
+
+                // ✅ 데이터가 설정된 후 뱃지 이미지 경로 업데이트
+                const foundMedal = bedgeImages.find((item) => item.key === data?.medal)?.src;
+                setUserMedalSrc(foundMedal);
             } catch (err) {
                 setError("데이터를 불러오는 중 오류가 발생했습니다.", err);
             } finally {
@@ -38,16 +45,43 @@ const MyPage = () => {
         fetchData();
     }, []);
 
+    // ✅ 로그아웃 핸들러 함수
+    const handleLogout = async () => {
+        await logout(); // 로그아웃 실행
+        dispatch(toggleLogoutModal(false)); // 모달 닫기
+        navigate("/login"); // ✅ 로그인 페이지로 이동
+    };
+
+    if (loading) {
+        return (
+            <Container className={styles.myPageContainer}>
+                <Typography sx={{ fontSize: "2rem", textAlign: "center" }}>
+                    로딩 중...
+                </Typography>
+            </Container>
+        );
+    }
+    
+    if (error) {
+        return (
+            <Container className={styles.myPageContainer}>
+                <Typography sx={{ fontSize: "2rem", textAlign: "center", color: "red" }}>
+                    {error}
+                </Typography>
+            </Container>
+        );
+    }
+
     return (
         <Container className={styles.myPageContainer}>
             <Box className={styles.profileImgWrapper}>
-                <img src={profile6} alt="프로필 대체 이미지" className={styles.profileImg}/>
+                <img src={userData?.profile_picture || profileImages[5].src} alt="프로필 이미지" className={styles.profileImg}/>
             </Box>
             <Typography 
                 className={styles.nickNameWrapper} 
                 sx={{fontSize: "3rem", fontWeight: "bold"}}
             >
-                김구름
+                {userData?.nickname || "닉네임 없음"}
             </Typography>
             <Box className={styles.levelContianer}>
                 <Typography 
@@ -60,14 +94,14 @@ const MyPage = () => {
                     className={styles.lvCountWrapper}
                     sx={{fontSize: "2rem"}}
                 >
-                    1
+                    {userData?.level || 1}
                 </Typography>
             </Box>
             <Container className={styles.expBarContainer}>
                 <Box className={styles.expBarWrapper}>
                     <LinearProgress
                         variant="determinate"
-                        value={70}
+                        value={userData?.exp || 0}
                         sx={{
                             width: "100%",
                             height: "1.25rem",
@@ -85,7 +119,7 @@ const MyPage = () => {
                         className={styles.exp}
                         sx={{fontSize: "1.5rem"}}
                     >
-                        70
+                        {userData?.exp || 0}
                     </Typography>
                     <Typography
                         className={styles.entireExp}
@@ -121,18 +155,28 @@ const MyPage = () => {
                 <Box className={styles.rpContentContainer}>
                     <Box className={styles.rpContentWrapper}>
                         <Box className={styles.rpBedge}>
-                            <img src={bedge} alt="독서 성과 뱃지"/>
+                            <img src={userMedalSrc} alt="독서 성과 뱃지"/>
                         </Box>
                         <Box className={styles.rpContent}>
                             <Typography 
                                 className={styles.rpCount}
-                                sx={{fontSize: "5rem", fontWeight: "Bold", color: "#739CD4"}}
+                                sx={{
+                                    width: "10.625rem",
+                                    fontSize: "5rem", 
+                                    fontWeight: "Bold", 
+                                    color: "#739CD4",
+                                    marginRight: "11rem",
+                                }}
                             >
-                                486
+                                {userData?.total_book_num || 0}
                             </Typography>
                             <Typography
                                 className={styles.rpText}
-                                sx={{fontSize: "2rem"}}
+                                sx={{
+                                    width: "10.625rem",
+                                    fontSize: "2rem",
+                                    marginLeft: "11rem",
+                                }}
                             >
                                 권째 기록 중
                             </Typography>
@@ -140,8 +184,8 @@ const MyPage = () => {
                     </Box>
                 </Box>
             </Container>
-            <MenuList onLogout={handleLogout} />
-            {isLogout && <LogoutModal />}
+            <MenuList onLogout={handleLogoutModal} />
+            {isLogout && <LogoutModal handleLogout={handleLogout}/>}
         </Container>
     );
 };

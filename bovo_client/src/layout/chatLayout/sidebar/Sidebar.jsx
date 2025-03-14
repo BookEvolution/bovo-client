@@ -3,7 +3,7 @@ import { Avatar, Box, Container, Drawer, IconButton, List, ListItem, ListItemAva
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import styles from "./Sidebar.module.css";
-import Profile from "../../../assets/profile/profile_1.png";
+import profileImages from '../../../constant/ProfileImg';
 
 const Sidebar = ({ open, toggleSidebar}) => {
     return (
@@ -35,7 +35,7 @@ const Sidebar = ({ open, toggleSidebar}) => {
                     <List className={styles.userList}>
                         <ListItem className={styles.userListItem}>
                             <ListItemAvatar className={styles.userAvatar}>
-                                <Avatar src={Profile} sx={{width: "4rem", height: "4rem"}} />
+                                <Avatar src={profileImages[6].src} sx={{width: "4rem", height: "4rem"}} />
                             </ListItemAvatar>
                             <Typography sx={{fontSize: "1.5rem"}}>
                                 userNickname

@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Typography, Container } from "@mui/material";
 import axios from "axios";
 import kakaoBtn from "../../assets/button/btn_kakao.png";
+import { disableInterceptor, enableInterceptor, setAccessToken } from "../../api/Auth";
 
-const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 axios.defaults.withCredentials = true;
-
 
 const Login = () => {
     const navigate = useNavigate();
@@ -15,58 +14,6 @@ const Login = () => {
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    
-    //주석처리 시작
-    const refreshAccessToken = async () => {
-        try {
-            const response = await axios.post(
-                `${API_URL}/refresh`,
-                {}, 
-                {
-                    withCredentials: true,
-                }
-            );
-
-            if (response.status === 200) {
-                console.log("Access Token 갱신 성공:", response.data);
-                const newAccessToken = response.data.accessToken;
-
-                if (newAccessToken) {
-                    sessionStorage.setItem("AccessToken", newAccessToken); 
-                    axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`; 
-                }
-            }
-        } catch (error) {
-            console.error("Access Token 갱신 실패:", error);
-            sessionStorage.removeItem("AccessToken"); 
-            navigate("/login"); 
-        }
-    };
-
-    axios.interceptors.response.use(
-        (response) => response,
-        async (error) => {
-            const originalRequest = error.config;
-    
-            if (error.response && error.response.status === 401 && !originalRequest._retry) {
-                originalRequest._retry = true; 
-    
-                try {
-                    await refreshAccessToken(); 
-                    const newAccessToken = sessionStorage.getItem("AccessToken"); 
-                    axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
-                    
-                    originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`; 
-                    return axios(originalRequest);
-                } catch (refreshError) {
-                    console.error("토큰 갱신 중 오류 발생:", refreshError);
-                    return Promise.reject(refreshError); 
-                }
-            }
-    
-            return Promise.reject(error);
-        }
-    );
 
     useEffect(() => {
         const accessToken = sessionStorage.getItem("AccessToken");
@@ -74,7 +21,6 @@ const Login = () => {
             axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
         }
     }, []);
-    // 작동 안되면 여기까지 주석 처리
 
     const handleSignUp = () => {
         navigate("/sign-up/basic");
@@ -84,9 +30,12 @@ const Login = () => {
         setEmailError("");
         setPasswordError("");
 
+        // 인터셉터 비활성화
+        disableInterceptor();
+
         try {
             const response = await axios.post(
-                `${API_URL}/login`,
+                `https://626e-112-158-33-80.ngrok-free.app/login`,
                 { email, password },
                 {
                     withCredentials: true,
@@ -100,9 +49,10 @@ const Login = () => {
                 console.log("로그인 성공:", response.data);
 
                 const accessToken = response.data.accessToken;
+
                 if (accessToken) {
-                    sessionStorage.setItem("AccessToken", accessToken);
-                    axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+                    sessionStorage.setItem("accessToken", accessToken);
+                    setAccessToken(accessToken); // 만료시간 기본값 3600초 적용
                 }
 
                 navigate("/");
@@ -123,81 +73,13 @@ const Login = () => {
             } else {
                 setErrorMessage("서버와의 연결에 실패했습니다.");
             }
+        } finally {
+            //로그인 후 인터셉터 다시 활성화
+            enableInterceptor();
         }
     };
-    //만약 위에거 안되면 이걸로 해보기
-    // useEffect(() => {
-    //     const accessToken = sessionStorage.getItem("AccessToken");
-    //     if (accessToken) {
-    //         axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-    //     }
-    // }, []);
 
-    // const refreshAccessToken = async () => {
-    //     try {
-    //         const response = await axios.post(`${API_URL}/refresh`, {}, { withCredentials: true });
 
-    //         if (response.status === 200) {
-    //             const newAccessToken = response.data.accessToken;
-    //             sessionStorage.setItem("AccessToken", newAccessToken);
-    //             return newAccessToken;
-    //         }
-    //     } catch (error) {
-    //         console.error("Access Token 갱신 실패:", error);
-    //         sessionStorage.removeItem("AccessToken");
-    //         navigate("/login");
-    //     }
-    // };
-
-    // axios.interceptors.response.use(
-    //     (response) => response,
-    //     async (error) => {
-    //         const originalRequest = error.config;
-
-    //         if ((error.response.status === 401 || error.response.status === 403) && !originalRequest._retry) {
-    //             originalRequest._retry = true;
-
-    //             try {
-    //                 const newAccessToken = await refreshAccessToken();
-    //                 if (newAccessToken) {
-    //                     originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-    //                     return axios(originalRequest);
-    //                 }
-    //             } catch (refreshError) {
-    //                 console.error("토큰 갱신 실패:", refreshError);
-    //                 return Promise.reject(refreshError);
-    //             }
-    //         }
-
-    //         return Promise.reject(error);
-    //     }
-    // );
-
-    // const handleLogin = async () => {
-    //     setErrorMessage("");
-
-    //     try {
-    //         const response = await axios.post(`${API_URL}/login`, { email, password }, { withCredentials: true });
-
-    //         if (response.status === 200) {
-    //             const accessToken = response.data.accessToken;
-    //             sessionStorage.setItem("AccessToken", accessToken);
-    //             navigate("/");
-    //         }
-    //     } catch (error) {
-    //         if (error.response) {
-    //             if (error.response.status === 404) {
-    //                 setErrorMessage("등록되지 않은 이메일입니다.");
-    //             } else if (error.response.status === 401) {
-    //                 setErrorMessage("비밀번호가 일치하지 않습니다.");
-    //             } else {
-    //                 setErrorMessage("로그인 중 오류가 발생했습니다.");
-    //             }
-    //         } else {
-    //             setErrorMessage("서버와의 연결에 실패했습니다.");
-    //         }
-    //     }
-    // };
 
 
     return (

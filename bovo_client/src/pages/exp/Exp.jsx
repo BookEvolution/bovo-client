@@ -1,18 +1,10 @@
 import { Box, Button, LinearProgress, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
 import styles from './Exp.module.css';
-import bedge1 from '../../assets/bedge/bedge1.png';
-import bedge2 from '../../assets/bedge/bedge2.png';
-import bedge3 from '../../assets/bedge/bedge3.png';
-import bedge4 from '../../assets/bedge/bedge4.png';
-import bedge5 from '../../assets/bedge/bedge5.png';
-import bedge6 from '../../assets/bedge/bedge6.png';
-import bedge7 from '../../assets/bedge/bedge7.png';
-import bedge8 from '../../assets/bedge/bedge8.png';
-import bedge9 from '../../assets/bedge/bedge9.png';
 import { useState } from "react";
 import QuestInfoModal from "../../components/questInfoModal/QuestInfoModal";
 import BedgeInfoModal from "../../components/bedgeInfoModal/BedgeInfoModal";
+import bedgeImages from "../../constant/BedgeImg";
 
 const Exp = () => {
     const [openQuestModal, setOpenQuestModal] = useState(false); // quest info 모달 상태 추가
@@ -23,18 +15,6 @@ const Exp = () => {
         {title: "커뮤니티 참여", count: 7},
         {title: "책 등록", count: 7},
         {title: "독서 기록", count: 7}
-    ]
-
-    const bedgeList = [
-        {key: "bedge1", src: bedge1, active: true},
-        {key: "bedge2", src: bedge2, active: false},
-        {key: "bedge3", src: bedge3, active: false},
-        {key: "bedge4", src: bedge4, active: false},
-        {key: "bedge5", src: bedge5, active: false},
-        {key: "bedge6", src: bedge6, active: false},
-        {key: "bedge7", src: bedge7, active: false},
-        {key: "bedge8", src: bedge8, active: false},
-        {key: "bedge9", src: bedge9, active: false},
     ]
 
     // questInfoModal 관련 함수
@@ -150,7 +130,7 @@ const Exp = () => {
                 </Box>
                 <Box className={styles.bedgeList}>
                     <Box className={styles.bedgeContainer}>
-                        {bedgeList.map((bedge) => (
+                        {bedgeImages.map((bedge) => (
                             <Box 
                                 key={bedge.key} 
                                 className={styles.bedgeWrapper}

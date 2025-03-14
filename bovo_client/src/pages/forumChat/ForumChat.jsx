@@ -1,6 +1,6 @@
 import { Avatar, Box, List, ListItem, ListItemAvatar, Paper, Typography } from "@mui/material";
-import Profile from "../../assets/profile/profile_1.png";
 import styles from "./ForumChat.module.css";
+import profileImages from "../../constant/ProfileImg";
 
 const ForumChat = () => {
     return (
@@ -11,7 +11,7 @@ const ForumChat = () => {
             >
                 <Box className={styles.userInfoWrapper}>
                     <ListItemAvatar className={styles.chatAvatar}>
-                        <Avatar src={Profile} sx={{width: "100%", height: "100%"}} />
+                        <Avatar src={profileImages[6].src} sx={{width: "100%", height: "100%"}} />
                     </ListItemAvatar>
                     <Typography 
                         variant="caption" 

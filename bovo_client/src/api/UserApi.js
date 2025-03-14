@@ -1,19 +1,9 @@
-import axios from "axios";
+import api from "./Auth"; // ✅ axios 인스턴스 가져오기
 
-const API_BASE_URL = "https://4e02-165-246-206-167.ngrok-free.app";
-
-
-export const fetchMyPageData = async ( ) => {
-    const token = sessionStorage.getItem("AccessToken");
+// ✅ 마이 페이지 데이터 가져오기
+export const fetchMyPageData = async () => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/my-page`, {
-            headers: {
-                "Content-Type": "application/json",
-                "ngrok-skip-browser-warning": "69420",
-                Authorization: `Bearer ${token}`
-            },
-            withCredentials: true 
-        });
+        const response = await api.get("/my-page"); // ✅ api 사용
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -23,35 +13,21 @@ export const fetchMyPageData = async ( ) => {
 };
 
 // ✅ 마이 프로필 정보 가져오기
-export const fetchMyProfileData = async ( ) => {
-    const token = sessionStorage.getItem("AccessToken");
+export const fetchMyProfileData = async () => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/my-page/profile`, {
-            headers: {
-                "ngrok-skip-browser-warning": "69420",
-                Authorization: `Bearer ${token}`
-            },
-            withCredentials: true, // 인증 포함
-        });
-        console.log(response)
-        return response;
+        const response = await api.get("/my-page/profile"); // ✅ api 사용
+        console.log(response);
+        return response.data;
     } catch (error) {
         console.error("MyProfile 데이터 요청 중 오류 발생:", error);
         throw error;
     }
 };
 
-// ✅ 마이 프로필 정보 가져오기 (닉네임, 이메일 등)
-export const fetchMyProfileEditData = async ( ) => {
-    const token = sessionStorage.getItem("AccessToken");
+// ✅ 마이 프로필 수정 정보 가져오기
+export const fetchMyProfileEditData = async () => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/my-page/profile/update`, {
-            headers: {
-                "ngrok-skip-browser-warning": "69420",
-                Authorization: `Bearer ${token}`
-            },
-            withCredentials: true, // 인증 포함
-        });
+        const response = await api.get("/my-page/profile/update"); // ✅ api 사용
         console.log("프로필 데이터:", response.data);
         return response.data;
     } catch (error) {
@@ -60,22 +36,11 @@ export const fetchMyProfileEditData = async ( ) => {
     }
 };
 
-// 프로필 수정 요청 (닉네임, 프로필 이미지, 비밀번호)
-// 사용자 프로필 수정 API (PUT)
+// ✅ 프로필 수정 요청 (닉네임, 프로필 이미지, 비밀번호)
 export const editUserProfile = async (profileData) => {
-    const token = sessionStorage.getItem("AccessToken");
     try {
-        const response = await axios.put(
-            `${API_BASE_URL}/my-page/profile/update`, 
-            profileData,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                withCredentials: true, // 인증 포함
-            }
-        );
-        return response.data; // 응답 데이터 반환
+        const response = await api.put("/my-page/profile/update", profileData); // ✅ api 사용
+        return response.data;
     } catch (error) {
         console.error("프로필 수정 중 오류 발생:", error);
         throw error;
