@@ -3,7 +3,7 @@ import styles from "./Layout.module.css";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "../header/Header";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleLogoutModal } from "../../store/logout/LogeoutSlice";
+import { toggleLogoutModal } from "../../store/logout/LogoutSlice.js";
 import LogoutModal from "../../components/logoutModal/LogoutModal";
 import { logout } from "../../api/AccountManager.js";
 
