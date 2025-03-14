@@ -20,7 +20,7 @@ const KakaoCallback = () => {
             .then((response) => {
                 console.log("카카오 로그인 성공:", response.data);
 
-                const accessToken = response.data.access_token;
+                const accessToken = response.data.accessToken;
                 if (accessToken) {
                     sessionStorage.setItem("AccessToken", accessToken);
                     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;

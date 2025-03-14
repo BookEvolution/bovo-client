@@ -6,8 +6,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import NoteCompleteModal from "./NoteCompleteModal";
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_BACKEND_SEARCH_API_URL;
-
 const NoteStateModal = ({ open, onClose, book, userId }) => {
     const [selectedState, setSelectedState] = useState(null);
     const [isRegisterCompleteOpen, setIsRegisterCompleteOpen] = useState(false);
@@ -18,39 +16,107 @@ const NoteStateModal = ({ open, onClose, book, userId }) => {
 
     console.log("NoteStateModal - book:", book);
 
+    // const handleRegister = async () => {
+    //     if (!selectedState || !book) {
+    //         console.log("데이터 입력 에러");
+    //         return;
+    //     }
+    
+    //     const accessToken = sessionStorage.getItem("AccessToken");
+    //     if (!accessToken) {
+    //         console.log("AccessToken 없음, 요청 불가");
+    //         return;
+    //     }
+
+    //     const authorsString = book.authors ? book.authors.join(", "): "저자 정보 없음";
+
+    //     const requestData = {
+    //         isbn: Array.isArray(book.isbn) ? String(book.isbn[0]) : String(book.isbn),
+    //         book_name: String(book.title),
+    //         book_author: authorsString,
+    //         book_cover: String(book.thumbnail),
+    //         publication_date: String(book.datetime.split("T")[0]), 
+    //         is_complete_reading: String(selectedState),
+    //     };
+    
+    //     console.log("요청 데이터 확인:", requestData);
+    //     console.log("Authorization 헤더 확인:", `Bearer ${accessToken}`);
+    
+    //     try {
+    //         const response = await axios.post(
+    //             `https://2cc3-222-112-255-159.ngrok-free.app/save`,
+    //             requestData,
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${accessToken}`, 
+    //                     "Content-Type": "application/json",
+    //                 },
+    //             }
+    //         );
+    //         console.log("서버 응답:", response.data);
+    
+    //     } catch (error) {
+    //         if (error.response) {
+    //             console.error("응답 데이터:", error.response.data);
+    //             console.error("응답 상태 코드:", error.response.status);
+    //             console.error("응답 헤더:", error.response.headers);
+    //         } else if (error.request) {
+    //             console.error("요청이 전송되었으나 응답 없음", error.request);
+    //         } else {
+    //             console.error("요청 설정 중 오류 발생", error.message);
+    //         }
+    //     }
+    // };
+
     const handleRegister = async () => {
-        if (!selectedState || !book_id || !userId) {
+        if (!selectedState || !book) {
             console.log("데이터 입력 에러");
             return;
         }
-
+    
+        const accessToken = sessionStorage.getItem("AccessToken");
+        if (!accessToken) {
+            console.log("AccessToken 없음, 요청 불가");
+            return;
+        }
+        
+        const requestData = {
+            isbn: book.isbn,
+            book_name: book.title,
+            book_author: book.authors,
+            book_cover: book.thumbnail,
+            publication_date: book.datetime ? book.datetime.split("T")[0] : "0000-00-00",
+            is_complete_reading: selectedState,
+        };
+    
+        console.log("요청 데이터 확인:", requestData);
+        console.log("Authorization 헤더 확인:", `Bearer ${accessToken}`);
+    
         try {
             const response = await axios.post(
-                `${API_URL}/save/${book_id}`,
-                {
-                    book_id: book_id,
-                    is_complete_reading: selectedState,
-                },
+                `https://2cc3-222-112-255-159.ngrok-free.app/save`,
+                requestData,
                 {
                     headers: {
-                        user_id: userId,
+                        Authorization: `Bearer ${accessToken}`,
                         "Content-Type": "application/json",
                     },
                 }
             );
-
-            if (response.status === 201) {
-                console.log("도서가 성공적으로 추가됨:", response.data);
-                setIsRegisterCompleteOpen(true);
-            } else if (response.status === 200) {
-                console.log("이미 추가된 도서:", response.data);
-                //이미 내 서재에 추가된 도서입니다. ->  이거 팝업/에러 만들기
-            }
+            console.log("서버 응답:", response.data);
         } catch (error) {
-            console.error("도서 상태 저장 실패:", error);
-            // 책 상태 저장에 실패했습니다. 다시 시도해주세요. -> 팝업/에러 만들기
+            if (error.response) {
+                console.error("응답 데이터:", error.response.data);
+                console.error("응답 상태 코드:", error.response.status);
+                console.error("응답 헤더:", error.response.headers);
+            } else if (error.request) {
+                console.error("요청이 전송되었으나 응답 없음", error.request);
+            } else {
+                console.error("요청 설정 중 오류 발생", error.message);
+            }
         }
     };
+    
 
     return (
         <>
