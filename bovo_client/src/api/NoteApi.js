@@ -110,14 +110,10 @@ export const noteCombineData = async (bookId) => {
     }
 };
 
+
 /** 메모 순서 변경 */
 export const updateMemoOrder = async (bookId, memoOrderArray) => {
     console.log("API 요청 전 데이터 확인:", { book_id: bookId, memo_order: memoOrderArray });
-
-    if (!bookId || !Array.isArray(memoOrderArray) || memoOrderArray.length === 0) {
-        console.error("book_id 또는 memo_order가 올바르지 않음:", { bookId, memoOrderArray });
-        return;
-    }
 
     try {
         const response = await api.put(`/archive/${bookId}/memos`, {
