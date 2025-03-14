@@ -8,6 +8,20 @@
     gap: 1rem;
 }
 
+.bookWrapper {
+    width: 15rem;
+    height: 22.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookWrapper > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 1.5625rem;
+}
+
 .addBookWrapper {
     width: 15rem;
     height: 22.5rem;
