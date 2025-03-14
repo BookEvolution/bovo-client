@@ -6,14 +6,11 @@ const DeleteModal = ({ open, onClose, targetId, targetType, bookId, onSuccess })
   const { deleteItem } = useDelete();
 
   const handleDelete = () => {
-    console.log(`삭제 버튼 클릭 - targetId: ${targetId}, targetType: ${targetType}, bookId: ${bookId}`);
-
     deleteItem(targetId, targetType, bookId, () => {
-      console.log("삭제 성공, 실행");
-      onSuccess && onSuccess();
+      onSuccess && onSuccess(targetId);
       onClose();
     });
-  };
+  };  
 
   return (
     <Dialog
