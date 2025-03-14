@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
-import { 
-  TouchSensor, 
-  MouseSensor, 
-  useSensor, 
-  useSensors 
+import {
+  TouchSensor,
+  MouseSensor,
+  useSensor,
+  useSensors
 } from "@dnd-kit/core";
+import { updateMemoOrder } from "../api/NoteApi";
+import { useParams } from "react-router-dom";
 
 class CustomTouchSensor extends TouchSensor {
   static activators = [
     {
-      eventName: 'onTouchStart',
+      eventName: "onTouchStart",
       handler: ({ nativeEvent: event }) => {
-        // 드래그 핸들 요소(data-drag-handle="true")를 클릭한 경우에만 드래그 활성화
-        if (!event.target.closest('[data-drag-handle="true"]')) {
+        if (!event.target.closest("[data-drag-handle='true']")) {
           return false;
         }
         return true;
@@ -23,92 +24,85 @@ class CustomTouchSensor extends TouchSensor {
 }
 
 const useCombineModal = (memos, setMemos, onClose) => {
-  // 아이템 상태 관리
   const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState(null);
   const [originalMemos, setOriginalMemos] = useState([]);
+  const { book_id } = useParams();
 
-  // 메모 배열이 변경될 때 아이템 상태 업데이트
   useEffect(() => {
     if (memos && Array.isArray(memos)) {
-      const sortedMemos = JSON.parse(JSON.stringify(memos)).sort((a, b) => {
-        if (a.order !== undefined && b.order !== undefined) {
-          return a.order - b.order;
-        }
-        return String(a.memo_id).localeCompare(String(b.memo_id));
-      });
-      
-      // 원본 메모와 현재 아이템 상태 설정
+      const sortedMemos = [...memos].sort((a, b) => a.order - b.order);
       setOriginalMemos([...sortedMemos]);
       setItems([...sortedMemos]);
-      
-      console.log("모달에 전달된 메모:", sortedMemos);
+      console.log("전달된 메모:", sortedMemos);
     }
   }, [memos]);
 
-  // 드래그 앤 드롭을 위한 센서 설정
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 10 } }),
     useSensor(CustomTouchSensor, { activationConstraint: { delay: 100, tolerance: 5 } })
   );
 
-  // 드래그 시작 이벤트 핸들러
   const handleDragStart = (event) => {
     setActiveId(event.active.id);
   };
 
-  // 드래그 종료 이벤트 핸들러
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (active && over && active.id !== over.id) {
       setItems((currentItems) => {
-        const oldIndex = currentItems.findIndex(
-          (item) => String(item.memo_id) === String(active.id)
-        );
-        const newIndex = currentItems.findIndex(
-          (item) => String(item.memo_id) === String(over.id)
-        );
-        
-        // 순서 이동 및 콘솔에 로그 기록
-        const newItems = arrayMove(currentItems, oldIndex, newIndex);
-        console.log(`항목 이동: ${active.id}를 ${oldIndex}에서 ${newIndex}로 이동`);
-        return newItems;
+        const oldIndex = currentItems.findIndex(item => String(item.memo_id) === String(active.id));
+        const newIndex = currentItems.findIndex(item => String(item.memo_id) === String(over.id));
+        return arrayMove(currentItems, oldIndex, newIndex);
       });
     }
     setActiveId(null);
   };
 
-  // 드래그 취소 이벤트 핸들러
   const handleDragCancel = () => {
     setActiveId(null);
   };
 
-  // 변경된 순서 적용 핸들러
   const handleApplyOrder = async () => {
     const updatedItems = items.map((item, index) => ({
       ...item,
+      memo_Q: item.memo_Q || "제목 없음",
+      memo_A: item.memo_A || "내용 없음",
       order: index,
     }));
-  
-    console.log("정렬 적용 - 업데이트된 항목:", updatedItems);
-  
-    // 모달이 닫히기 전에 상태를 먼저 업데이트
-    setMemos([...updatedItems]);
-  
+
+    if (!book_id) {
+      console.error("book_id 없음", book_id);
+      return;
+    }
+
+    const memoOrderArray = updatedItems.map(item => item.memo_id);
+    console.log("보낼 데이터:", { book_id, memo_order: memoOrderArray });
+
+    if (typeof setMemos === "function") {
+      setMemos([...updatedItems]);
+    } else {
+      console.error("setMemos가 오류:", setMemos);
+    }
+
+    try {
+      await updateMemoOrder(book_id, memoOrderArray);
+      console.log("순서 변경 성공");
+    } catch (error) {
+      console.error("순서 변경 실패:", error);
+    }
+
     setTimeout(() => {
-      console.log("모달 닫기 전 상태 업데이트 확인:", updatedItems);
+      console.log("상태 업데이트 확인:", updatedItems);
       onClose();
     }, 100);
-  };  
+  };
 
-  // 모달 취소 핸들러
   const handleCancel = () => {
-    // 원래 순서로 복원
     setItems(originalMemos);
     onClose();
   };
 
-  // 활성 항목 가져오기
   const getActiveItem = () => {
     return items.find(item => String(item.memo_id) === String(activeId));
   };

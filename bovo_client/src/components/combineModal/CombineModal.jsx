@@ -41,8 +41,8 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
     >
       <Box
         sx={{
-          width: { xs: "95%", sm: "43rem" },
-          height: { xs: "80%", sm: "55rem" },
+          width: "40rem",
+          height: "75rem",
           backgroundColor: "#E8F1F6",
           borderRadius: "1.25rem",
           padding: "1rem",
@@ -64,11 +64,15 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         >
           <Typography sx={{ 
             fontSize: "2rem", 
-            fontWeight: "bold" 
+            fontWeight: "bold",
+            mt: "2rem",
+            ml: "2.2rem"
             }}>
               순서 변경하기
             </Typography>
-          <IconButton onClick={handleCancel}><CloseIcon /></IconButton>
+            <IconButton onClick={handleCancel}>
+            <CloseIcon sx={{ fontSize: "2rem", mt: "1rem", mr: "1rem" }} />
+            </IconButton>
         </Box>
 
         <DndContext 
@@ -84,7 +88,7 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           >
             <Box sx={{
               width: "34rem",
-              height: "45rem",
+              height: "72rem",
               overflowY: "auto",
               display: "flex",
               flexDirection: "column",
@@ -108,10 +112,12 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           sx={{
             backgroundColor: "#739CD4",
             color: "white",
-            fontSize: "1.5rem",
+            fontSize: "1.8rem",
             borderRadius: "1.25rem",
-            width: "10rem",
-            height: "3rem",
+            width: "12rem",
+            height: "4rem",
+            mb: "2rem",
+            mt: "1.2rem"
           }}
         >
           정렬하기

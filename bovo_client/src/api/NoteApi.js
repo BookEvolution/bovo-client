@@ -111,31 +111,19 @@ export const noteCombineData = async (bookId) => {
 };
 
 /** 메모 순서 변경 */
-export const updateMemoOrder = async (bookId, updatedMemos) => {
-    console.log("API 요청 전 updatedMemos 값 확인:", updatedMemos);
+export const updateMemoOrder = async (bookId, memoOrderArray) => {
+    console.log("API 요청 전 데이터 확인:", { book_id: bookId, memo_order: memoOrderArray });
 
-    if (!bookId || !Array.isArray(updatedMemos) || updatedMemos.length === 0) {
-        console.error("bookId 또는 updatedMemos가 올바르지 않음:", { bookId, updatedMemos });
-        return;
-    }
-
-    const memoOrderArray = updatedMemos
-        .map(memo => memo.memo_id)
-        .filter(memoId => memoId !== null && memoId !== undefined);
-
-    if (memoOrderArray.length === 0) {
-        console.error("memo_order가 비어 있음, 요청 취소");
+    if (!bookId || !Array.isArray(memoOrderArray) || memoOrderArray.length === 0) {
+        console.error("book_id 또는 memo_order가 올바르지 않음:", { bookId, memoOrderArray });
         return;
     }
 
     try {
-        console.log("최종 요청 데이터:", {
+        const response = await api.put(`/archive/${bookId}/memos`, {
             book_id: bookId,
             memo_order: memoOrderArray
         });
-        const response = await api.put(`/archive/${bookId}/memos`,
-            { book_id: bookId, memo_order: memoOrderArray },
-        );
 
         console.log("메모 순서 변경 성공:", response.data);
         return response.data;

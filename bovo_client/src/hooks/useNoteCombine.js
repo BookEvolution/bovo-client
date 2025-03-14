@@ -15,28 +15,31 @@ const useNoteCombine = (bookId) => {
       setLoading(true);
       try {
         const data = await noteCombineData(bookId);
-        if (data) {
+  
+        if (data && data.book) {
           setBookInfo({
-            title: data.title || "책 제목 없음",
-            author: data.author || "저자 없음",
-            start_date: data.start_date || "기간 없음",
-            end_date: data.end_date || "현재",
+            title: data.book.title || "책 제목 없음",
+            author: data.book.author || "저자 없음",
+            start_date: data.book.start_date || "기간 없음",
+            end_date: data.book.end_date || "현재",
           });
-          setLocalMemos(data.memos || []);
+        }
+  
+        if (data && Array.isArray(data.memos)) {
+          setLocalMemos(data.memos);
         } else {
-          setBookInfo({ title: "책 정보 없음", author: "", start_date: "", end_date: "" });
+          setLocalMemos([]);
         }
       } catch (err) {
         setError(err);
-        setBookInfo({ title: "책 정보를 불러올 수 없습니다.", author: "", start_date: "", end_date: "" });
       } finally {
         setLoading(false);
       }
     };
   
     fetchMemos();
-  }, [bookId]);  
-
+  }, [bookId]);
+  
   // 모달 열고 닫기
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
