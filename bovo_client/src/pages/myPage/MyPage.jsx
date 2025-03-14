@@ -4,7 +4,7 @@ import styles from './MyPage.module.css';
 import { useNavigate } from "react-router-dom";
 import MenuList from "../../components/myPageListMenu/MenuList";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleLogoutModal } from "../../store/logout/LogeoutSlice";
+import { toggleLogoutModal } from "../../store/logout/LogoutSlice.js";
 import LogoutModal from "../../components/logoutModal/LogoutModal";
 import { useEffect, useState } from "react";
 import { fetchMyPageData } from "../../api/UserApi.js";
