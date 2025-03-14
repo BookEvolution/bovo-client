@@ -4,9 +4,9 @@ import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import NoteCompleteModal from "./NoteCompleteModal";
-import axios from "axios";
+import api from "../../api/Auth";
 
-const NoteStateModal = ({ open, onClose, book, userId }) => {
+const NoteStateModal = ({ open, onClose, book }) => {
     const [selectedState, setSelectedState] = useState(null);
     const [isRegisterCompleteOpen, setIsRegisterCompleteOpen] = useState(false);
 
@@ -14,106 +14,31 @@ const NoteStateModal = ({ open, onClose, book, userId }) => {
         setSelectedState(state);
     };
 
-    console.log("NoteStateModal - book:", book);
-
-    // const handleRegister = async () => {
-    //     if (!selectedState || !book) {
-    //         console.log("데이터 입력 에러");
-    //         return;
-    //     }
-    
-    //     const accessToken = sessionStorage.getItem("AccessToken");
-    //     if (!accessToken) {
-    //         console.log("AccessToken 없음, 요청 불가");
-    //         return;
-    //     }
-
-    //     const authorsString = book.authors ? book.authors.join(", "): "저자 정보 없음";
-
-    //     const requestData = {
-    //         isbn: Array.isArray(book.isbn) ? String(book.isbn[0]) : String(book.isbn),
-    //         book_name: String(book.title),
-    //         book_author: authorsString,
-    //         book_cover: String(book.thumbnail),
-    //         publication_date: String(book.datetime.split("T")[0]), 
-    //         is_complete_reading: String(selectedState),
-    //     };
-    
-    //     console.log("요청 데이터 확인:", requestData);
-    //     console.log("Authorization 헤더 확인:", `Bearer ${accessToken}`);
-    
-    //     try {
-    //         const response = await axios.post(
-    //             `https://2cc3-222-112-255-159.ngrok-free.app/save`,
-    //             requestData,
-    //             {
-    //                 headers: {
-    //                     Authorization: `Bearer ${accessToken}`, 
-    //                     "Content-Type": "application/json",
-    //                 },
-    //             }
-    //         );
-    //         console.log("서버 응답:", response.data);
-    
-    //     } catch (error) {
-    //         if (error.response) {
-    //             console.error("응답 데이터:", error.response.data);
-    //             console.error("응답 상태 코드:", error.response.status);
-    //             console.error("응답 헤더:", error.response.headers);
-    //         } else if (error.request) {
-    //             console.error("요청이 전송되었으나 응답 없음", error.request);
-    //         } else {
-    //             console.error("요청 설정 중 오류 발생", error.message);
-    //         }
-    //     }
-    // };
-
     const handleRegister = async () => {
         if (!selectedState || !book) {
             console.log("데이터 입력 에러");
             return;
         }
-    
-        const accessToken = sessionStorage.getItem("AccessToken");
-        if (!accessToken) {
-            console.log("AccessToken 없음, 요청 불가");
-            return;
-        }
-        
+
+        const authorsString = book.authors ? book.authors.join(", "): "저자 정보 없음";
+
         const requestData = {
             isbn: book.isbn,
             book_name: book.title,
-            book_author: book.authors,
+            book_author: authorsString,
             book_cover: book.thumbnail,
-            publication_date: book.datetime ? book.datetime.split("T")[0] : "0000-00-00",
+            publication_date: book.datetime? String(book.datetime.split("T")[0]) : "0000-00-00",
             is_complete_reading: selectedState,
         };
     
         console.log("요청 데이터 확인:", requestData);
-        console.log("Authorization 헤더 확인:", `Bearer ${accessToken}`);
     
         try {
-            const response = await axios.post(
-                `https://2cc3-222-112-255-159.ngrok-free.app/save`,
-                requestData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
+            const response = await api.post("/save", requestData);
             console.log("서버 응답:", response.data);
+            setIsRegisterCompleteOpen(true);
         } catch (error) {
-            if (error.response) {
-                console.error("응답 데이터:", error.response.data);
-                console.error("응답 상태 코드:", error.response.status);
-                console.error("응답 헤더:", error.response.headers);
-            } else if (error.request) {
-                console.error("요청이 전송되었으나 응답 없음", error.request);
-            } else {
-                console.error("요청 설정 중 오류 발생", error.message);
-            }
+            console.error("API 요청 오류:", error);
         }
     };
     
@@ -232,7 +157,7 @@ const NoteStateModal = ({ open, onClose, book, userId }) => {
                 </Box>
             </Modal>
 
-            <NoteCompleteModal open={isRegisterCompleteOpen} onClose={() => setIsRegisterCompleteOpen(false)} book={book} />
+            <NoteCompleteModal open={isRegisterCompleteOpen} onClose={() => setIsRegisterCompleteOpen(false)} book={book}/>
         </>
     );
 };
