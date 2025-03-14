@@ -2,7 +2,7 @@ import { memoPropType } from "../../utils/propTypes";
 import PropTypes from "prop-types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Box, Paper, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 
 const SortableItem = ({ memo, isDragging }) => {
@@ -24,13 +24,12 @@ const SortableItem = ({ memo, isDragging }) => {
   };
 
   return (
-    <Paper
+    <Box
       ref={setNodeRef}
       style={style}
       sx={{
         width: "100%",
-        height: "8rem",
-        minHeight: "6rem",
+        height: "10rem",
         padding: "1rem",
         display: "flex",
         justifyContent: "space-between",
@@ -41,11 +40,14 @@ const SortableItem = ({ memo, isDragging }) => {
         touchAction: "auto",
       }}
     >
-      <Box sx={{ width: "90%" }}>
-        <Typography sx={{ fontSize: "1.2rem", fontWeight: "bold" }}>
+      <Box sx={{ 
+        width: "85%",
+        ml: "1rem"
+        }}>
+        <Typography sx={{ fontSize: "1.5rem", fontWeight: "500", mt: "1rem" }}>
           {memo.memo_Q || "제목 없음"}
         </Typography>
-        <Typography sx={{ fontSize: "1rem", color: "gray" }}>
+        <Typography sx={{ fontSize: "1.3rem", color: "gray", mb: "1rem" }}>
           기록 작성일 : {memo.memo_date || "YY.MM.DD"}
         </Typography>
       </Box>
@@ -56,9 +58,9 @@ const SortableItem = ({ memo, isDragging }) => {
         sx={{ cursor: "grab" }}
         data-drag-handle="true"
       >
-        <DragHandleIcon sx={{ color: "gray" }} />
+        <DragHandleIcon sx={{ fontSize: "2rem", color: "gray", mr: "0.5rem" }} />
       </IconButton>
-    </Paper>
+    </Box>
   );
 };
 SortableItem.propTypes = {

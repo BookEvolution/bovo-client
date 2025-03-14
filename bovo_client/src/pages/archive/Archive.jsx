@@ -41,7 +41,7 @@ const Archive = () => {
           <ArchiveWish books={displayedBooks} />
         )
       ) : (
-        <div className={styles.nobooks}>검색 결과가 없습니다.</div>
+        <div className={styles.nobooks}>해당하는 책이 없습니다.</div>
       )}
     </div>
   );

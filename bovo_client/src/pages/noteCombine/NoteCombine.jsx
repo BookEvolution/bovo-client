@@ -13,8 +13,9 @@ const NoteCombine = () => {
     modalOpen,
     openModal,
     closeModal,
-    handleUpdateMemos
+    handleUpdateMemos,
   } = useNoteCombine(book_id);
+
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
@@ -76,7 +77,7 @@ const NoteCombine = () => {
                     fontSize: "1.5rem", 
                     color: "gray" 
                     }}>
-                  {bookInfo.start_date ? `${bookInfo.start_date} ~ ${bookInfo.end_date || "현재"}` : "읽은 기간 없음"}
+                  {bookInfo.start_date ? `${bookInfo.start_date} ~ ${bookInfo.end_date}` : "읽은 기간 없음"}
                 </Typography>
               </Box>
             </Box>
@@ -121,13 +122,13 @@ const NoteCombine = () => {
                         fontSize: "1.5rem", 
                         fontWeight: "500", 
                         mb: "1rem", 
-                        px: "1rem" 
+                        px: "1rem",
+                        mt: "1rem"
                         }}>
                         {memo.memo_Q || "제목 없음"}
                       </Typography>
                       <Typography sx={{ 
-                        fontSize: "1rem", 
-                        mb: "1rem", 
+                        fontSize: "1rem",  
                         px: "1rem" 
                         }}>
                         {memo.memo_A || "내용 없음"}
@@ -171,12 +172,13 @@ const NoteCombine = () => {
       )}
 
       {modalOpen && localMemos && localMemos.length > 0 && (
-        <CombineModal 
-          open={modalOpen} 
-          onClose={closeModal} 
-          memos={localMemos} 
-          setMemos={handleUpdateMemos}
-        />
+      <CombineModal 
+      open={modalOpen} 
+      onClose={closeModal} 
+      memos={localMemos} 
+      setMemos={handleUpdateMemos} 
+    />
+
       )}
     </Box>
   );

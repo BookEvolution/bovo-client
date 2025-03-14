@@ -1,27 +1,14 @@
-import axios from "axios";
-
-const API_URL = "https://626e-112-158-33-80.ngrok-free.app";
-const token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjMsImlhdCI6MTc0MTg3MjIxOSwiZXhwIjoxNzQxODc1ODE5fQ.w-KNJ9Iu2XRMZ15leCfLs-T0PIn1UFcRZyW1z0MxoIU";
+import api from "./Auth.js";
 
 /** 기록 페이지 */
 export const noteData = async (bookId) => {
-    //const token = sessionStorage.getItem("AccessToken");
 
     if (!bookId) {
         console.error("book_id가 필요합니다.");
         return;
     }
     try {
-
-        const response = await axios.get(`${API_URL}/archive/${bookId}`, {
-            headers: {
-                "Content-Type": "application/json",
-                "ngrok-skip-browser-warning": "69420",
-                Authorization: `Bearer ${token}`
-            },
-            withCredentials: true 
-        });
-
+        const response = await api.get(`/archive/${bookId}`);
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -32,24 +19,12 @@ export const noteData = async (bookId) => {
 
 /** 기록 상세보기 */
 export const noteDetailData = async (bookId, memoId) => {
-    console.log("전달된 bookId:", bookId);
-    console.log("전달된 memoId:", memoId);
-    console.log(`요청 경로: ${API_URL}/archive/${bookId}/memo?memoId=${memoId}`);
 
     if (!bookId || !memoId) {
         return;
     }
-
     try {
-        const response = await axios.get(`${API_URL}/archive/${bookId}/memo?memoId=${memoId}`, {
-            headers: {
-                "Content-Type": "application/json",
-                "ngrok-skip-browser-warning": "69420",
-                Authorization: `Bearer ${token}`
-            },
-            withCredentials: true 
-        });
-
+        const response = await api.get(`/archive/${bookId}/memo?memoId=${memoId}`);
         console.log("API 응답:", response.data);
         return response.data;
     } catch (error) {
@@ -69,16 +44,9 @@ export const createMemo = async (bookId, memoData) => {
         console.error("bookId 오류.");
         return;
     }
-  
+
     try {
-      const response = await axios.post(`${API_URL}/archive/${bookId}/memo`, memoData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        withCredentials: true,
-      });
-  
+        const response = await api.post(`/archive/${bookId}/memo`, memoData);
       console.log("기록 작성 성공:", response.data);
       return response.data;
     } catch (error) {
@@ -97,14 +65,7 @@ export const createMemo = async (bookId, memoData) => {
     }
   
     try {
-      const response = await axios.put(`${API_URL}/archive/${bookId}/memo?memoId=${memoId}`, memoData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        withCredentials: true,
-      });
-  
+        const response = await api.put(`/archive/${bookId}/memo?memoId=${memoId}`, memoData);  
       console.log("기록 수정 성공:", response.data);
       return response.data;
     } catch (error) {
@@ -121,16 +82,8 @@ export const updateBook = async (bookId, bookData) => {
         console.error("bookId 오류.");
         return;
     }
-  
     try {
-        const response = await axios.put(`${API_URL}/archive/${bookId}/update`, bookData, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            withCredentials: true,
-        });
-  
+        const response = await api.put(`/archive/${bookId}/update`, bookData);
         console.log("책 정보 수정 성공:", response.data);
         return response.data;
     } catch (error) {
@@ -142,22 +95,13 @@ export const updateBook = async (bookId, bookData) => {
 
 /** 기록 모아보기 */
 export const noteCombineData = async (bookId) => {
-    //const token = sessionStorage.getItem("AccessToken");
 
     if (!bookId) {
         console.error("book_id가 필요합니다.");
         return;
     }
     try {
-        const response = await axios.get(`${API_URL}/archive/${bookId}/memos`, {
-            headers: {
-                "Content-Type": "application/json",
-                "ngrok-skip-browser-warning": "69420",
-                Authorization: `Bearer ${token}`
-            },
-            withCredentials: true 
-        });
-
+        const response = await api.get(`/archive/${bookId}/memos`);
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -167,39 +111,19 @@ export const noteCombineData = async (bookId) => {
 };
 
 /** 메모 순서 변경 */
-export const updateMemoOrder = async (bookId, updatedMemos) => {
-    console.log("API 요청 전 updatedMemos 값 확인:", updatedMemos);
+export const updateMemoOrder = async (bookId, memoOrderArray) => {
+    console.log("API 요청 전 데이터 확인:", { book_id: bookId, memo_order: memoOrderArray });
 
-    if (!bookId || !Array.isArray(updatedMemos) || updatedMemos.length === 0) {
-        console.error("bookId 또는 updatedMemos가 올바르지 않음:", { bookId, updatedMemos });
-        return;
-    }
-
-    const memoOrderArray = updatedMemos
-        .map(memo => memo.memo_id)
-        .filter(memoId => memoId !== null && memoId !== undefined);
-
-    if (memoOrderArray.length === 0) {
-        console.error("memo_order가 비어 있음, 요청 취소");
+    if (!bookId || !Array.isArray(memoOrderArray) || memoOrderArray.length === 0) {
+        console.error("book_id 또는 memo_order가 올바르지 않음:", { bookId, memoOrderArray });
         return;
     }
 
     try {
-        console.log("최종 요청 데이터:", {
+        const response = await api.put(`/archive/${bookId}/memos`, {
             book_id: bookId,
             memo_order: memoOrderArray
         });
-
-        const response = await axios.put(`${API_URL}/archive/${bookId}/memos`, 
-            { book_id: bookId, memo_order: memoOrderArray },
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                withCredentials: true,
-            }
-        );
 
         console.log("메모 순서 변경 성공:", response.data);
         return response.data;

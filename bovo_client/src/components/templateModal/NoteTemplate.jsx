@@ -119,11 +119,18 @@ const TemplateModal = ({ open, onClose, onApplyTemplate }) => {
             alignItems: "center",
             justifyContent: "center",
             gap: "1.5rem",
+            borderRadius: "1.25rem"
           }}
         >
           {/* 검색 + 필터 */}
           <Box 
-            sx={{display: "flex",alignItems: "center", gap: "1rem", width: "34rem" }}> {/* 544px */}
+            sx={{
+              display: "flex",
+              alignItems: "center", 
+              gap: "1rem", 
+              width: "36rem",
+              mt: "1rem"
+              }}>
             {/* 카테고리 드롭다운 */}
             <Select
               value={categoryFilter}
@@ -164,8 +171,8 @@ const TemplateModal = ({ open, onClose, onApplyTemplate }) => {
           {/* 템플릿 리스트 */}
           <List
             sx={{
-              width: "34rem",
-              maxHeight: "30rem",
+              width: "36rem",
+              height: "30rem",
               overflowX: "hidden",
               overflowY: "auto",
               borderRadius: "0.625rem",
@@ -178,8 +185,6 @@ const TemplateModal = ({ open, onClose, onApplyTemplate }) => {
                 key={index}
                 onClick={() => setSelectedItem(item.text)}
                 sx={{
-                  height: "auto",
-                  minHeight: "3.75rem",
                   backgroundColor: selectedItem === item.text ? "#E8F1F6" : "transparent",
                   margin: "0.125rem",
                   cursor: "pointer",
@@ -222,7 +227,7 @@ const TemplateModal = ({ open, onClose, onApplyTemplate }) => {
               alignSelf: "center",
               fontSize: "1.5rem",
             }}
-            Disable elevation
+            disableElevation
             disabled={!selectedItem}
           >
             추가하기

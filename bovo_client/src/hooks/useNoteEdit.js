@@ -22,6 +22,8 @@ export const useNoteEdit = () => {
 
   const [titleFocused, setTitleFocused] = useState(false);
   const [templateModalOpen, setTemplateModalOpen] = useState(false);
+  const [error, setError] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const MAX_TITLE_LENGTH = 36;
   
   useEffect(() => {
@@ -32,7 +34,6 @@ export const useNoteEdit = () => {
       }
       try {
         const data = await noteDetailData(bookId, memo_id);
-        console.log("데이터 불러옴:", data);
         setLoadedMemo({
           memo_Q: data.memo_Q || "",
           memo_A: data.memo_A || "",
@@ -47,6 +48,14 @@ export const useNoteEdit = () => {
   }, [memo_id, bookId]);
 
   const handleSaveMemo = async () => {
+    if (!loadedMemo.memo_Q.trim() || !loadedMemo.memo_A.trim()) {
+      setError("제목과 내용을 모두 입력해야 합니다.");
+      setSnackbarOpen(true);
+      return;
+    }
+    setError("");
+    setSnackbarOpen(false);
+    
     if (!bookId) {
       console.error("bookId가 없습니다.");
       return;
@@ -61,12 +70,9 @@ export const useNoteEdit = () => {
     try {
       if (memo_id) {
         await updateMemo(bookId, memo_id, updatedMemoData);
-        console.log("메모 수정 완료");
       } else {
         await createMemo(bookId, updatedMemoData);
-        console.log("메모 작성 완료");
       }
-
       navigate(`/archive/${bookId}`);
     } catch (error) {
       console.error("메모 저장 실패:", error.response?.data || error.message);
@@ -78,7 +84,6 @@ export const useNoteEdit = () => {
       setLoadedMemo(prev => ({ ...prev, memo_Q: value }));
     }
   };
-  
 
   const handleMemoAChange = (value) => {
     setLoadedMemo(prev => ({ ...prev, memo_A: value }));
@@ -88,7 +93,7 @@ export const useNoteEdit = () => {
   const handleCloseTemplateModal = () => setTemplateModalOpen(false);
   
   const handleApplyTemplate = (templateContent) => {
-    setLoadedMemo({ ...loadedMemo, memo_Q: templateContent });
+    setLoadedMemo(prev => ({ ...prev, memo_Q: templateContent }));
     setTemplateModalOpen(false);
   };
 
@@ -108,6 +113,10 @@ export const useNoteEdit = () => {
     handleOpenTemplateModal,
     handleCloseTemplateModal,
     handleApplyTemplate,
-    handleTitleFocus
+    handleTitleFocus,
+    error,
+    snackbarOpen,
+    setSnackbarOpen,
+    setError
   };
 };

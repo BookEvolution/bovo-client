@@ -1,4 +1,4 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Snackbar, Alert } from "@mui/material";
 import NoteTemplate from "../../components/templateModal/NoteTemplate";
 import { useNoteEdit } from "../../hooks/useNoteEdit";
 
@@ -15,8 +15,11 @@ const NoteEdit = () => {
     handleOpenTemplateModal,
     handleCloseTemplateModal,
     handleApplyTemplate,
-    handleTitleFocus
+    handleTitleFocus,
+    snackbarOpen,
+    setSnackbarOpen
   } = useNoteEdit();
+
 
   return (
     <Box 
@@ -209,6 +212,25 @@ const NoteEdit = () => {
       >
         {memo_id ? "수정완료" : "기록하기"}
       </Button>
+
+      {/* 스낵바 */}
+      <Snackbar 
+        open={snackbarOpen} 
+        autoHideDuration={2500} 
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert 
+          onClose={() => setSnackbarOpen(false)} 
+          severity="error" 
+          sx={{ 
+            width: '1000%', 
+            fontWeight: "bold", backgroundColor: "#E8F1F6", color: "red" }}
+        >
+          제목과 내용을 모두 입력해야 합니다.
+        </Alert>
+      </Snackbar>
+
 
       {/* 템플릿 모달 */}
       <NoteTemplate 
