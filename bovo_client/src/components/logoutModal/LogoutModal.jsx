@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'; // PropTypes 임포트
 import { useDispatch, useSelector } from "react-redux";
-import { toggleLogoutModal } from "../../store/logout/LogeoutSlice";
+import { toggleLogoutModal } from "../../store/logout/LogoutSlice";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import styles from './LogoutModal.module.css';
 

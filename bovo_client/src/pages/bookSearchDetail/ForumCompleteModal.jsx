@@ -1,10 +1,14 @@
 import { useNavigate } from "react-router-dom"; 
 import { Box, Typography, Button, Modal } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setBook } from "../../store/bookForum/BookSlice";
 
 const ForumCompleteModal = ({ open, onClose, book }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleMoveToForum = () => {
+        dispatch(setBook(book)); // 선택된 책 정보를 Redux에 저장
         navigate("/Forum"); 
     };
 

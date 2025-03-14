@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { Box, Typography, Container, Rating } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-const API_URL = import.meta.env.VITE_BACKEND_API_URL;
+import api from "../../api/Auth";
 
 const Main = () => {
     const navigate = useNavigate();
@@ -11,22 +9,7 @@ const Main = () => {
     const [bookStyles, setBookStyles] = useState({});
 
     useEffect(() => {
-        const accessToken = sessionStorage.getItem("AccessToken");
-
-        if (!accessToken) {
-            console.error("AccessToken 없음, 로그인 페이지로 이동");
-            navigate("/login");  
-            return;
-        }
-
-        axios.get(`${API_URL}/main`, {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`, 
-                "ngrok-skip-browser-warning": "69420"
-            },
-            withCredentials: true
-        })
+        api.get("/main")
         .then((response) => {
             console.log("서버 응답:", response.data);
             setUserData(response.data);
