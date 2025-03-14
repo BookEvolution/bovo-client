@@ -86,17 +86,20 @@ const SignUp = () => {
         if (nicknameError || emailError || passwordError || confirmPasswordError) {
             return;
         } //에러가 없을 때 회원가입 가능 -> 확인 필요
-    
+        
+        //여기 일부 수정했어서 잘 되는지 확인 필요
         try {
-            await axios.post(`${API_URL}/register`, {
+            const response = await axios.post(`${API_URL}/register`, {
                 email,
                 password,
                 nickname,
                 profile_picture: profileImage,
             });
-    
-            console.log("회원가입 성공");
-            setIsModalOpen(true);
+
+            if (response.status === 200) {
+                console.log("회원가입 성공:", response.data);
+                setIsModalOpen(true);
+            }
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 const message = error.response.data.message;
