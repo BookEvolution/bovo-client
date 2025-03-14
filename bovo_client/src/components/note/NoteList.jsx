@@ -49,6 +49,7 @@ const NoteList = ({ memos }) => {
   };
 
   if (!memoList.length) return <p className={styles.NOmemos}>작성된 메모가 없습니다.</p>;
+  /**작성된 메모가 없다는 거 띄울 때도 글쓰기 아이콘은 노출되어야함 컨테이너 다시 만들기 */
 
   return (
     <Box className={styles.noteListContainer}>

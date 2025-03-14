@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = "";
+const API_URL = "https://deb1-2406-5900-902b-8631-4cd9-c81c-a344-e3ef.ngrok-free.app";
+const token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjcsImlhdCI6MTc0MTkxOTU0MiwiZXhwIjoxNzQxOTIzMTQyfQ.WQmGjLv93hYQyb8v3iEX1a9yB00Iv_GSKDCRNGmng5Y";
+
 
 export const archiveData = async ( ) => {
     //const token = sessionStorage.getItem("AccessToken");
@@ -9,7 +11,7 @@ export const archiveData = async ( ) => {
             headers: {
                 "Content-Type": "application/json",
                 "ngrok-skip-browser-warning": "69420",
-                //Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             },
             withCredentials: true 
         });
