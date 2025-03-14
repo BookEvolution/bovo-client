@@ -26,21 +26,15 @@ import Calendar from './pages/calendar/Calendar'
 import ErrorPage from './pages/errorPage/ErrorPage'
 import KakaoCallback from './pages/login/KakaoCallback'
 import ChatLayout from './layout/chatLayout/layout/ChatLayout'
-// import { useEffect } from 'react'
-// import { enableInterceptor } from "./api/Auth";
+import { useEffect } from 'react'
+import { enableInterceptor } from "./api/Auth.js";
 
 function App() {
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //     enableInterceptor(() => {
-  //         navigate("/login"); // 토큰 만료 시 로그인 페이지로 이동
-  //     });
-  // }, [navigate])
 
   return (
     <>
       <BrowserRouter>
+        <InterceptorWrapper /> {/* useNavigate를 여기에서 사용 */}
         <Routes>
           <Route path='/kakao/bovocallback' element={<KakaoCallback />} />
           <Route path='/login' element={<LoginLayout />}>
@@ -82,4 +76,16 @@ function App() {
   )
 }
 
-export default App
+function InterceptorWrapper() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    enableInterceptor(() => {
+      navigate("/login"); // 토큰 만료 시 로그인 페이지로 이동
+    });
+  }, [navigate]);
+
+  return null; // UI를 렌더링하지 않는 컴포넌트
+}
+
+export default App;
