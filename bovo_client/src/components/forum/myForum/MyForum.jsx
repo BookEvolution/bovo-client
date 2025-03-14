@@ -1,56 +1,28 @@
-import { Box, List, ListItem, Typography } from "@mui/material";
-import Book from "../../../assets/book/book_ex.png";
+import PropTypes from "prop-types";  // PropTypes import
+import { List } from "@mui/material";
 import styles from "./MyForum.module.css";
+import MyForumList from "./myForumList/MyForumList";
 
-const MyForum = () => {
+const MyForum = ({ myChatrooms }) => {
+     // myChatrooms가 null이나 빈 배열일 경우 처리
+     if (!myChatrooms || myChatrooms.length === 0) {
+        return <div>No chatrooms available.</div>;
+    }
+
+    console.log("내채팅방", myChatrooms)
+
     return (
         <List className={styles.chatRoomContainer}>
-            <ListItem button="true" className={styles.myChatRoom}>
-                <Box className={styles.chatContentContainer}>
-                    <Box className={styles.chatBookWrapper}>
-                        <img src={Book} alt="책 대체 이미지" />
-                    </Box>
-                    <Box className={styles.chatDescription}>
-                        <Typography 
-                            sx={{
-                                fontSize: "1.75rem", 
-                                letterSpacing: "0.0175rem",
-                                fontWeight: "bold"
-                            }}
-                        >
-                            채팅방 제목
-                        </Typography>
-                        <Typography 
-                            sx={{
-                                fontSize: "1.25rem", 
-                                letterSpacing: "0.01rem",
-                                color: "#D9D9D9",
-                                textAlign: "right"
-                            }}
-                        >
-                            2025.03.10
-                        </Typography>
-                        <Box className={styles.chatMessageInfoWrapper}>
-                            <Typography
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    fontSize: "1.25rem", 
-                                    letterSpacing: "0.0125rem",
-                                }}
-                            >
-                                안녕하세요 ~ OO입니다.
-                            </Typography>
-                            <Box className={styles.chatNewMsgCount}>
-                                1
-                            </Box>
-                        </Box>
-                    </Box>
-                </Box>
-            </ListItem>
+            {myChatrooms.map((myChatroom) => {
+                return <MyForumList key={myChatroom.id} myChatroom={myChatroom} />;
+            })}
         </List>
     );
 };
 
 export default MyForum;
+
+// PropTypes 설정
+MyForum.propTypes = {
+    myChatrooms: PropTypes.array.isRequired,
+};

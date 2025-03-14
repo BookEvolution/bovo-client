@@ -2,15 +2,20 @@ import { Box, Container, IconButton, TextField } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import styles from "./ChatLayout.module.css";
-import { Outlet } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Header from "../header/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Sidebar";
 import ReadingShareModal from "../../../components/forum/readingShareModal/ReadingShareModal";
+import { connectToChat, disconnectChat, sendMessage } from "../../../api/ChatService";
+import ForumChat from "../../../pages/forumChat/ForumChat";
 
 const ChatLayout = () => {
     const [modalOpen, setModalOpen] = useState(false); //독서 기록 공유 모달 상태 관리
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { roomId } = useParams();
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState("");
 
     const toggleSidebar = (open) => () => {
         setSidebarOpen(open);
@@ -19,11 +24,43 @@ const ChatLayout = () => {
     const handleOpenModal = () => setModalOpen(true);
     const handleCloseModal = () => setModalOpen(false);
 
+    useEffect(() => {
+        const onMessageReceived = (message) => {
+            setMessages((prevMessages) => [
+                ...prevMessages,
+                {
+                    id: message.id,
+                    message: message.message,
+                    timestamp: message.timestamp,
+                    messageType: message.messageType,
+                    userId: message.userId,
+                    chatRoomId: message.chatRoomId,
+                    nickname: message.nickname,
+                },
+            ]);
+        };
+    
+        connectToChat(roomId, onMessageReceived)
+            .then(() => console.log(`Connected to chat room ${roomId}`))
+            .catch((error) => console.error("WebSocket connection error:", error));
+    
+        return () => {
+            disconnectChat();
+        };
+    }, [roomId]);
+
+    const handleSendMessage = () => {
+        if (newMessage.trim()) {
+            sendMessage(roomId, newMessage);
+            setNewMessage("");
+        }
+    };
+
     return (
         <Container className={styles.layout}>
             <Header toggleSidebar={toggleSidebar} />
             <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
-            <Outlet/>
+            <ForumChat messages={messages} />
             <Box className={styles.inputContainer}>
                 <IconButton className={styles.addBtn} onClick={handleOpenModal}>
                     <AddCircleIcon sx={{fontSize: "3.5rem", color: "#739CD4"}} />
@@ -52,6 +89,7 @@ const ChatLayout = () => {
                 />
                 <IconButton 
                     className={styles.addBtn}
+                    onClick={handleSendMessage}  // ✅ 메시지 전송 핸들러 추가
                     sx={{
                         borderRadius: "3.125rem",
                         backgroundColor: "#739CD4",
