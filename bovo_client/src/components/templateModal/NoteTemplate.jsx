@@ -14,6 +14,7 @@ import {
   Chip,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import PropTypes from "prop-types";
 
 const TemplateModal = ({ open, onClose, onApplyTemplate }) => {
   const [searchText, setSearchText] = useState("");
@@ -231,5 +232,12 @@ const TemplateModal = ({ open, onClose, onApplyTemplate }) => {
     </Dialog>
   );
 };
+
+TemplateModal.propTypes = {
+  open: PropTypes.bool.isRequired, 
+  onClose: PropTypes.func.isRequired, 
+  onApplyTemplate: PropTypes.func.isRequired,
+};
+
 
 export default TemplateModal;

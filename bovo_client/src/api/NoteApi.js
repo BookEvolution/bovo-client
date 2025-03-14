@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://4d3e-61-33-46-194.ngrok-free.app";
-const token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjcsImlhdCI6MTc0MTg0NDc4MiwiZXhwIjoxNzQxODQ4MzgyfQ.c1WO-2ihQZEtonyBd5gvXu6DVtBNSL8w2z3zAXBaRII";
+const API_URL = "https://626e-112-158-33-80.ngrok-free.app";
+const token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjMsImlhdCI6MTc0MTg3MjIxOSwiZXhwIjoxNzQxODc1ODE5fQ.w-KNJ9Iu2XRMZ15leCfLs-T0PIn1UFcRZyW1z0MxoIU";
 
 /** 기록 페이지 */
 export const noteData = async (bookId) => {
@@ -37,7 +37,6 @@ export const noteDetailData = async (bookId, memoId) => {
     console.log(`요청 경로: ${API_URL}/archive/${bookId}/memo?memoId=${memoId}`);
 
     if (!bookId || !memoId) {
-        console.error("book_id와 memo_id가 필요합니다.", { bookId, memoId });
         return;
     }
 
@@ -163,6 +162,49 @@ export const noteCombineData = async (bookId) => {
         return response.data;
     } catch (error) {
         console.error("기록 모아보기 페이지 에러", error.response || error.message);
+        throw error;
+    }
+};
+
+/** 메모 순서 변경 */
+export const updateMemoOrder = async (bookId, updatedMemos) => {
+    console.log("API 요청 전 updatedMemos 값 확인:", updatedMemos);
+
+    if (!bookId || !Array.isArray(updatedMemos) || updatedMemos.length === 0) {
+        console.error("bookId 또는 updatedMemos가 올바르지 않음:", { bookId, updatedMemos });
+        return;
+    }
+
+    const memoOrderArray = updatedMemos
+        .map(memo => memo.memo_id)
+        .filter(memoId => memoId !== null && memoId !== undefined);
+
+    if (memoOrderArray.length === 0) {
+        console.error("memo_order가 비어 있음, 요청 취소");
+        return;
+    }
+
+    try {
+        console.log("최종 요청 데이터:", {
+            book_id: bookId,
+            memo_order: memoOrderArray
+        });
+
+        const response = await axios.put(`${API_URL}/archive/${bookId}/memos`, 
+            { book_id: bookId, memo_order: memoOrderArray },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                withCredentials: true,
+            }
+        );
+
+        console.log("메모 순서 변경 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("메모 순서 변경 실패:", error.response?.data || error.message);
         throw error;
     }
 };

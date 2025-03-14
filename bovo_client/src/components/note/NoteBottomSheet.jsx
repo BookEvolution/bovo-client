@@ -15,6 +15,9 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import DeleteModal from "../deleteModal/DeleteModal";
 import { useNavigate } from "react-router-dom";
 import { updateBook } from "../../api/NoteApi";
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
 
 const NoteBottomSheet = ({ open, onClose, book }) => {
     const [status, setStatus] = useState("ing");
@@ -24,15 +27,37 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const navigate = useNavigate();
 
+    const handleClose = () => {
+        onClose();
+        window.location.reload(); // 페이지 새로고침
+    };
+
     // 기존 데이터 불러오기
     useEffect(() => {
         if (open && book) {
+            console.log("전달된 book 데이터:", book);
+    
             setStatus(book.status || "ing");
-            setStartDate(book.start_date ? dayjs(book.start_date) : null);
-            setEndDate(book.end_date ? dayjs(book.end_date) : null);
+    
+            if (book.start_date) {
+                const parsedStartDate = dayjs(book.start_date, "YY.MM.DD");
+                console.log("Parsed start date:", parsedStartDate.format("YYYY-MM-DD"), parsedStartDate.isValid());
+                setStartDate(parsedStartDate.isValid() ? parsedStartDate : null);
+            } else {
+                setStartDate(null);
+            }
+    
+            if (book.end_date) {
+                const parsedEndDate = dayjs(book.end_date, "YY.MM.DD");
+                setEndDate(parsedEndDate.isValid() ? parsedEndDate : null);
+            } else {
+                setEndDate(null);
+            }
+    
             setRating(book.star || 0);
         }
     }, [open, book]);
+    
 
     const handleStatusChange = (event, newStatus) => {
         if (newStatus !== null) setStatus(newStatus);
@@ -50,7 +75,8 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
             };
             await updateBook(book.book_id, updatedBookData);
             console.log("책 정보 수정 완료");
-            onClose(); // 모달 닫기
+            handleClose();
+            //onClose(); 모달 닫기
         } catch (error) {
             console.error("책 정보 수정 실패:", error);
         }
@@ -60,7 +86,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
             {/* 모달 */}
             <Modal 
                 open={open} 
-                onClose={onClose}
+                onClose={handleClose}
                 disableAutoFocus    //자꾸 오류 생겨서 넣어둠
                 disableEnforceFocus //얘도
                 sx={{ 
