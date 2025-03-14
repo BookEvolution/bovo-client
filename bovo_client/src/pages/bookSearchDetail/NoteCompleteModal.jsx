@@ -1,6 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button, Modal } from "@mui/material";
 
-const NoteCompleteModal = ({ open, onClose, book, onMoveToArchive }) => {
+const NoteCompleteModal = ({ open, onClose, book, selectedState }) => {
+    const navigate = useNavigate();
+
+    const handleMoveToArchive = () => {
+        navigate(`/archive`);
+    };
+
     return (
         <Modal open={open} onClose={onClose} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Box
@@ -13,7 +20,6 @@ const NoteCompleteModal = ({ open, onClose, book, onMoveToArchive }) => {
                     textAlign: "center",
                 }}
             >
-
                 {book?.thumbnail ? (
                     <img
                         src={book.thumbnail}
@@ -40,22 +46,19 @@ const NoteCompleteModal = ({ open, onClose, book, onMoveToArchive }) => {
                             justifyContent: "center",
                             marginLeft: "5.65rem",
                             marginTop: "2rem",
-                            
                         }}
                     >
                         <Typography sx={{ fontSize: "1.8rem", color: "#5F5F5F" }}>이미지 없음</Typography>
                     </Box>
                 )}
 
-
                 <Typography variant="h6" sx={{ fontSize: "2.2rem", fontWeight: "600", marginTop: "1rem", marginBottom: "3rem" }}>
                     등록 완료!
                 </Typography>
 
-
                 <Button
                     variant="contained"
-                    onClick={onMoveToArchive}
+                    onClick={handleMoveToArchive}
                     sx={{
                         fontSize: "2.2rem",
                         fontWeight: "600",

@@ -6,23 +6,35 @@ import ProfileBottomSheet from "../../components/profileImgBottomsheet/ProfileBo
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import CompleteSignUpModal from "../../components/signUpCompleteModal/CompleteSignUpModal";
+import profileImages from "../../constant/ProfileImg";
+import { disableInterceptor, enableInterceptor } from "../../api/Auth";
 
 const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
 const KakaoSignUp = () => {
     const navigate = useNavigate();
-    const [profileImage, setProfileImage] = useState("/src/assets/profile/profile_3.png");
     const [email, setEmail] = useState("");
     const [inputError, setInputError] = useState("");
     const [emailError, setEmailError] = useState("");
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [profileImage, setProfileImage] = useState(profileImages[0].src);
+    const [nickname, setNickname] = useState("");
+    const [nicknameError, setNicknameError] = useState("");
 
-    //이미지 카카오에서 안 가져올거면 제거
-    // useEffect(() => {  
-    //     const storedProfileImage = sessionStorage.getItem("profileImage");
-    //     if (storedProfileImage) setProfileImage(storedProfileImage);
-    // }, []);
+    const checkNickname = async () => {
+        if (!nickname.trim()) return;
+        try {
+            await axios.post(`${API_URL}/register/nickname`, { nickname }); 
+            setNicknameError("");
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                setNicknameError(error.response.data.message);
+            } else {
+                console.error("닉네임 확인 실패", error);
+            }
+        }
+    };
 
     const checkEmail = async () => {
         if (!email.trim()) return;
@@ -44,32 +56,46 @@ const KakaoSignUp = () => {
     };
 
     const handleSignUp = async () => {
-        if (!email) {
-            setInputError("이메일 필드를 입력해 주세요.");
+        if (!nickname || !email) {
+            setInputError("모든 필드를 입력해 주세요.");
             return;
         }
+    
+    if (nicknameError || emailError) {
+        return;
+    } 
 
+    disableInterceptor();
+
+    const token = sessionStorage.getItem("AccessToken");
+    if (!token) {
+        console.error("AccessToken 없음");
+        return;
+    }
         try {
-            const kakaoId = sessionStorage.getItem("kakaoId"); 
-            const nickname = sessionStorage.getItem("nickname"); 
-            if (!kakaoId || !nickname) {
-                setInputError("카카오 로그인 정보가 없습니다.");
-                return;
-            }
-
-            await axios.post(`${API_URL}/kakao/sign-up`, {
-                kakaoId,
+            await axios.post("https://daf6-112-158-33-80.ngrok-free.app/kakao/register", {
                 email,
                 nickname,
-                profileImage, 
-            });
+                profile_picture: profileImage, 
+            },
+                {   
+                    withCredentials: true,
+                    headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`, 
+                    "ngrok-skip-browser-warning": "69420",
+                },
+            }
+        );
 
             console.log("회원가입 성공");
             setIsModalOpen(true); 
+            enableInterceptor();
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 const message = error.response.data.message;
                 if (message.includes("이메일")) setEmailError(message);
+                if (message.includes("닉네임")) setNicknameError(message);
             }
         }
     };
@@ -110,11 +136,25 @@ const KakaoSignUp = () => {
                 <TextField
                     fullWidth
                     variant="outlined"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                    onBlur={checkNickname}
+                    placeholder="닉네임"
+                    sx={{ backgroundColor: "#E8F1F6", borderRadius: "1.3rem", "& fieldset": { border: "none" }, padding: "0.8rem 0rem"}}
+                    inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft:"2.5rem" } }}
+                />
+                {nicknameError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{ margin:"-1.8rem", marginRight:"0.2rem" }}>{nicknameError}</Typography>}
+            </Box>
+
+            <Box>
+                <TextField
+                    fullWidth
+                    variant="outlined"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     onBlur={checkEmail}
                     placeholder="이메일"
-                    sx={{ backgroundColor: "#E8F1F6", borderRadius: "1.3rem", "& fieldset": { border: "none" }, padding: "0.8rem 0rem", marginTop: "1rem" }}
+                    sx={{ backgroundColor: "#E8F1F6", borderRadius: "1.3rem", "& fieldset": { border: "none" }, padding: "0.8rem 0rem", marginTop: "3rem" }}
                     inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft: "2.5rem" } }}
                 />
                 {emailError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{ margin: "-1.8rem", marginRight: "0.2rem" }}>{emailError}</Typography>}
