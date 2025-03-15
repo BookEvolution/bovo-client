@@ -1,21 +1,30 @@
-import { Box, Button, LinearProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
 import styles from './Exp.module.css';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QuestInfoModal from "../../components/questInfoModal/QuestInfoModal";
 import BedgeInfoModal from "../../components/bedgeInfoModal/BedgeInfoModal";
 import bedgeImages from "../../constant/BedgeImg";
+import { fetchRewards } from "../../api/RewardService";
+import QuestList from "../../components/quest/questList/QuestList";
 
 const Exp = () => {
     const [openQuestModal, setOpenQuestModal] = useState(false); // quest info 모달 상태 추가
     const [openBedgeModal, setOpenBedgeModal] = useState(false); // bedge info 모달 상태 추가
+    const [quests, setQuests] = useState([]); // 퀘스트 및 뱃지 저장
+    const [medal, setMedal] = useState();
 
-    const questList = [
-        {title: "출석", count: 7},
-        {title: "커뮤니티 참여", count: 7},
-        {title: "책 등록", count: 7},
-        {title: "독서 기록", count: 7}
-    ]
+    // API 호출
+    useEffect(() => {
+        const getRewards = async () => {
+            const data = await fetchRewards();
+            if (data) {
+                setQuests(data.missions);
+                setMedal(data.medal_type);
+            }
+        };
+        getRewards();
+    }, []);
 
     // questInfoModal 관련 함수
     const handleOpenQuestModal = () => {
@@ -50,69 +59,8 @@ const Exp = () => {
                     </Box>
                 </Box>
                 <Box className={styles.questContainer}>
-                    {questList.map((quest)=>(
-                        <Box key={quest.title} className={styles.questWrapper}>
-                            <Box className={styles.questTitle}>
-                                <Typography 
-                                    sx={{fontSize: "1.75rem", display: "flex", alignItems: "center"}} 
-                                    fontWeight="bold"
-                                >
-                                    {quest.title} &nbsp;
-                                </Typography>
-                                <Typography
-                                    sx={{
-                                        fontSize: "1.75rem", 
-                                        display: "flex", 
-                                        alignItems: "center", 
-                                        color: "#739CD4"
-                                    }} 
-                                    fontWeight="bold"
-                                >
-                                    7
-                                </Typography>
-                                <Typography
-                                    sx={{fontSize: "1.75rem", display: "flex", alignItems: "center"}} 
-                                    fontWeight="bold"
-                                >
-                                    회
-                                </Typography>
-                            </Box>
-                            <Box>
-                                <LinearProgress
-                                    variant="determinate"
-                                    value={100}
-                                    sx={{
-                                        width: "100%",
-                                        height: "1.25rem",
-                                        borderRadius: "6.25rem",
-                                        backgroundColor: "#E8F1F6",
-                                        "& .MuiLinearProgress-bar": {
-                                            borderRadius: "6.25rem",
-                                            background: "#739CD4",
-                                        },
-                                    }}
-                                />
-                            </Box>
-                            <Box className={styles.questCount}>
-                                <Typography sx={{fontSize: "1.25rem", color: "#739CD4"}}>
-                                    7회&nbsp;
-                                </Typography>
-                                <Typography sx={{fontSize: "1.25rem"}}>
-                                    / 7회
-                                </Typography>
-                            </Box>
-                            <Button 
-                                className={styles.questBtn}
-                                sx={{
-                                    borderRadius: "0.625rem",
-                                    backgroundColor: "#739CD4",
-                                    color: "#FFFFFF",
-                                    fontSize: "1.25rem"
-                                }}
-                            >
-                                    확인
-                            </Button>
-                        </Box>
+                    {quests.map((quest)=>(
+                        <QuestList key={quest.mission_id} quest={quest} />
                     ))}
                 </Box>
             </Box>
@@ -130,26 +78,32 @@ const Exp = () => {
                 </Box>
                 <Box className={styles.bedgeList}>
                     <Box className={styles.bedgeContainer}>
-                        {bedgeImages.map((bedge) => (
-                            <Box 
-                                key={bedge.key} 
-                                className={styles.bedgeWrapper}
-                                sx={{
-                                    background: bedge.active ? 
-                                        "linear-gradient(to bottom, #FFF, #E8F1F6)" 
-                                        : "#FFFFFF",
-                                    border: bedge.active ? "0.25rem solid #B0D3F0" : "none",
-                                }}
-                            >
-                                <Box className={styles.bedgeImg}>
-                                    <img 
-                                        src={bedge.src} 
-                                        alt={bedge.key} 
-                                        style={{opacity: bedge.active ? "1" : "0.5"}}
-                                    />
+                        {bedgeImages.map((bedge) => {
+                            // medal 값과 bedge.key를 비교하여 활성화된 배지 설정
+                            const isActive = medal === bedge.key;
+
+                            return (
+                                <Box 
+                                    key={bedge.key} 
+                                    className={styles.bedgeWrapper}
+                                    sx={{
+                                        background: isActive ? 
+                                            "linear-gradient(to bottom, #FFF, #E8F1F6)" 
+                                            : "#FFFFFF",
+                                        border: isActive ? "0.25rem solid #B0D3F0" : "none",
+                                    }}
+                                >
+                                    <Box className={styles.bedgeImg}>
+                                        <img 
+                                            src={bedge.src} 
+                                            alt={bedge.key} 
+                                            style={{opacity: isActive  ? "1" : "0.5"}}
+                                        />
+                                    </Box>
                                 </Box>
-                            </Box>
-                        ))}
+                            );
+                            }
+                        )}
                     </Box>
                 </Box>
             </Box>
