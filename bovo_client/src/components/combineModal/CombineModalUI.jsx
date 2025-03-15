@@ -3,25 +3,20 @@ import { DndContext, closestCenter, DragOverlay } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import CloseIcon from "@mui/icons-material/Close";
 import SortableItem from "./SortableItem";
-import useCombineModal from "../../hooks/useCombineModal";
 import PropTypes from "prop-types";
+import { memoPropType } from "../../utils/propTypes";
 
-const CombineModal = ({ open, onClose, memos, setMemos }) => {
-  const {
-    items,
-    activeId,
-    sensors,
-    getActiveItem,
-    handleDragStart,
-    handleDragEnd,
-    handleDragCancel,
-    handleApplyOrder,
-    handleCancel,
-  } = useCombineModal(memos, setMemos, onClose);
-
+const CombineModalUI = ({ 
+  open, 
+  onClose, 
+  items, 
+  sensors, 
+  activeId, 
+  handleDragStart, 
+  handleDragEnd, 
+  handleApplyOrder 
+}) => {
   if (!open) return null;
-
-  const activeItem = getActiveItem();
 
   return (
     <Box
@@ -37,7 +32,7 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
         alignItems: "center",
         zIndex: 1000,
       }}
-      onClick={handleCancel} 
+      onClick={onClose} 
     >
       <Box
         sx={{
@@ -49,15 +44,14 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "1rem",
           position: "relative",
-          maxWidth: "100%",
-          maxHeight: "100%",
           boxSizing: "border-box"
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <Box display="flex" 
+        {/* 헤더 */}
+        <Box 
+        display="flex" 
         justifyContent="space-between" 
         width="100%" 
         mb={2}
@@ -65,35 +59,25 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           <Typography sx={{ 
             fontSize: "2rem", 
             fontWeight: "bold",
-            mt: "2rem",
-            ml: "2.2rem"
+            mt: "2rem", 
+            ml: "2.2rem" 
             }}>
-              순서 변경하기
-            </Typography>
-            <IconButton onClick={handleCancel}>
+            순서 변경하기
+          </Typography>
+          <IconButton onClick={onClose}>
             <CloseIcon sx={{ fontSize: "2rem", mt: "1rem", mr: "1rem" }} />
-            </IconButton>
+          </IconButton>
         </Box>
 
+        {/* 드래그 & 드롭 컨텍스트 */}
         <DndContext 
           sensors={sensors}
           collisionDetection={closestCenter} 
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
-          onDragCancel={handleDragCancel}
         >
-          <SortableContext 
-            items={items.map((item) => String(item.memo_id))} 
-            strategy={verticalListSortingStrategy}
-          >
-            <Box sx={{
-              width: "34rem",
-              height: "72rem",
-              overflowY: "auto",
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem",
-            }}>
+          <SortableContext items={items.map((item) => String(item.memo_id))} strategy={verticalListSortingStrategy}>
+            <Box sx={{ width: "34rem", height: "72rem", overflowY: "auto", display: "flex", flexDirection: "column", gap: "1rem" }}>
               {items.map((memo) => (
                 <SortableItem key={memo.memo_id} memo={memo} />
               ))}
@@ -101,23 +85,24 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
           </SortableContext>
 
           <DragOverlay>
-            {activeId ? <SortableItem memo={activeItem} isDragging /> : null}
+            {activeId ? <SortableItem memo={items.find(item => String(item.memo_id) === String(activeId))} isDragging /> : null}
           </DragOverlay>
         </DndContext>
 
-        <Button
-          variant="contained"
-          disableElevation
-          onClick={handleApplyOrder}
-          sx={{
-            backgroundColor: "#739CD4",
-            color: "white",
-            fontSize: "1.8rem",
-            borderRadius: "1.25rem",
-            width: "12rem",
-            height: "4rem",
-            mb: "2rem",
-            mt: "1.2rem"
+        {/* 정렬 버튼 */}
+        <Button 
+          variant="contained" 
+          disableElevation 
+          onClick={handleApplyOrder} 
+          sx={{ 
+            backgroundColor: "#739CD4", 
+            color: "white", 
+            fontSize: "1.8rem", 
+            borderRadius: "1.25rem", 
+            width: "12rem", 
+            height: "4rem", 
+            mb: "2rem", 
+            mt: "1.2rem" 
           }}
         >
           정렬하기
@@ -127,11 +112,16 @@ const CombineModal = ({ open, onClose, memos, setMemos }) => {
   );
 };
 
-CombineModal.propTypes = {
-  open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  memos: PropTypes.array.isRequired,
-  setMemos: PropTypes.func.isRequired,
-};
+// PropTypes 설정
+CombineModalUI.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    items: PropTypes.arrayOf(memoPropType).isRequired,
+    sensors: PropTypes.object.isRequired,
+    activeId: PropTypes.string,
+    handleDragStart: PropTypes.func.isRequired,
+    handleDragEnd: PropTypes.func.isRequired,
+    handleApplyOrder: PropTypes.func.isRequired,
+  };
 
-export default CombineModal;
+export default CombineModalUI;

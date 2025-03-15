@@ -1,3 +1,5 @@
+/** 책 상세보기 화면에서 책의 정보를 등록 */
+
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { bookPropType } from "../../utils/propTypes";

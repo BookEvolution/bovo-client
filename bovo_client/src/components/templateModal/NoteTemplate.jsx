@@ -1,3 +1,5 @@
+/** 기록하기 화면에서 템플릿을 선택하는 모달 */
+
 import { useState } from "react";
 import templateData from "../../assets/data/template.json";
 import {

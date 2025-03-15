@@ -1,3 +1,5 @@
+/** Note에서 사용하는 삭제 모달 */
+
 import PropTypes from "prop-types";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 import useDelete from "../../hooks/useDelete";

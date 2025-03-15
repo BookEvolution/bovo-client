@@ -1,136 +1,124 @@
-import { Box, Typography, Button, IconButton } from "@mui/material";
-import { DndContext, closestCenter, DragOverlay } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import CloseIcon from "@mui/icons-material/Close";
-import SortableItem from "./SortableItem";
-import useCombineModal from "../../hooks/useCombineModal";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { arrayMove } from "@dnd-kit/sortable";
+import {
+  TouchSensor,
+  MouseSensor,
+  useSensor,
+  useSensors
+} from "@dnd-kit/core";
+import { updateMemoOrder } from "../../api/NoteApi";
+import CombineModalUI from "./CombineModalUI";
 import PropTypes from "prop-types";
+import { memoPropType } from "../../utils/propTypes";
+
+// 모바일 환경에서 드래그하게 터치 센서 설정
+class CustomTouchSensor extends TouchSensor {
+  static activators = [
+    {
+      eventName: "onTouchStart",
+      handler: ({ nativeEvent: event }) => {
+        if (!event.target.closest("[data-drag-handle='true']")) {
+          return false;
+        }
+        return true;
+      },
+    },
+  ];
+}
 
 const CombineModal = ({ open, onClose, memos, setMemos }) => {
-  const {
-    items,
-    activeId,
-    sensors,
-    getActiveItem,
-    handleDragStart,
-    handleDragEnd,
-    handleDragCancel,
-    handleApplyOrder,
-    handleCancel,
-  } = useCombineModal(memos, setMemos, onClose);
+  const { book_id } = useParams();
+  const [items, setItems] = useState([]);
+  const [activeId, setActiveId] = useState(null);
+  const [originalMemos, setOriginalMemos] = useState([]);
 
-  if (!open) return null;
 
-  const activeItem = getActiveItem();
+  /**목록을 불러올 때 상태가 변경되면 정렬된 상태로 items와 originalMemos를 설정 */
+  useEffect(() => {
+    if (memos && Array.isArray(memos)) {
+      const sortedMemos = [...memos].sort((a, b) => a.order - b.order);
+      setOriginalMemos([...sortedMemos]);
+      setItems([...sortedMemos]);
+    }
+  }, [memos]);
+
+  /**10px 이동해야 드래그 시작, 터치 후 100ms 후에 드래그 가능 */
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 10 } }),
+    useSensor(CustomTouchSensor, { activationConstraint: { delay: 100, tolerance: 5 } })
+  );
+
+/**activeId에 현재 드래그 중인 아이템의 ID 저장 */
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
+/**드래그가 끝난 후 아이템 순서를 변경 arrayMove로 새로운 순서를 반영 */
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (active && over && active.id !== over.id) {
+      setItems((currentItems) => {
+        const oldIndex = currentItems.findIndex(item => String(item.memo_id) === String(active.id));
+        const newIndex = currentItems.findIndex(item => String(item.memo_id) === String(over.id));
+        return arrayMove(currentItems, oldIndex, newIndex);
+      });
+    }
+    setActiveId(null);
+  };
+/**순서 변경 적용 */
+  const handleApplyOrder = async () => {
+    const updatedItems = items.map((item, index) => ({
+      ...item,
+      order: index,
+    }));
+
+    if (!book_id) {
+      console.error("book_id 없음", book_id);
+      return;
+    }
+
+    const memoOrderArray = updatedItems.map(item => item.memo_id);
+
+    if (typeof setMemos === "function") {
+      setMemos([...updatedItems]);
+    }
+
+    try {
+      await updateMemoOrder(book_id, memoOrderArray);
+    } catch (error) {
+      console.error("순서 변경 실패:", error);
+    }
+
+    setTimeout(() => {
+      onClose();
+    }, 100);
+  };
+
+  // 취소
+  const handleCancel = () => {
+    setItems(originalMemos); // 원래 상태로 되돌림
+    onClose();
+  };
 
   return (
-    <Box
-      sx={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 1000,
-      }}
-      onClick={handleCancel} 
-    >
-      <Box
-        sx={{
-          width: "40rem",
-          height: "75rem",
-          backgroundColor: "#E8F1F6",
-          borderRadius: "1.25rem",
-          padding: "1rem",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "1rem",
-          position: "relative",
-          maxWidth: "100%",
-          maxHeight: "100%",
-          boxSizing: "border-box"
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Box display="flex" 
-        justifyContent="space-between" 
-        width="100%" 
-        mb={2}
-        >
-          <Typography sx={{ 
-            fontSize: "2rem", 
-            fontWeight: "bold",
-            mt: "2rem",
-            ml: "2.2rem"
-            }}>
-              순서 변경하기
-            </Typography>
-            <IconButton onClick={handleCancel}>
-            <CloseIcon sx={{ fontSize: "2rem", mt: "1rem", mr: "1rem" }} />
-            </IconButton>
-        </Box>
-
-        <DndContext 
-          sensors={sensors}
-          collisionDetection={closestCenter} 
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          onDragCancel={handleDragCancel}
-        >
-          <SortableContext 
-            items={items.map((item) => String(item.memo_id))} 
-            strategy={verticalListSortingStrategy}
-          >
-            <Box sx={{
-              width: "34rem",
-              height: "72rem",
-              overflowY: "auto",
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem",
-            }}>
-              {items.map((memo) => (
-                <SortableItem key={memo.memo_id} memo={memo} />
-              ))}
-            </Box>
-          </SortableContext>
-
-          <DragOverlay>
-            {activeId ? <SortableItem memo={activeItem} isDragging /> : null}
-          </DragOverlay>
-        </DndContext>
-
-        <Button
-          variant="contained"
-          disableElevation
-          onClick={handleApplyOrder}
-          sx={{
-            backgroundColor: "#739CD4",
-            color: "white",
-            fontSize: "1.8rem",
-            borderRadius: "1.25rem",
-            width: "12rem",
-            height: "4rem",
-            mb: "2rem",
-            mt: "1.2rem"
-          }}
-        >
-          정렬하기
-        </Button>
-      </Box>
-    </Box>
+    <CombineModalUI 
+      open={open} 
+      onClose={handleCancel} 
+      items={items} 
+      activeId={activeId} 
+      sensors={sensors} 
+      handleDragStart={handleDragStart} 
+      handleDragEnd={handleDragEnd} 
+      handleApplyOrder={handleApplyOrder} 
+    />
   );
 };
 
+// PropTypes 설정
 CombineModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  memos: PropTypes.array.isRequired,
+  memos: PropTypes.arrayOf(memoPropType).isRequired,
   setMemos: PropTypes.func.isRequired,
 };
 
