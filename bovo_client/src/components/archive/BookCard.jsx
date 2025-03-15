@@ -7,7 +7,7 @@ const BookCard = ({ book, showDate, showRating }) => {
 
   return (
     <Box
-      onClick={() => navigate(`/archive/${book.book_id}`)}
+      onClick={() => navigate(`/archive/${book.book_id}`)}  // 선택하면 상세 페이지
       sx={{
         width: "39rem",
         height: "15rem",
@@ -20,6 +20,7 @@ const BookCard = ({ book, showDate, showRating }) => {
         cursor: "pointer",
       }}
     >
+      {/* 책 표지 (없을 때도 설정) */}
       <img
         src={book.cover}
         alt={book.title}
@@ -30,6 +31,7 @@ const BookCard = ({ book, showDate, showRating }) => {
           backgroundColor: "lightgray",
         }}
       />
+       {/* 책 제목 */}
       <Box sx={{ ml: 4, flex: 1 }}>
         <Typography 
           sx={{ 
@@ -48,6 +50,7 @@ const BookCard = ({ book, showDate, showRating }) => {
         >
           {book.title}
         </Typography>
+         {/* 저자 */}
         <Typography 
           sx={{ 
             fontSize: "1.5rem", 
@@ -66,6 +69,7 @@ const BookCard = ({ book, showDate, showRating }) => {
         >
           {book.author}
         </Typography>
+         {/* 책 정보 */}
         {showDate && book.start_date && (
           <Typography sx={{ 
             fontSize: "1.25rem", 

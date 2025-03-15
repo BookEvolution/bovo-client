@@ -7,7 +7,7 @@ const WishCard = ({ book }) => {
 
   return (
     <Box
-      onClick={() => navigate(`/archive/${book.book_id}`)}
+      onClick={() => navigate(`/archive/${book.book_id}`)}  //선택하면 상세 페이지
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -16,6 +16,7 @@ const WishCard = ({ book }) => {
         cursor: "pointer",
       }}
     >
+        {/* 책 표지 */}
       <img
         src={book.cover}
         alt={book.title}
@@ -27,6 +28,7 @@ const WishCard = ({ book }) => {
         }}
       />
       <Box sx={{ textAlign: "left", mt: 1, width: "100%" }}>
+        {/* 책 제목 */}
         <Typography 
           sx={{ 
             fontSize: "1.5rem", 
@@ -41,6 +43,7 @@ const WishCard = ({ book }) => {
         >
           {book.title}
         </Typography>
+        {/* 책 저자 */}
         <Typography 
           sx={{ 
             fontSize: "1.5rem", 
