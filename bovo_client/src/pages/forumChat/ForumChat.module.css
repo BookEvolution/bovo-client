@@ -1,15 +1,15 @@
 .chatContainer {
     width: 41.125rem;
-    height: 100%;
+    height: 75rem;
     padding: 0 1rem;
     display: flex;
     flex-direction: column;
     gap: 3.5rem;
-    overflow-y: scroll;
+    overflow-y: auto; /* 스크롤이 생기도록 */
 }
 
 .chatListItem {
-    max-width: 34rem;
+    width: 100%;
 }
 
 .userInfoWrapper {
