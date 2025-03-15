@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Box, Typography, Container, Rating } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/Auth";
+import AutoStoriesRoundedIcon from '@mui/icons-material/AutoStoriesRounded';
 
 const Main = () => {
     const navigate = useNavigate();
@@ -103,7 +104,7 @@ const Main = () => {
                                 권째 기록 중
                             </Typography>
                         </Box>
-                        <img src={profile_picture} alt="Profile" style={{ width: "12rem", height: "12rem", marginBottom: "-2rem" }} />
+                        <img src={profile_picture} alt="Profile" style={{ width: "12rem", height: "12rem", marginBottom: "-2rem"}} />
                     </Box>
 
                     {recent_book_info === null ? (
@@ -119,12 +120,17 @@ const Main = () => {
                                 marginTop: "2rem",
                                 display: "flex",
                                 alignItems: "center",
-                                justifyContent: "center",
+                                justifyContent: "flex-start",
                             }}
                         >
-                            <Typography sx={{ fontSize: "2.6rem", fontWeight: "500", color: "#7B7B7B" }}>
-                                새로운 책 추가하러 가기
-                            </Typography>
+                            <Box sx={{display:"flex", alignItems:"center", gap:"2rem"}}>
+                                <Typography sx={{ fontSize: "2.5rem", fontWeight: "500", color: "#7B7B7B" ,marginLeft:"2.8rem" }}>
+                                    새로운 책 <br />추가하러 가기
+                                </Typography>
+                                <Box sx={{backgroundColor:"#E7E7E7", borderRadius:"100rem", padding:"2.4rem", marginLeft:"1.6rem"}}>
+                                    <AutoStoriesRoundedIcon sx={{fontSize:"7rem", color:"#ffffff"}}/>
+                                </Box>
+                            </Box>
                         </Box>
                     ) : (
                         <Box
@@ -137,9 +143,11 @@ const Main = () => {
                                 width: "35rem",
                                 height: "20rem",
                                 marginTop: "2rem",
+                                display: "flex",
+                                alignItems: "center",
                             }}
                         >
-                            <Box sx={{ display: "flex", gap: 5 }}>
+                            <Box sx={{ display: "flex", gap: 5, alignItems: "center" }}>
                                 <Box
                                     sx={{
                                         width: "12rem",
@@ -148,28 +156,30 @@ const Main = () => {
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "center",
-                                        fontSize: "1.2rem",
-                                        color: "#555",
-                                        marginTop: "0.5rem",
-                                        marginLeft: "0.8rem",
+                                        borderRadius: "0.8rem",
+                                        overflow: "hidden",
+                                        marginLeft:"1rem"
                                     }}
                                 >
-                                    <img src={bookCover} 
+                                    <img 
+                                        src={bookCover} 
                                         alt="책 표지" 
-                                        style={{ width: "100%", height: "100%" }} />
+                                        style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                                    />
                                 </Box>
 
-                                <Box>
-                                <Typography 
-                                    sx={{ 
-                                            fontSize: "2.6rem", 
+                                <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", minHeight: "14rem" }}>
+                                    <Typography 
+                                        sx={{ 
+                                            fontSize: "2.4rem", 
                                             fontWeight: "700", 
-                                            marginTop: "1rem",
-                                            display: "-webkit-box",
-                                            WebkitBoxOrient: "vertical",
-                                            WebkitLineClamp: 1, 
+                                            maxWidth: "19rem",
                                             overflow: "hidden",
-                                            textOverflow: "ellipsis"
+                                            textOverflow: "ellipsis",
+                                            WebkitBoxOrient: "vertical",
+                                            WebkitLineClamp: 1,
+                                            display: "-webkit-box",
+                                            wordBreak: "break-word",
                                         }}
                                     >
                                         {bookName}
@@ -178,22 +188,26 @@ const Main = () => {
                                     <Typography 
                                         sx={{ 
                                             fontSize: "1.6rem", 
-                                            color: "#6D6D6D", 
-                                            marginTop: "1rem",
-                                            display: "-webkit-box",
+                                            color: "#6D6D6D",
+                                            marginTop: "0.8rem",
+                                            maxWidth: "18rem",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
                                             WebkitBoxOrient: "vertical",
                                             WebkitLineClamp: 1,
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis"
+                                            display: "-webkit-box",
+                                            wordBreak: "break-word",
                                         }}
                                     >
                                         {bookAuthor}
                                     </Typography>
-                                    <Typography sx={{ fontSize: "1.6rem", color: "#6D6D6D", marginTop: "0.5rem" }}>
+
+                                    <Typography sx={{ fontSize: "1.5rem", color: "#6D6D6D", marginTop: "0.5rem" ,maxWidth: "18rem",}}>
                                         읽기 시작한 날: {readingStartDate ? new Date(readingStartDate).toLocaleDateString() : "날짜 없음"}
                                     </Typography>
-                                    <Box sx={{ marginTop: "1.7rem", display: "flex", alignItems: "center" }}>
-                                    <Rating value={bookScore}readOnly precision={0.1} sx={{fontSize:"3rem"}} />
+
+                                    <Box sx={{ marginTop: "1.5rem", display: "flex", alignItems: "center" }}>
+                                        <Rating value={bookScore} readOnly precision={0.1} sx={{ fontSize: "2.8rem" }} />
                                     </Box>
                                 </Box>
                             </Box>
@@ -201,26 +215,58 @@ const Main = () => {
                     )}
                 </Box>
 
-                <Box sx={{ marginTop: "8rem", width: "100%" }}>
-                <Box sx={{ display: "flex", gap: 2.7, justifyContent: "center", alignItems: "flex-end", height: "12rem" }}>
-                    {bookArray.map((book, index) => {
-                            const { width, height, backgroundColor } = bookStyles[book] || {
-                                width: "4rem",
-                                height: "12rem",
-                                backgroundColor: "#D5ECF2",
-                            };
 
-                            return (
-                                <Box key={index} sx={{ width, height, backgroundColor, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "0.4rem" }}>
-                                    <Typography variant="caption" sx={{ transform: "rotate(-270deg)", whiteSpace: "nowrap", fontSize: "1.4rem" }}>
-                                        {book}
-                                    </Typography>
-                                </Box>
-                            );
-                        })}
+                <Box sx={{ marginTop: "8rem", width: "100%" }}>
+                    {bookArray.length > 0 ? (
+                        <>
+                            <Box sx={{ display: "flex", gap: 2.7, justifyContent: "center", alignItems: "flex-end", height: "12rem" }}>
+                                {bookArray.map((book, index) => {
+                                    const { width, height, backgroundColor } = bookStyles[book] || {
+                                        width: "4rem",
+                                        height: "12rem",
+                                        backgroundColor: "#D5ECF2",
+                                    };
+                                    return (
+                                        <Box 
+                                            key={index} 
+                                            sx={{ 
+                                                width, 
+                                                height, 
+                                                backgroundColor, 
+                                                display: "flex", 
+                                                alignItems: "center", 
+                                                justifyContent: "center", 
+                                                borderRadius: "0.4rem",
+                                            }}
+                                        >
+                                            <Typography 
+                                                variant="caption" 
+                                                sx={{ 
+                                                    transform: "rotate(-270deg)", 
+                                                    whiteSpace: "nowrap", 
+                                                    fontSize: "1.6rem",  
+                                                    // overflow: "hidden", 
+                                                    // textOverflow: "ellipsis",
+                                                    // maxWidth: "min(14rem, 90%)"
+                                                }}
+                                            >
+                                                {book.length > 8 ? `${book.substring(0, 8)}...` : book}
+                                            </Typography>
+                                        </Box>
+                                    );
+                                })}
+                            </Box>
+                            <Box sx={{ backgroundColor: "#739CD4", height: "1.5rem", borderRadius: "1rem", width: "100%" }}></Box>
+                        </>
+                    ) : (
+                        <Box>
+                            <Typography sx={{ fontSize: "3rem", textAlign: "center", fontWeight: "600", color: "#6D6D6D", marginTop:"-1rem" }}>
+                                소통하는 독서 플랫폼, <br /> <span style={{color: "#BDE5F1", fontWeight:"600"}} >보보</span>에 오신 것을 환영합니다!
+                            </Typography>
+                            <Box sx={{ backgroundColor: "#9BBAE4", height: "1.5rem", borderRadius: "1rem", width: "100%", marginTop:"3rem" }}></Box>
+                        </Box>
+                    )}
                 </Box>
-                <Box sx={{ backgroundColor: "#739CD4", height: "1.5rem", borderRadius: "1rem", width: "100%" }}></Box>
-            </Box> 
             </>
         </Container>
     );

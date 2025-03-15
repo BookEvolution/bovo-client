@@ -22,28 +22,48 @@ const KakaoSignUp = () => {
     const [nickname, setNickname] = useState("");
     const [nicknameError, setNicknameError] = useState("");
 
+    const isSignUpDisabled = 
+    nicknameError !== "사용 가능한 닉네임입니다" ||
+    emailError !== "사용 가능한 이메일입니다" ||
+    !nickname.trim() || 
+    !email.trim();
+
+
     const checkNickname = async () => {
-        if (!nickname.trim()) return;
-        try {
-            await axios.post(`${API_URL}/register/nickname`, { nickname }); 
+        if (!nickname.trim()) {
             setNicknameError("");
+            return;
+        }
+        try {
+            const response = await axios.post(`${API_URL}/register/nickname`, { nickname });
+    
+            if (response.status === 200) {
+                setNicknameError("사용 가능한 닉네임입니다");
+            }
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                setNicknameError(error.response.data.message);
+                setNicknameError("중복된 닉네임입니다");
             } else {
                 console.error("닉네임 확인 실패", error);
             }
         }
     };
+    
 
     const checkEmail = async () => {
-        if (!email.trim()) return;
-        try {
-            await axios.post(`${API_URL}/register/email`, { email });
+        if (!email.trim()) {
             setEmailError("");
+            return;
+        }
+        try {
+            const response = await axios.post(`${API_URL}/register/email`, { email });
+    
+            if (response.status === 200) {
+                setEmailError("사용 가능한 이메일입니다");
+            }
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                setEmailError(error.response.data.message);
+                setEmailError("중복된 이메일입니다");
             } else {
                 console.error("이메일 확인 실패:", error);
             }
@@ -57,13 +77,14 @@ const KakaoSignUp = () => {
 
     const handleSignUp = async () => {
         if (!nickname || !email) {
-            setInputError("모든 필드를 입력해 주세요.");
+            setInputError("모든 필드를 입력해 주세요");
             return;
         }
     
-    if (nicknameError || emailError) {
-        return;
-    } 
+        if (nicknameError === "중복된 닉네임입니다" || emailError === "중복된 이메일입니다") {
+            setInputError("입력 필드를 다시 확인해주세요");
+            return;
+        }
 
     disableInterceptor();
 
@@ -73,7 +94,7 @@ const KakaoSignUp = () => {
         return;
     }
         try {
-            await axios.post("https://daf6-112-158-33-80.ngrok-free.app/kakao/register", {
+            await axios.post("https://c374-112-158-33-80.ngrok-free.app/kakao/register", {
                 email,
                 nickname,
                 profile_picture: profileImage, 
@@ -116,7 +137,6 @@ const KakaoSignUp = () => {
                         alignItems: "center",
                         justifyContent: "center",
                         marginBottom: "2rem",
-                        marginTop: "1.5rem",
                     }}
                 >
                     <img src={profileImage} alt="프로필 이미지" style={{ width: "14rem", height: "14rem", marginTop: "4.7rem" }} />
@@ -130,58 +150,102 @@ const KakaoSignUp = () => {
                         }}
                     />
                 </Box>
+                <Box sx={{width:"43rem"}}>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        value={nickname}
+                        onChange={(e) => {
+                            setNickname(e.target.value);
+                            setNicknameError(""); 
+                        }}
+                        onBlur={checkNickname} 
+                        placeholder="닉네임"
+                        sx={{
+                            width:"42.5rem",
+                            marginLeft:"3.2rem",
+                            position: "absolute",
+                            top: "57rem",
+                            left: "0",
+                            backgroundColor: "#E8F1F6",
+                            borderRadius: "1.3rem",
+                            "& fieldset": { border: "none" },
+                            padding: "0.8rem 0rem",
+                        }}
+                        inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft: "2.5rem" } }}
+                    />
+                    {nicknameError && (
+                        <Typography
+                            textAlign="right"
+                            fontSize="1.3rem"
+                            sx={{
+                                marginTop: "9.1rem",
+                                marginRight: "0.5rem",
+                                color: nicknameError === "사용 가능한 닉네임입니다" ? "#0066CC" : "#FF0000",
+                            }}
+                        >
+                            {nicknameError}
+                        </Typography>
+                    )}
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        value={email}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setEmailError(""); 
+                        }}
+                        onBlur={checkEmail} 
+                        placeholder="이메일"
+                        sx={{
+                            width:"42.5rem",
+                            marginLeft:"3.2rem",
+                            position: "absolute",
+                            top: "66rem",
+                            left: "0",
+                            backgroundColor: "#E8F1F6",
+                            borderRadius: "1.3rem",
+                            "& fieldset": { border: "none" },
+                            padding: "0.8rem 0rem",
+                        }}
+                        inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft: "2.5rem" } }}
+                    />
+                    {emailError && (
+                        <Typography
+                            textAlign="right"
+                            fontSize="1.3rem"
+                            sx={{
+                                marginTop: "7rem",
+                                marginRight: "0.5rem",
+                                color: emailError === "사용 가능한 이메일입니다" ? "#0066CC" : "#FF0000",
+                            }}
+                        >
+                            {emailError}
+                        </Typography>
+                    )}
+                </Box>
             </Box>
 
-            <Box>
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
-                    onBlur={checkNickname}
-                    placeholder="닉네임"
-                    sx={{ backgroundColor: "#E8F1F6", borderRadius: "1.3rem", "& fieldset": { border: "none" }, padding: "0.8rem 0rem"}}
-                    inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft:"2.5rem" } }}
-                />
-                {nicknameError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{ margin:"-1.8rem", marginRight:"0.2rem" }}>{nicknameError}</Typography>}
-            </Box>
-
-            <Box>
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onBlur={checkEmail}
-                    placeholder="이메일"
-                    sx={{ backgroundColor: "#E8F1F6", borderRadius: "1.3rem", "& fieldset": { border: "none" }, padding: "0.8rem 0rem", marginTop: "3rem" }}
-                    inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft: "2.5rem" } }}
-                />
-                {emailError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{ margin: "-1.8rem", marginRight: "0.2rem" }}>{emailError}</Typography>}
-            </Box>
-
-            <Box marginTop="5rem">
+            <Box marginTop="1rem" sx={{position:"absolute", left:"3.5rem", top:"76rem"}}>
                 <Button
                     fullWidth
                     variant="contained"
                     color="primary"
                     onClick={handleSignUp}
+                    disabled={isSignUpDisabled}
                     sx={{
                         fontSize: "2.2rem",
                         fontWeight: "600",
-                        padding: "1rem",
+                        padding: "1rem 17rem",
                         borderRadius: "1rem",
-                        backgroundColor: "#BDE5F1",
+                        backgroundColor: isSignUpDisabled ? "#B0BEC5" : "#BDE5F1",
                         boxShadow: "none",
                         transition: "none",
-                        "&:hover": { backgroundColor: "#BDE5F1" },
-                        "&:focus": { backgroundColor: "#BDE5F1" },
-                        "&:active": { backgroundColor: "#BDE5F1" },
                     }}
                 >
                     회원가입
                 </Button>
-                {inputError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{ marginTop: "1rem", marginRight: "0.2rem" }}>{inputError}</Typography>}
+                {inputError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{ marginTop: "0.5rem", marginRight: "0.2rem" }}>{inputError}</Typography>}
             </Box>
 
             <ProfileBottomSheet open={isBottomSheetOpen} onClose={() => setIsBottomSheetOpen(false)} onSelectProfile={handleProfileSelect} selectedProfile={profileImage} />
