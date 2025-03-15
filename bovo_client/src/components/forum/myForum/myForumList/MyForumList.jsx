@@ -8,7 +8,7 @@ const MyForumList = ({myChatroom}) => {
     const formattedDate = useFormattedDate(myChatroom.last_msg_info.last_message_date);
 
     return (
-        <ListItem button key={myChatroom.id} className={styles.myChatRoom}>
+        <ListItem button="true" key={myChatroom.id} className={styles.myChatRoom}>
             <Box className={styles.chatContentContainer}>
                 <Box className={styles.chatBookWrapper}>
                     <img src={myChatroom.book_info.book_img} alt="책 대체 이미지" />
@@ -45,9 +45,6 @@ const MyForumList = ({myChatroom}) => {
                         >
                             {myChatroom.last_msg_info.last_message} 
                         </Typography>
-                        <Box className={styles.chatNewMsgCount}>
-                            1
-                        </Box>
                     </Box>
                 </Box>
             </Box>
