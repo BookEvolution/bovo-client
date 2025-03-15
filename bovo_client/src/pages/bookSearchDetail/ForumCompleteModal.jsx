@@ -9,7 +9,7 @@ const ForumCompleteModal = ({ open, onClose, book }) => {
 
     const handleMoveToForum = () => {
         dispatch(setBook(book)); // 선택된 책 정보를 Redux에 저장
-        navigate("/Forum"); 
+        navigate("/forum/forum-make"); 
     };
 
     return (
