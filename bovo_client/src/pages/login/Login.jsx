@@ -58,6 +58,9 @@ const Login = () => {
                     setAccessToken(accessToken); // 만료시간 기본값 3600초 적용
                 }
 
+                // 로그인 성공 시 사용자가 입력한 이메일을 sessionStorage에 저장
+                sessionStorage.setItem("userEmail", email); 
+
                 navigate("/");
             }
         } catch (error) {
