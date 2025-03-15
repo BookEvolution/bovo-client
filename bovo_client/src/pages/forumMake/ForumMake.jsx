@@ -37,7 +37,7 @@ const ForumMake = () => {
             book_info: {
                 book_name: book.title, // 선택된 책 정보
                 book_cover: book.thumbnail,
-                book_author: book.authors
+                book_author: book.authors.join(", ")
             },
             chat_info: {
                 chat_name: chatName,
