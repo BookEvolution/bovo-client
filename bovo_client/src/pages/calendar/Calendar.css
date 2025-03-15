@@ -8,6 +8,8 @@
 .rbc-calendar,
 .rbc-month-view,
 .rbc-day-bg,
+.rbc-month-row,
+.rbc-row ,
 .rbc-header {
     border: none !important;
 }
@@ -16,6 +18,7 @@
     font-size: 1.3rem !important;
     font-weight: bold !important;
     text-align: center !important;
+    padding-bottom: 1.3rem !important;
 }
 
 .rbc-day-bg {
@@ -24,6 +27,36 @@
     font-weight: bold !important;
     color: #333 !important;
 }
+
+.rbc-button-link {
+    font-size: 1.5rem !important;
+    font-weight: 400 !important;
+    text-align: center !important;
+}
+
+.rbc-header:nth-child(7) {
+    color: #2E50DA !important;
+}
+
+
+.rbc-header:nth-child(1) {
+    color: #EA2424 !important;
+}
+
+
+.rbc-date-cell:nth-child(7) {
+    color: #2E50DA !important;
+}
+
+
+.rbc-date-cell:nth-child(1) {
+    color: #EA2424 !important;
+}
+
+.rbc-date-cell {
+    padding: 0.5rem !important;
+}
+
 
 .rbc-off-range-bg {
     background-color: rgba(225, 225, 225, 0.224) !important;
