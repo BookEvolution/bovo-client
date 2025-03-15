@@ -1,3 +1,5 @@
+/**기록 입력, 수정 페이지 */
+
 import { Box, Typography, Button, Snackbar, Alert } from "@mui/material";
 import NoteTemplate from "../../components/templateModal/NoteTemplate";
 import { useNoteEdit } from "../../hooks/useNoteEdit";

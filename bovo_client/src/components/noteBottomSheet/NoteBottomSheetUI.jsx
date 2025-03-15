@@ -30,6 +30,7 @@ const NoteBottomSheetUI = ({
     onDeleteModalClose,
     onDeleteSuccess
 }) => {
+    // 독서 상태 버튼 목록
     const statusOptions = [
         { 
             value: "ing", 

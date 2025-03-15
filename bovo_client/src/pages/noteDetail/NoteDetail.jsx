@@ -1,3 +1,5 @@
+/**기록 상세보기 페이지 */
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";

@@ -1,3 +1,5 @@
+/**기록 모아보기 페이지 */
+
 import { useParams } from "react-router-dom";
 import CombineModal from "../../components/combineModal/CombineModal";
 import useNoteCombine from "../../hooks/useNoteCombine";

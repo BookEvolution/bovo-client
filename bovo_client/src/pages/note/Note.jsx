@@ -1,3 +1,5 @@
+/**책 상세보기 페이지 */
+
 import { useParams } from "react-router-dom";
 import NoteInfo from "../../components/note/NoteInfo";
 import NoteList from "../../components/note/NoteList";
