@@ -5,7 +5,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import styles from "./Sidebar.module.css";
 import profileImages from '../../../constant/ProfileImg';
 
-const Sidebar = ({ open, toggleSidebar}) => {
+const Sidebar = ({ open, toggleSidebar, roomName, handleExitClick}) => {
     return (
         <Drawer anchor="right" open={open} onClose={toggleSidebar(false)}>
             <Container className={styles.sideBarContainer}>
@@ -17,7 +17,7 @@ const Sidebar = ({ open, toggleSidebar}) => {
                             fontWeight: "bold"
                         }}
                     >
-                        채팅방 이름
+                        {roomName}
                     </Typography>
                     <IconButton onClick={toggleSidebar(false)}>
                         <CloseIcon sx={{fontSize: "2rem"}} />
@@ -35,7 +35,7 @@ const Sidebar = ({ open, toggleSidebar}) => {
                     <List className={styles.userList}>
                         <ListItem className={styles.userListItem}>
                             <ListItemAvatar className={styles.userAvatar}>
-                                <Avatar src={profileImages[6].src} sx={{width: "4rem", height: "4rem"}} />
+                                <Avatar src={profileImages[6] ? profileImages[6].src : ""} sx={{width: "4rem", height: "4rem"}} />
                             </ListItemAvatar>
                             <Typography sx={{fontSize: "1.5rem"}}>
                                 userNickname
@@ -43,7 +43,7 @@ const Sidebar = ({ open, toggleSidebar}) => {
                         </ListItem>
                     </List>
                 </Box>
-                <Box className={styles.footerContainer}>
+                <Box className={styles.footerContainer} onClick={handleExitClick}>
                     <Box>
                         <LogoutIcon sx={{fontSize: "2rem"}} />
                     </Box>
@@ -66,4 +66,6 @@ export default Sidebar;
 Sidebar.propTypes = {
     open: PropTypes.bool.isRequired, // open은 boolean 타입이고 필수 props
     toggleSidebar: PropTypes.func.isRequired, // toggleSidebar는 함수 타입이고 필수 props
+    roomName: PropTypes.string.isRequired,
+    handleExitClick: PropTypes.func.isRequired,
 };

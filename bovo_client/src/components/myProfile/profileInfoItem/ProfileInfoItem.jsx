@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'; // PropTypes 임포트
 import { Box, Typography } from "@mui/material";
 import styles from "./ProfileInfoItem.module.css";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium"; // 추가
 
 // ✅ MyProfile 내부에 ProfileInfoItem 컴포넌트 선언
 const ProfileInfoItem = ({ title, content, src }) => {
@@ -15,7 +16,11 @@ const ProfileInfoItem = ({ title, content, src }) => {
                 </Typography>
             ) : (
                 <Box className={styles.imgWrapper} sx={{ textAlign: "right" }}>
-                    <img src={src} alt="독서 성과 이미지" className={styles.bedgeImg} /> 
+                    {src === "NONE" ? (
+                        <WorkspacePremiumIcon sx={{ fontSize: "4rem", color: "#D9D9D9" }} />
+                    ) : (
+                        <img src={src} alt="독서 성과 이미지" className={styles.bedgeImg} />
+                    )} 
                 </Box>
             )}
         </Box>

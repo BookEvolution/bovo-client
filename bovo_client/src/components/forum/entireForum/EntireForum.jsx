@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { Box, InputAdornment, TextField, Typography } from "@mui/material";
 import GroupIcon from '@mui/icons-material/Group';
 import SearchIcon from '@mui/icons-material/Search';
-import Book from "../../../assets/book/book_ex.png";
 import styles from "./EntireForum.module.css";
 import { useState } from "react";
 import JoinChatRoomModal from "../joinChatRoomModal/JoinChatRoomModal";
@@ -12,6 +11,7 @@ const EntireForum = ({ chatrooms }) => {
     const [open, setOpen] = useState(false); // 모달 상태
     const [chatRoomData, setChatRoomData] = useState(null); // 참여를 위한 채팅방 데이터
     const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태
+    const [filteredChatrooms, setFilteredChatrooms] = useState(chatrooms); // 필터링된 채팅방 상태
 
     const handleOpen = async (roomId) => {
         try {
@@ -26,16 +26,18 @@ const EntireForum = ({ chatrooms }) => {
     const handleClose = () => setOpen(false);
 
     const handleSearch = (text) => {
-        if (event.key === 'Enter' || event.type === 'blur') {
+        if (text.trim() === "") {
+            setSearchQuery("");
+            setFilteredChatrooms(chatrooms); // 검색어가 없으면 모든 채팅방을 보여줌
+        } else {
             setSearchQuery(text);
+            const filtered = chatrooms.filter(room =>
+                room.chatroom_name.toLowerCase().includes(text.toLowerCase()) ||
+                room.book_info.book_name.toLowerCase().includes(text.toLowerCase())
+            );
+            setFilteredChatrooms(filtered); // 검색어에 맞는 채팅방만 필터링
         }
     };
-
-    // 검색어로 필터링한 chatrooms
-    const filteredChatrooms = chatrooms.filter(room => 
-        room.chatroom_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        room.book_info.book_name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
 
     // admin이 true인 항목을 필터링
     const adminPick = chatrooms.filter(room => room.admin === true);
@@ -98,7 +100,8 @@ const EntireForum = ({ chatrooms }) => {
                     variant="standard" // 외부 border를 제거하는 방법
                     placeholder="토론방 검색"
                     value={searchQuery} // 입력 값 상태 바인딩
-                    onChange={(e) => setSearchQuery(e.target.value)} // 입력값 업데이트
+                    onChange={(e) => handleSearch(e.target.value)} // 입력값 업데이트
+                    onBlur={() => handleSearch(searchQuery)} // 블러 시 검색 처리
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                             e.preventDefault(); // 기본 엔터키 동작 방지
@@ -128,19 +131,36 @@ const EntireForum = ({ chatrooms }) => {
                 />
             </Box>
             <Box className={styles.forumListContainer}>
-            {chatrooms.filter(room => room.admin !== true).map((room) => (
+            {filteredChatrooms.filter(room => room.admin !== true).map((room) => (
                     <Box key={room.id} className={styles.forumList} onClick={() => handleOpen(room.id)}>
                         <Box className={styles.forumBook}>
-                            <img src={Book} alt="책 예시 이미지" />
+                            <img src={room.book_info.book_img} alt="책 이미지" />
                         </Box>
                         <Box className={styles.forumRecruiteComplete}>
                             모집 완료
                         </Box>
                         <div className={styles.forumBottomContainer}>
-                            <Typography sx={{ fontSize: "1.75rem", letterSpacing: "0.0175rem", fontWeight: 500, textAlign: "left" }}>
+                            <Typography
+                                className={styles.forumInfoText} 
+                                sx={{
+                                    textOverflow: "ellipsis", 
+                                    fontSize: "1.75rem", 
+                                    letterSpacing: "0.0175rem", 
+                                    fontWeight: 500, 
+                                    textAlign: "left" 
+                                    }}
+                            >
                                 {room.chatroom_name}
                             </Typography>
-                            <Typography sx={{ fontSize: "1.25rem", fontWeight: 500, letterSpacing: "0.0125rem" }}>
+                            <Typography
+                                className={styles.forumInfoText} 
+                                sx={{ 
+                                     textOverflow: "ellipsis", 
+                                     fontSize: "1.25rem", 
+                                     fontWeight: 500, 
+                                     letterSpacing: "0.0125rem" 
+                                    }}
+                            >
                                 {room.chatroom_ds}
                             </Typography>
                             <Box className={styles.groupLimitContainer}>
