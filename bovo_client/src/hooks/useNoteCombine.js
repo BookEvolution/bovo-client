@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { noteCombineData, updateMemo } from "../api/NoteApi";
+import { noteCombineData, updateMemoOrder } from "../api/NoteApi";
 
 const useNoteCombine = (bookId) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -56,7 +56,7 @@ const useNoteCombine = (bookId) => {
 
       // 서버에 업데이트 요청
       const updatePromises = updatedMemos.map((memo) =>
-        memo.memo_id ? updateMemo(bookId, memo.memo_id, { order: memo.order }) : Promise.resolve(false)
+        memo.memo_id ? updateMemoOrder(bookId, memo.memo_id, { order: memo.order }) : Promise.resolve(false)
       );
 
       await Promise.all(updatePromises);
