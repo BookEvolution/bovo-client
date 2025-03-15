@@ -1,5 +1,6 @@
 import { Container, Box, Typography, LinearProgress, Link } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import styles from './MyPage.module.css';
 import { useNavigate } from "react-router-dom";
 import MenuList from "../../components/myPageListMenu/MenuList";
@@ -155,7 +156,11 @@ const MyPage = () => {
                 <Box className={styles.rpContentContainer}>
                     <Box className={styles.rpContentWrapper}>
                         <Box className={styles.rpBedge}>
-                            <img src={userMedalSrc} alt="독서 성과 뱃지"/>
+                        {userData?.medal === "NONE" ? (
+                            <WorkspacePremiumIcon sx={{ fontSize: "9rem", color: "#D9D9D9" }} />
+                        ) : (
+                            <img src={userMedalSrc} alt="독서 성과 뱃지" />
+                        )}
                         </Box>
                         <Box className={styles.rpContent}>
                             <Typography 
