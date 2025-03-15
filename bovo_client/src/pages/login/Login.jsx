@@ -1,11 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+// import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Typography, Container } from "@mui/material";
 import axios from "axios";
 import kakaoBtn from "../../assets/button/btn_kakao.png";
 import { disableInterceptor, enableInterceptor, setAccessToken } from "../../api/Auth";
 
-axios.defaults.withCredentials = true;
+const CLIENT_ID = import.meta.env.VITE_KAKAO_LOGIN_API_KEY;
+const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+console.log(import.meta.env.VITE_KAKAO_REDIRECT_URI);
+
+const handleKakaoLogin = () => {
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    console.log("카카오 로그인 URL:", kakaoAuthUrl);
+    window.location.href = kakaoAuthUrl;
+    console.log(kakaoAuthUrl);
+};
 
 const Login = () => {
     const navigate = useNavigate();
@@ -15,13 +25,6 @@ const Login = () => {
     const [passwordError, setPasswordError] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
-    useEffect(() => {
-        const accessToken = sessionStorage.getItem("AccessToken");
-        if (accessToken) {
-            axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-        }
-    }, []);
-
     const handleSignUp = () => {
         navigate("/sign-up/basic");
     };
@@ -30,12 +33,12 @@ const Login = () => {
         setEmailError("");
         setPasswordError("");
 
-        // 인터셉터 비활성화
+       // 인터셉터 비활성화
         disableInterceptor();
 
         try {
             const response = await axios.post(
-                `https://0ec4-2406-5900-902b-8631-f13a-55ce-2a61-3542.ngrok-free.app/login`,
+                "https://daf6-112-158-33-80.ngrok-free.app/login",
                 { email, password },
                 {
                     withCredentials: true,
@@ -78,8 +81,6 @@ const Login = () => {
             enableInterceptor();
         }
     };
-
-
 
 
     return (
@@ -207,6 +208,7 @@ const Login = () => {
                         }}
                     >
                         <img 
+                            onClick={handleKakaoLogin}
                             src={kakaoBtn} 
                             alt="카카오 로그인" 
                             style={{ width: "25rem", boxShadow: "none", cursor: "pointer" }} 

@@ -7,25 +7,73 @@ import 'dayjs/locale/ko';
 import styles from "./ForumMake.module.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { createForumRoom } from "../../api/ForumService";
+import { useDispatch, useSelector } from "react-redux";
+import { clearBook } from "../../store/bookForum/BookSlice";
 
 const ForumMake = () => {
-
+    const book = useSelector((state) => state.book.book); // Redux에서 book 정보 가져오기
+    const dispatch = useDispatch();
     const [startDate, setStartDate] = useState(dayjs());
     const [endDate, setEndDate] = useState(dayjs().add(7, "day"));
     const [isPrivate, setIsPrivate] = useState(false);
     const [capacity, setCapacity] = useState("");
+    const [chatName, setChatName] = useState("");
+    const [chatDetail, setChatDetail] = useState("");
+    const [secretQuestion, setSecretQuestion] = useState("");
+    const [secretAnswer, setSecretAnswer] = useState("");
 
     const handleToggle = () => {
         setIsPrivate((prev) => !prev);
     };
 
+    const handleSubmit = async () => {
+        if (!chatName.trim() || !chatDetail.trim() || !capacity.trim()) {
+            alert("필수 정보를 입력해주세요.");
+            return;
+        }
+
+        const forumData = {
+            book_info: {
+                book_name: book.title, // 선택된 책 정보
+                book_cover: book.thumbnail,
+                book_author: book.authors
+            },
+            chat_info: {
+                chat_name: chatName,
+                chat_detail: chatDetail,
+                challenge_start_date: startDate.format("YYYY-MM-DD"),
+                challenge_end_date: endDate.format("YYYY-MM-DD"),
+                is_secret: isPrivate,
+                secret_question: isPrivate ? secretQuestion : "",
+                secret_answer: isPrivate ? secretAnswer : "",
+                max_recruiting: parseInt(capacity)
+            }
+        };
+
+        try {
+            const response = await createForumRoom(forumData);
+            alert("방이 성공적으로 생성되었습니다!");
+            dispatch(clearBook());
+            console.log(response); // 생성된 방 정보 확인
+        } catch (error) {
+            alert("방 만들기에 실패했습니다.");
+        }
+    };
+
     return (
         <Box className={styles.forumMakeContainer}>
-            <Link to='/search'>
-                <Box className={styles.addBookWrapper}>
-                    <AddCircleOutlineIcon sx={{fontSize: "3rem", color: "#739CD4"}}/>
+            {book ? (
+                <Box className={styles.bookWrapper}>
+                    <img src={book.thumbnail} alt={book.title} />
                 </Box>
-            </Link>
+            ) : (
+                <Link to='/search'>
+                    <Box className={styles.addBookWrapper}>
+                        <AddCircleOutlineIcon sx={{fontSize: "3rem", color: "#739CD4"}}/>
+                    </Box>
+                </Link>
+            )}
             <Box className={styles.inputBox}>
                 <Typography
                     className={styles.inputTitle} 
@@ -40,6 +88,8 @@ const ForumMake = () => {
                 <TextField
                     variant="outlined"
                     fullWidth
+                    value={chatName} 
+                    onChange={(e) => setChatName(e.target.value)}
                     sx={{
                         backgroundColor: "#E8F1F6",
                         width: "100%",
@@ -74,6 +124,8 @@ const ForumMake = () => {
                     fullWidth
                     multiline
                     rows={4} // 줄 개수 지정 (4줄)
+                    value={chatDetail} 
+                    onChange={(e) => setChatDetail(e.target.value)} 
                     sx={{
                         backgroundColor: "#E8F1F6",
                         width: "100%",
@@ -251,8 +303,9 @@ const ForumMake = () => {
                     <TextField
                         fullWidth
                         variant="outlined"
-                        type="password"
                         disabled={!isPrivate} // ✅ isPrivate가 false이면 비활성화
+                        value={secretQuestion} 
+                        onChange={(e) => setSecretQuestion(e.target.value)}
                         sx={{
                             backgroundColor: isPrivate ? "#E8F1F6": "#D9D9D9",
                             width: "100%",
@@ -291,8 +344,9 @@ const ForumMake = () => {
                     <TextField
                         fullWidth
                         variant="outlined"
-                        type="password"
                         disabled={!isPrivate} // ✅ isPrivate가 false이면 비활성화
+                        value={secretAnswer} 
+                        onChange={(e) => setSecretAnswer(e.target.value)}
                         sx={{
                             backgroundColor: isPrivate ? "#E8F1F6": "#D9D9D9",
                             width: "100%",
@@ -324,7 +378,8 @@ const ForumMake = () => {
 
             {/* 방 만들기 버튼 */}
             <Button 
-                className={styles.makeRoomBtn} 
+                className={styles.makeRoomBtn}
+                onClick={handleSubmit} 
                 sx={{
                     backgroundColor: "#E8F1F6",
                     borderRadius: "1.5625rem",

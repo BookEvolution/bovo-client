@@ -6,12 +6,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import logo from "../../assets/logo/logo.png";
 import CompleteSignUpModal from "../../components/signUpCompleteModal/CompleteSignUpModal";
+import profileImages from "../../constant/ProfileImg";
 
 const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
 const SignUp = () => {
     const navigate = useNavigate();
-    const [profileImage, setProfileImage] = useState("/src/assets/profile/profile_3.png");
+    const [profileImage, setProfileImage] = useState(profileImages[0].src);
     const [nickname, setNickname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -23,7 +24,6 @@ const SignUp = () => {
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
 
     const checkNickname = async () => {
         if (!nickname.trim()) return;
@@ -87,7 +87,6 @@ const SignUp = () => {
             return;
         } //에러가 없을 때 회원가입 가능 -> 확인 필요
         
-        //여기 일부 수정했어서 잘 되는지 확인 필요
         try {
             const response = await axios.post(`${API_URL}/register`, {
                 email,
@@ -214,8 +213,6 @@ const SignUp = () => {
                 {inputError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{marginTop:"1rem", marginRight:"0.2rem"}}>{inputError}</Typography>}
             </Box>
 
-
-            {/* 고정 필요 */}
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "6rem" }}>
                 <img src={logo} alt="Bovo 로고" style={{ width: "10rem", marginRight: "1rem" }} />
                 <Typography fontSize="1.8rem" fontWeight= "500" color="#343434" marginLeft="2rem">

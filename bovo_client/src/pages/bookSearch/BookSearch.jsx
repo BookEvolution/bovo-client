@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { Box, FormControl, MenuItem, Select, Typography } from "@mui/material";
+import api from "../../api/Auth";
 import BookSearchBar from "./BookSearchBar";
 import BookList from "./BookList";
 import styles from "./BookSearch.module.css";
@@ -10,59 +10,53 @@ const BookSearch = () => {
     const [sort, setSort] = useState("accuracy"); 
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [page, setPage] = useState(1); 
+    const [hasMore, setHasMore] = useState(true); 
 
-    const fetchBooks = async (query) => {
-        if (!query.trim()) { 
-            setBooks([]); 
+    const fetchBooks = async (query, newPage = 1) => {
+        if (!query.trim()) {
+            setBooks([]);
             return;
         }
 
         setLoading(true);
-
-        const accessToken = sessionStorage.getItem("AccessToken");
-        if (!accessToken) {
-            console.error("AccessToken 없음, API 요청을 중단합니다.");
-            setLoading(false);
-            return;
-        }
-
         try {
-            const response = await axios.get(`https://2cc3-222-112-255-159.ngrok-free.app/search?query=${encodeURIComponent(query)}&sort=${sort}&size=20`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`, 
-                    "ngrok-skip-browser-warning": "69420",
-                },
-            });
-
+            const response = await api.get(`/search?query=${encodeURIComponent(query)}&sort=${sort}&size=20&page=${newPage}`);
             console.log("서버에서 받은 데이터:", response.data);
 
             if (response.data && response.data.documents) {
-                setBooks(response.data.documents);
+                if (newPage === 1) {
+                    setBooks(response.data.documents);
+                } else {
+                    setBooks((prevBooks) => [...prevBooks, ...response.data.documents]);
+                }
+
+                setHasMore(response.data.documents.length >= 20);
             } else {
                 console.error("잘못된 API 응답 형식:", response.data);
                 setBooks([]);
+                setHasMore(false);
             }
         } catch (error) {
             console.error("도서 검색 API 오류:", error);
-
-            if (error.response) {
-                if (error.response.status === 401) {
-                    console.error("AccessToken이 만료되었거나 유효하지 않습니다.");
-                    sessionStorage.removeItem("AccessToken");
-                } else if (error.response.status === 403) {
-                    console.error("API 접근이 금지되었습니다.");
-                }
-            }
-
             setBooks([]);
+            setHasMore(false);
         }
         setLoading(false);
     };
 
     useEffect(() => {
-        fetchBooks(searchTerm);
-    }, [searchTerm, sort]); 
+        setPage(1);
+        fetchBooks(searchTerm, 1);
+    }, [searchTerm, sort]);
+
+    const fetchMoreBooks = () => {
+        setPage((prevPage) => {
+            const nextPage = prevPage + 1;
+            fetchBooks(searchTerm, nextPage);
+            return nextPage;
+        });
+    };
 
     return (
         <Box className={styles.container}>
@@ -116,7 +110,7 @@ const BookSearch = () => {
                 </FormControl>
             </Box>
 
-            <BookList books={books} loading={loading} searchTerm={searchTerm} />
+            <BookList books={books} loading={loading} searchTerm={searchTerm} fetchMoreBooks={fetchMoreBooks} hasMore={hasMore} />
         </Box>
     );
 };
