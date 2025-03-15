@@ -3,12 +3,15 @@ import { Box, Button, Dialog, TextField, Typography } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import styles from './JoinChatRoomModal.module.css';
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux"; 
 import { useState } from "react";
 import api from "../../../api/Auth";
+import { addMessage } from "../../../store/chatInfo/ChatSlice";
 
 const JoinChatRoomModal = ({ open, onClose, chatRoomData }) => {
     // `JoinChatRoomModal` 함수 내에서 선언
     const navigate = useNavigate();
+    const dispatch = useDispatch(); 
 
     // 상태로 답변을 관리합니다.
     const [secretAnswer, setSecretAnswer] = useState("");
@@ -26,12 +29,24 @@ const JoinChatRoomModal = ({ open, onClose, chatRoomData }) => {
             const response = await api.post(`/chatrooms?roomId=${id}`, {
                 secret_answer: answerToSend, // 비밀 답변도 함께 전달
             });
+            console.log(response.data);
             if (response.status === 200) {
                 alert("방에 성공적으로 참여했습니다.");
-                navigate(`/chatroom/${id}`); // 채팅방으로 이동
-            } else {
-                alert("방 참여에 실패했습니다.");
-            }
+
+
+                // 서버에서 받은 메시지를 Redux 상태에 추가
+                response.data.forEach((message) => {
+                    dispatch(addMessage(message));
+                });
+
+                // 서버에서 받은 메시지를 sessionStorage에도 저장 (새로고침 시 복원 가능)
+                sessionStorage.setItem("chatMessages", JSON.stringify(response.data));
+
+                // Redux에 저장된 메시지를 사용하므로 navigate의 state는 필요 없음
+                navigate(`/forum/${id}`, { state: { roomName: chatInfo.chat_name } });
+                } else {
+                    alert("방 참여에 실패했습니다.");
+                }
         } catch (error) {
             console.error("방 참여 오류:", error);
             alert("방 참여 중 오류가 발생했습니다.");
