@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 const MyProfileEdit = () => {
     const navigate = useNavigate(); // ✅ useNavigate 추가
     const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
-    const [selectedProfile, setSelectedProfile] = useState();
+    const [selectedProfile, setSelectedProfile] = useState({ key: "", src: "" });
     const {register, handleSubmit, watch, setValue, formState: {isSubmitting, errors }} = useForm({mode : "onChange", defaultValues: { nickname: "", password: "", confirmPassword: "" }}); //프로필 수정 유효성 검사
 
     useEffect(() => {
@@ -61,7 +61,7 @@ const MyProfileEdit = () => {
                     <SearchIcon sx={{fontSize: "3.8rem", color: "#739CD4" }}/>
                 </Box>
                 <Box className={styles.profileImg}>
-                    <img src={selectedProfile.src} alt="프로필 대체 이미지" />
+                {selectedProfile?.src && <img src={selectedProfile.src} alt="프로필 이미지" />}
                 </Box>
             </Box>
             <form

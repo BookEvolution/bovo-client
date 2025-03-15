@@ -32,12 +32,13 @@ export const connectToChat = (roomId, onMessageReceived) => {
 
 export const sendMessage = (roomId, message) => {
     if (stompClient && stompClient.connected) {
-        const userId = sessionStorage.getItem("userId");  // 🔹 사용자 ID 가져오기
+        // sessionStorage에서 저장된 email을 가져옴
+        const userEmail = sessionStorage.getItem("userEmail");
 
         stompClient.publish({
             destination: `/app/chatroom/${roomId}`,
             body: JSON.stringify({
-                users: { id: userId },
+                users: { email: userEmail },
                 message: message,
                 type: "CHAT",
             }),
