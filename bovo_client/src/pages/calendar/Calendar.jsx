@@ -5,31 +5,28 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./Calendar.css";
 import { Box, MenuItem, Select } from "@mui/material";
 import { useEffect, useState } from "react";
+import api from "../../api/Auth"; 
 
-moment.locale("ko");
 const localizer = momentLocalizer(moment);
 
-const adjustEvents = (events) => {
-    return events.map(event => ({
-        ...event,
-        end: new Date(event.end.getFullYear(), event.end.getMonth(), event.end.getDate() + 1) 
-    }));
+const colors = ["#FFEA86", "#FFBD86", "#FF8686", "#EE7D99", "#9F68BD", "#609DE7", "#5FA8B2", "#68C691", "#A4E779"];
+
+const getRandomColor = (bookName) => {
+    const storedColors = JSON.parse(sessionStorage.getItem("bookColors")) || {};
+    if (!storedColors[bookName]) {
+        storedColors[bookName] = colors[Math.floor(Math.random() * colors.length)];
+        sessionStorage.setItem("bookColors", JSON.stringify(storedColors));
+    }
+    return storedColors[bookName];
 };
-//임의 설정
-const events = adjustEvents([
-    { title: "해리 포터와 비밀의 방 1", start: new Date(2025, 2, 5), end: new Date(2025, 2, 10), color: "#000000" },
-    { title: "해리 포터와 마법사의 돌 1", start: new Date(2025, 2, 28), end: new Date(2025, 3, 1), color: "#8B0000" },
-    { title: "해리 포터와 불의 잔 1", start: new Date(2025, 2, 10), end: new Date(2025, 2, 12), color: "#1E3A8A" },
-    { title: "해리 포터와 혼혈 왕자 1", start: new Date(2025, 2, 20), end: new Date(2025, 2, 24), color: "#c4a484" },
-]);
 
 const SelectYearMonth = () => {
     const options = [];
     for (let year = 2025; year >= 2023; year--) {
-        for (let month = 11; month >= 0; month--) {
+        for (let month = 12; month >= 1; month--) {
             options.push({
-                label: `${year}년 ${month + 1}월`, 
-                value: { year, month: month }, 
+                label: `${year}년 ${month}월`, 
+                value: { year, month },
             });
         }
     }
@@ -40,29 +37,69 @@ const yearMonthOptions = SelectYearMonth();
 
 const MyCalendar = () => {
     const [date, setDate] = useState(new Date());
+    const [events, setEvents] = useState([]);
+    const [selectedYear, setSelectedYear] = useState(2025);
+    const [selectedMonth, setSelectedMonth] = useState(3);
+
+    const fetchEvents = async (year, month) => {
+        try {
+            const formattedMonth = String(month).padStart(2, "0"); 
+            const response = await api.get(`/my-page/calendar?year=${year}&month=${formattedMonth}`);
+    
+            if (response.status === 200) {
+                const bookCalendarList = response.data.book_calendar_list;
+                let newEvents = [];
+    
+                Object.entries(bookCalendarList).forEach(([bookName, dateList]) => {
+                    const color = getRandomColor(bookName);
+    
+                    let startDate = new Date(dateList[0]); 
+                    let endDate = startDate;
+    
+                    for (let i = 1; i < dateList.length; i++) {
+                        const currentDate = new Date(dateList[i]);
+
+                        if ((endDate.getTime() + 86400000) === currentDate.getTime()) {
+                            endDate = currentDate; 
+                        } else {
+                            newEvents.push({
+                                title: bookName,
+                                start: new Date(startDate),
+                                end: new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1),
+                                color: color,
+                            });
+    
+                            startDate = currentDate;
+                            endDate = currentDate;
+                        }
+                    }
+    
+                    newEvents.push({
+                        title: bookName,
+                        start: new Date(startDate),
+                        end: new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1),
+                        color: color,
+                    });
+                });
+    
+                setEvents(newEvents);
+            }
+        } catch (error) {
+            console.error("캘린더 데이터 불러오기 실패:", error);
+            setEvents([]); 
+        }
+    };
+    
 
     useEffect(() => {
-        console.log("현재 선택된 날짜:", date);
-    }, [date]);
-
-    const eventStyleGetter = (event) => {
-        return {
-            style: {
-                backgroundColor: event.color,
-                color: "white",
-                borderRadius: "4px",
-                padding: "5px",
-                fontSize: "0.85rem",
-                border: "none",
-            },
-        };
-    };
+        fetchEvents(selectedYear, selectedMonth);
+    }, [selectedYear, selectedMonth]);
 
     const handleDateChange = (event) => {
         const { year, month } = event.target.value;
-        const newDate = new Date(year, month, 1);
-        setDate(newDate);
-        console.log("업데이트된 날짜:", newDate);
+        setSelectedYear(year);
+        setSelectedMonth(month);
+        setDate(new Date(year, month - 1, 1)); 
     };
 
     return (
@@ -70,7 +107,7 @@ const MyCalendar = () => {
             <Box className="calendar-header" backgroundColor="#739CD4" padding="1.5rem" marginTop="1rem">
                 <Select
                     value={yearMonthOptions.find(
-                        (option) => option.value.year === moment(date).year() && option.value.month === moment(date).month()
+                        (option) => option.value.year === selectedYear && option.value.month === selectedMonth
                     )?.value || ""}
                     onChange={handleDateChange}
                     variant="standard"
@@ -123,16 +160,24 @@ const MyCalendar = () => {
                     views={["month"]}
                     date={date}
                     onNavigate={(newDate) => setDate(newDate)}
-                    eventPropGetter={eventStyleGetter}
+                    eventPropGetter={(event) => ({
+                        style: {
+                            backgroundColor: event.color,
+                            color: "white",
+                            borderRadius: "4px",
+                            padding: "5px",
+                            fontSize: "0.85rem",
+                            border: "none",
+                        },
+                    })}
                     components={{
                         toolbar: () => null,
                     }}
-                    style={{ height: "66rem" }}
+                    style={{ height: "66rem" , marginTop:"2rem"}}
                     formats={{
                         weekdayFormat: (date, locale, localizer) =>
-                            localizer.format(date, "dddd", locale), 
+                            localizer.format(date, "ddd", locale), 
                     }}
-                    locale="ko"
                 />
             </Box>
         </Box>
