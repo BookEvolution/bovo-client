@@ -5,7 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 const ArchiveTabs = ({ currentTab, setCurrentTab, searchQuery, setSearchQuery, bookCount }) => {
   const handleChange = (event, newValue) => {
     setCurrentTab(newValue);
-    setSearchQuery(""); //
+    setSearchQuery("");  // 변경 시 검색어 초기화
   };
 
   return (

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { archiveData } from "../api/ArchiveApi";
 
 const useArchive = () => {
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState({ ing: [], end: [], wish: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -11,7 +11,12 @@ const useArchive = () => {
       setLoading(true);
       try {
         const data = await archiveData();
-        setBooks(data?.books || []); // 배열만 저장
+        const categorizedBooks = {
+          ing: data.books.filter((book) => book.status === "ing"),
+          end: data.books.filter((book) => book.status === "end"),
+          wish: data.books.filter((book) => book.status === "wish"),
+        };
+        setBooks(categorizedBooks);
       } catch (err) {
         setError(err);
       } finally {

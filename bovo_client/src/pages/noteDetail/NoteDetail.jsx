@@ -1,6 +1,8 @@
+/**기록 상세보기 페이지 */
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { Box, Typography, Button, Paper } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import DeleteModal from "../../components/deleteModal/DeleteModal";
 import { noteDetailData } from "../../api/NoteApi";
 import useBook from "../../hooks/useBook";
@@ -54,8 +56,7 @@ const NoteDetail = () => {
       </Box>
 
       {/* 질문 박스 */}
-      <Paper
-        elevation={0}
+      <Box
         sx={{
           width: "41rem",
           height: "68.5rem",
@@ -84,8 +85,7 @@ const NoteDetail = () => {
         </Box>
 
         {/* 내용 */}
-        <Paper
-          elevation={0}
+        <Box
           sx={{
             width: "38rem",
             height: "55rem",
@@ -100,8 +100,8 @@ const NoteDetail = () => {
           }}
         >
           <Typography sx={{ fontSize: "1.5rem", margin: "1.5rem" }}>{memo.memo_A}</Typography>
-        </Paper>
-      </Paper>
+        </Box>
+      </Box>
 
       {/* 버튼 */}
       <Box display="flex" gap={2} mt={3} width="41rem" justifyContent="flex-end">

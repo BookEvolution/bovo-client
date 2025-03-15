@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { bookPropType } from "../../utils/propTypes";
 import {
@@ -8,87 +7,71 @@ import {
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import DeleteModal from "../deleteModal/DeleteModal";
-import { useNavigate } from "react-router-dom";
-import { updateBook } from "../../api/NoteApi";
-import customParseFormat from 'dayjs/plugin/customParseFormat';
 
-dayjs.extend(customParseFormat);
-
-const NoteBottomSheet = ({ open, onClose, book }) => {
-    const [status, setStatus] = useState("ing");
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [rating, setRating] = useState(0);
-    const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const navigate = useNavigate();
-
-    const handleClose = () => {
-        onClose();
-        window.location.reload(); // 페이지 새로고침
-    };
-
-    // 기존 데이터 불러오기
-    useEffect(() => {
-        if (open && book) {
-            console.log("전달된 book 데이터:", book);
-    
-            setStatus(book.status || "ing");
-    
-            if (book.start_date) {
-                const parsedStartDate = dayjs(book.start_date, "YY.MM.DD");
-                console.log("Parsed start date:", parsedStartDate.format("YYYY-MM-DD"), parsedStartDate.isValid());
-                setStartDate(parsedStartDate.isValid() ? parsedStartDate : null);
-            } else {
-                setStartDate(null);
-            }
-    
-            if (book.end_date) {
-                const parsedEndDate = dayjs(book.end_date, "YY.MM.DD");
-                setEndDate(parsedEndDate.isValid() ? parsedEndDate : null);
-            } else {
-                setEndDate(null);
-            }
-    
-            setRating(book.star || 0);
+const NoteBottomSheetUI = ({
+    open,
+    onClose,
+    book,
+    status,
+    startDate,
+    endDate,
+    rating,
+    openDeleteModal,
+    onStatusChange,
+    onStartDateChange,
+    onEndDateChange,
+    onRatingChange,
+    onSave,
+    onDeleteClick,
+    onDeleteModalClose,
+    onDeleteSuccess
+}) => {
+    // 독서 상태 버튼 목록
+    const statusOptions = [
+        { 
+            value: "ing", 
+            label: "읽는 중", 
+            icon: <HourglassBottomIcon 
+                sx={{ 
+                    fontSize: "6rem", 
+                    marginBottom: "0.5rem" 
+                }} 
+            /> 
+        },
+        { 
+            value: "end", 
+            label: "다 읽음", 
+            icon: <CheckCircleOutlineIcon 
+                sx={{ 
+                    fontSize: "6rem", 
+                    marginBottom: "0.5rem" 
+                }} 
+            /> 
+        },
+        { 
+            value: "wish", 
+            label: "읽고 싶음", 
+            icon: <FavoriteBorderIcon 
+                sx={{ 
+                    fontSize: "6rem", 
+                    marginBottom: "0.5rem" 
+                }} 
+            /> 
         }
-    }, [open, book]);
-    
+    ];
 
-    const handleStatusChange = (event, newStatus) => {
-        if (newStatus !== null) setStatus(newStatus);
-    };
-
-    const handleSave = async () => {
-        if (!book) return;
-        try {
-            const updatedBookData = {
-                book_id: book.book_id,
-                status,
-                start_date: startDate ? startDate.format("YY.MM.DD") : null,
-                end_date: endDate ? endDate.format("YY.MM.DD") : null,
-                star: rating
-            };
-            await updateBook(book.book_id, updatedBookData);
-            console.log("책 정보 수정 완료");
-            handleClose();
-            //onClose(); 모달 닫기
-        } catch (error) {
-            console.error("책 정보 수정 실패:", error);
-        }
-    };
     return (
         <>
             {/* 모달 */}
             <Modal 
                 open={open} 
-                onClose={handleClose}
-                disableAutoFocus    //자꾸 오류 생겨서 넣어둠
-                disableEnforceFocus //얘도
+                onClose={onClose}
+                disableAutoFocus
+                disableEnforceFocus
                 sx={{ 
                     display: "flex", 
                     alignItems: "flex-end", 
@@ -97,7 +80,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
             >
                 <Slide direction="up" in={open} mountOnEnter unmountOnExit>
                     <Box
-                    aria-hidden="false" //오류 생겨서 넣어둠
+                        aria-hidden="false"
                         sx={{
                             width: "100%",
                             maxWidth: "45.5rem",
@@ -109,14 +92,15 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                         }}
                     >
                         {/* 상단 바 */}
-                    <Box 
-                        sx={{
-                            width: "20rem",
-                            height: "0.4rem",
-                            backgroundColor: "#739CD4",
-                            margin: "0 auto 2rem"
-                        }} 
-                    />
+                        <Box 
+                            sx={{
+                                width: "20rem",
+                                height: "0.4rem",
+                                backgroundColor: "#739CD4",
+                                margin: "0 auto 2rem"
+                            }} 
+                        />
+                        
                         {/* 독서 상태 선택 */}
                         <Typography 
                             sx={{ 
@@ -127,49 +111,19 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                         >
                             독서 상태
                         </Typography>
+                        
                         {/* 독서 상태 버튼 */}
                         <ToggleButtonGroup 
                             value={status} 
                             exclusive 
-                            onChange={handleStatusChange} 
+                            onChange={onStatusChange} 
                             sx={{ 
                                 display: "flex", 
                                 gap: "1rem", 
                                 mb: "3rem" 
                             }}
                         >
-                            {[
-                                { 
-                                    value: "ing", 
-                                    label: "읽는 중", 
-                                    icon: <HourglassBottomIcon 
-                                        sx={{ 
-                                            fontSize: "6rem", 
-                                            marginBottom: "0.5rem" 
-                                        }} 
-                                    /> 
-                                },
-                                { 
-                                    value: "end", 
-                                    label: "다 읽음", 
-                                    icon: <CheckCircleOutlineIcon 
-                                        sx={{ 
-                                            fontSize: "6rem", 
-                                            marginBottom: "0.5rem" 
-                                        }} 
-                                    /> 
-                                },
-                                { 
-                                    value: "wish", 
-                                    label: "읽고 싶음", 
-                                    icon: <FavoriteBorderIcon 
-                                        sx={{ 
-                                            fontSize: "6rem", 
-                                            marginBottom: "0.5rem" 
-                                        }} 
-                                    /> 
-                                }
-                            ].map(({ value, label, icon }) => (
+                            {statusOptions.map(({ value, label, icon }) => (
                                 <ToggleButton 
                                     key={value} 
                                     value={value} 
@@ -202,6 +156,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                         >
                             독서 기간
                         </Typography>
+                        
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <Box 
                                 sx={{ 
@@ -212,7 +167,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                             >
                                 <DatePicker
                                     value={startDate}
-                                    onChange={(newValue) => setStartDate(newValue)}
+                                    onChange={onStartDateChange}
                                     format="YY.MM.DD"
                                     sx={{
                                         width: "14rem",
@@ -246,7 +201,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                                 </Typography>
                                 <DatePicker
                                     value={endDate}
-                                    onChange={(newValue) => setEndDate(newValue)}
+                                    onChange={onEndDateChange}
                                     format="YY.MM.DD"
                                     sx={{
                                         width: "14rem",
@@ -272,7 +227,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                             </Box>
                         </LocalizationProvider>
 
-                         {/* 별점 */}
+                        {/* 별점 */}
                         <Typography 
                             sx={{ 
                                 fontSize: "1.75rem", 
@@ -283,19 +238,20 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                         >
                             별점
                         </Typography>
+                        
                         <Rating 
                             name="size-large" 
                             value={rating / 2} 
                             precision={0.5} 
                             size="large" 
-                            onChange={(event, newValue) => setRating(newValue * 2)} 
+                            onChange={onRatingChange} 
                             sx={{ 
                                 mb: "2rem", 
                                 fontSize: "5rem" 
                             }} 
                         />
 
-                         {/* 삭제 수정 버튼 */}
+                        {/* 삭제 수정 버튼 */}
                         <Box 
                             sx={{ 
                                 display: "flex", 
@@ -306,7 +262,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                             <Button 
                                 variant="contained" 
                                 disableElevation 
-                                onClick={() => setOpenDeleteModal(true)} 
+                                onClick={onDeleteClick} 
                                 sx={{ 
                                     fontSize: "2rem", 
                                     fontWeight: "500", 
@@ -321,7 +277,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
                             <Button 
                                 variant="contained" 
                                 disableElevation 
-                                onClick={handleSave} 
+                                onClick={onSave} 
                                 sx={{ 
                                     fontSize: "2rem", 
                                     fontWeight: "500", 
@@ -341,23 +297,32 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
             {/* 삭제 모달 */}
             <DeleteModal
                 open={openDeleteModal}
-                onClose={() => setOpenDeleteModal(false)}
+                onClose={onDeleteModalClose}
                 targetId={book?.book_id}
                 targetType="book"
-                onSuccess={() => {
-                    setOpenDeleteModal(false);
-                    onClose();
-                    navigate("/archive");
-                }}
+                onSuccess={onDeleteSuccess}
             />
         </>
     );
 };
 
-NoteBottomSheet.propTypes = {
+NoteBottomSheetUI.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     book: bookPropType.isRequired,
+    status: PropTypes.string.isRequired,
+    startDate: PropTypes.object,
+    endDate: PropTypes.object,
+    rating: PropTypes.number.isRequired,
+    openDeleteModal: PropTypes.bool.isRequired,
+    onStatusChange: PropTypes.func.isRequired,
+    onStartDateChange: PropTypes.func.isRequired,
+    onEndDateChange: PropTypes.func.isRequired,
+    onRatingChange: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired,
+    onDeleteClick: PropTypes.func.isRequired,
+    onDeleteModalClose: PropTypes.func.isRequired,
+    onDeleteSuccess: PropTypes.func.isRequired
 };
 
-export default NoteBottomSheet;
+export default NoteBottomSheetUI;
