@@ -25,28 +25,51 @@ const SignUp = () => {
     const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const isSignUpDisabled = 
+        nicknameError === "중복된 닉네임입니다" || 
+        emailError === "중복된 이메일입니다" ||
+        passwordError || 
+        confirmPasswordError || 
+        !nickname.trim() || 
+        !email.trim() || 
+        !password.trim() || 
+        !confirmPassword.trim();
+
+
     const checkNickname = async () => {
-        if (!nickname.trim()) return;
-        try {
-            await axios.post(`${API_URL}/register/nickname`, { nickname }); 
+        if (!nickname.trim()) {
             setNicknameError("");
+            return;
+        }
+        try {
+            const response = await axios.post(`${API_URL}/register/nickname`, { nickname });
+    
+            if (response.status === 200) {
+                setNicknameError("사용 가능한 닉네임입니다");
+            }
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                setNicknameError(error.response.data.message);
+                setNicknameError("중복된 닉네임입니다");
             } else {
                 console.error("닉네임 확인 실패", error);
             }
         }
     };
-
+    
     const checkEmail = async () => {
-        if (!email.trim()) return;
-        try {
-            await axios.post(`${API_URL}/register/email`, { email }); 
+        if (!email.trim()) {
             setEmailError("");
+            return;
+        }
+        try {
+            const response = await axios.post(`${API_URL}/register/email`, { email });
+    
+            if (response.status === 200) {
+                setEmailError("사용 가능한 이메일입니다");
+            }
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                setEmailError(error.response.data.message);
+                setEmailError("중복된 이메일입니다");
             } else {
                 console.error("이메일 확인 실패:", error);
             }
@@ -56,7 +79,7 @@ const SignUp = () => {
     const validatePassword = () => {
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
         if (!passwordRegex.test(password)) {
-            setPasswordError("영어 또는 숫자 조합, 8자 이상으로 입력해 주세요.");
+            setPasswordError("영어 또는 숫자 조합, 8자 이상으로 입력해 주세요");
         } else {
             setPasswordError("");
         }
@@ -64,7 +87,7 @@ const SignUp = () => {
 
     const validateConfirmPassword = () => {
         if (password !== confirmPassword) {
-            setConfirmPasswordError("비밀번호가 일치하지 않습니다.");
+            setConfirmPasswordError("비밀번호가 일치하지 않습니다");
         } else {
             setConfirmPasswordError("");
         }
@@ -75,17 +98,16 @@ const SignUp = () => {
         setIsBottomSheetOpen(false);
     };
 
-    //전체 필드가 입력되고, 에러가 없어야만 회원가입 가능 -> 확인 필요
     const handleSignUp = async () => {
         if (!nickname || !email || !password || !confirmPassword) {
-            setInputError("모든 필드를 입력해 주세요.");
+            setInputError("모든 필드를 입력해 주세요");
             return;
-        } //아무것도 입력 안했을 때 검사 -> 확인 필요
-
+        }
     
-        if (nicknameError || emailError || passwordError || confirmPasswordError) {
+        if (nicknameError === "중복된 닉네임입니다" || emailError === "중복된 이메일입니다") {
+            setInputError("입력 필드를 다시 확인해주세요");
             return;
-        } //에러가 없을 때 회원가입 가능 -> 확인 필요
+        }
         
         try {
             const response = await axios.post(`${API_URL}/register`, {
@@ -137,32 +159,80 @@ const SignUp = () => {
                     />
                 </Box>
             </Box>
-            <Box display="flex" flexDirection="column" gap={5.2}>
+            <Box sx={{ width: "100%" }}>
                 <TextField
                     fullWidth
                     variant="outlined"
                     value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
+                    onChange={(e) => {
+                        setNickname(e.target.value);
+                        setNicknameError("");
+                    }}
                     onBlur={checkNickname}
                     placeholder="닉네임"
-                    sx={{ backgroundColor: "#E8F1F6", borderRadius: "1.3rem", "& fieldset": { border: "none" }, padding: "0.8rem 0rem", marginTop:"2.5rem" }}
-                    inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft:"2.5rem" } }}
+                    sx={{
+                        position: "absolute",
+                        top: "42.5rem",
+                        width: "42rem",
+                        backgroundColor: "#E8F1F6",
+                        borderRadius: "1.3rem",
+                        "& fieldset": { border: "none" },
+                        padding: "0.8rem 0rem",
+                    }}
+                    inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft: "2.5rem" } }}
                 />
-                {nicknameError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{ margin:"-1.8rem", marginRight:"0.2rem" }}>{nicknameError}</Typography>}
-                
+                {nicknameError && (
+                    <Typography
+                        textAlign="right"
+                        fontSize="1.3rem"
+                        sx={{
+                            position: "absolute",
+                            top: "49.2rem",
+                            right: "4rem",
+                            color: nicknameError === "사용 가능한 닉네임입니다" ? "#0066CC" : "#FF0000",
+                        }}
+                    >
+                        {nicknameError}
+                    </Typography>
+                )}
+
                 <TextField
                     fullWidth
                     variant="outlined"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                        setEmail(e.target.value);
+                        setEmailError("");
+                    }}
                     onBlur={checkEmail}
                     placeholder="이메일"
-                    sx={{ backgroundColor: "#E8F1F6", borderRadius: "1.3rem", "& fieldset": { border: "none" }, padding: "0.8rem 0rem" }}
-                    inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft:"2.5rem" }}}
+                    sx={{
+                        position: "absolute",
+                        top: "51.7rem",
+                        width: "42rem",
+                        backgroundColor: "#E8F1F6",
+                        borderRadius: "1.3rem",
+                        "& fieldset": { border: "none" },
+                        padding: "0.8rem 0rem",
+                    }}
+                    inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft: "2.5rem" } }}
                 />
-                {emailError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{ margin:"-1.8rem", marginRight:"0.2rem" }}>{emailError}</Typography>}
-            
-            <TextField
+                {emailError && (
+                    <Typography
+                        textAlign="right"
+                        fontSize="1.3rem"
+                        sx={{
+                            position: "absolute",
+                            top: "58.5rem",
+                            right: "4rem",
+                            color: emailError === "사용 가능한 이메일입니다" ? "#0066CC" : "#FF0000",
+                        }}
+                    >
+                        {emailError}
+                    </Typography>
+                )}
+
+                <TextField
                     fullWidth
                     type="password"
                     variant="outlined"
@@ -170,10 +240,31 @@ const SignUp = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     onBlur={validatePassword}
                     placeholder="비밀번호"
-                    sx={{ backgroundColor: "#E8F1F6", borderRadius: "1.3rem", "& fieldset": { border: "none" }, padding: "0.8rem 0rem" }}
-                    inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft:"2.5rem" } }}
+                    sx={{
+                        position: "absolute",
+                        top: "61rem",
+                        width: "42rem",
+                        backgroundColor: "#E8F1F6",
+                        borderRadius: "1.3rem",
+                        "& fieldset": { border: "none" },
+                        padding: "0.8rem 0rem",
+                    }}
+                    inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft: "2.5rem" } }}
                 />
-                {passwordError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem"sx={{ margin:"-1.8rem", marginRight:"0.2rem"}}>{passwordError}</Typography>}
+                {passwordError && (
+                    <Typography
+                        textAlign="right"
+                        fontSize="1.3rem"
+                        sx={{
+                            position: "absolute",
+                            top: "67.7rem",
+                            right: "4rem",
+                            color: "#FF0000",
+                        }}
+                    >
+                        {passwordError}
+                    </Typography>
+                )}
 
                 <TextField
                     fullWidth
@@ -183,37 +274,80 @@ const SignUp = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     onBlur={validateConfirmPassword}
                     placeholder="비밀번호 확인"
-                    sx={{ backgroundColor: "#E8F1F6", borderRadius: "1.3rem", "& fieldset": { border: "none" }, padding: "0.8rem 0rem" }}
-                    inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft:"2.5rem" } }}
+                    sx={{
+                        position: "absolute",
+                        top: "70rem",
+                        width: "42rem",
+                        backgroundColor: "#E8F1F6",
+                        borderRadius: "1.3rem",
+                        "& fieldset": { border: "none" },
+                        padding: "0.8rem 0rem",
+                    }}
+                    inputProps={{ style: { fontSize: "1.8rem", color: "#6D6D6D", paddingLeft: "2.5rem" } }}
                 />
-                {confirmPasswordError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem"sx={{ margin:"-1.8rem", marginRight:"0.2rem"}}>{confirmPasswordError}</Typography>}
+                {confirmPasswordError && (
+                    <Typography
+                        textAlign="right"
+                        fontSize="1.3rem"
+                        sx={{
+                            position: "absolute",
+                            top: "76.7rem",
+                            right: "4rem",
+                            color: "#FF0000",
+                        }}
+                    >
+                        {confirmPasswordError}
+                    </Typography>
+                )}
             </Box>
 
-            <Box marginTop="3rem">
+            <Box
+                sx={{
+                    position: "absolute",
+                    top: "80.5rem",
+                    left:"0rem",
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                }}
+            >
                 <Button
                     fullWidth
                     variant="contained"
                     color="primary"
                     onClick={handleSignUp}
+                    disabled={isSignUpDisabled}
                     sx={{
+                        width: "42rem",
                         fontSize: "2.2rem",
                         fontWeight: "600",
                         padding: "1rem",
                         borderRadius: "1rem",
-                        backgroundColor: "#BDE5F1",
+                        backgroundColor: isSignUpDisabled ? "#B0BEC5" : "#BDE5F1",
                         boxShadow: "none",
                         transition: "none",
-                        "&:hover": { backgroundColor: "#BDE5F1" },
-                        "&:focus": { backgroundColor: "#BDE5F1" },
-                        "&:active": { backgroundColor: "#BDE5F1" },
                     }}
                 >
                     회원가입
                 </Button>
-                {inputError && <Typography textAlign="right" color="#FF0000" fontSize="1.3rem" sx={{marginTop:"1rem", marginRight:"0.2rem"}}>{inputError}</Typography>}
             </Box>
+            {inputError && (
+                    <Typography
+                        textAlign="center"
+                        color="#FF0000"
+                        fontSize="1.5rem"
+                        sx={{
+                            position: "absolute",
+                            top: "87rem",
+                            right: "4rem",
+                            color: "#FF0000",
+                        }}
+                    >
+                        {inputError}
+                    </Typography>
+                )}
 
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "6rem" }}>
+            <Box sx={{ position:"absolute", display: "flex", alignItems: "center", justifyContent: "center", left:"8.4rem", top:"93.5rem" }}>
                 <img src={logo} alt="Bovo 로고" style={{ width: "10rem", marginRight: "1rem" }} />
                 <Typography fontSize="1.8rem" fontWeight= "500" color="#343434" marginLeft="2rem">
                     소통하는 독서 플랫폼, <br /> 보보에 오신 것을 환영합니다!
