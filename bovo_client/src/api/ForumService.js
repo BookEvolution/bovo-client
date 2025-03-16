@@ -47,3 +47,49 @@ export const fetchChatRoomData = async (roomId) => {
       throw error; // 에러를 다시 던져서 호출한 곳에서 처리 가능하게 함
     }
 };
+
+
+// 나의토론방 참여를 위한 데이터 요청
+export const fetchMyRoomData = async (roomId) => {
+    try {
+      const response = await api.get(`/chatrooms/my/?roomId=${roomId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch room data:', error);
+      throw error;
+    }
+};
+
+// 토론방 참여 후 userList 데이터 정보 요청
+export const fetchUserList = async (roomId) => {
+    try {
+        const response = await api.get(`/chatrooms?roomId=${roomId}/users`);
+        console.log("Received user list:", response.data);
+        return response.data; // 사용자 목록 반환
+    } catch (error) {
+        console.error("사용자 목록 요청 실패:", error);
+        throw error;
+    }
+};
+
+// 채팅방 나가기 
+export const deleteChatRoomUser = async (roomId) => {
+    try {
+        const response = await api.delete(`/chatrooms?roomId=${roomId}/users`);
+        return response.data;
+    } catch (error) {
+        console.error("채팅방 나가기 요청에 실패했습니다.", error);
+        throw error;
+    }
+};
+
+// 독서기록 공유 
+export const getMemos = async (roomId) => {
+    try {
+        const response = await api.get(`/chatrooms?roomId=${roomId}/memos`);
+        return response.data;  // 요청 성공 시 반환된 데이터
+    } catch (error) {
+        console.error("메모를 가져오는 데 실패했습니다:", error);
+        throw error;  // 에러 발생 시 에러를 throw하여 호출하는 쪽에서 처리하도록 함
+    }
+};
