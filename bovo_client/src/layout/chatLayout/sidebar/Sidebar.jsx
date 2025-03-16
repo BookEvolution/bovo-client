@@ -5,7 +5,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import styles from "./Sidebar.module.css";
 import profileImages from '../../../constant/ProfileImg';
 
-const Sidebar = ({ open, toggleSidebar, roomName, handleExitClick}) => {
+const Sidebar = ({ open, toggleSidebar, roomName, handleExitClick, userList}) => {
     return (
         <Drawer anchor="right" open={open} onClose={toggleSidebar(false)}>
             <Container className={styles.sideBarContainer}>
@@ -33,14 +33,17 @@ const Sidebar = ({ open, toggleSidebar, roomName, handleExitClick}) => {
                         대화 상대
                     </Typography>
                     <List className={styles.userList}>
-                        <ListItem className={styles.userListItem}>
-                            <ListItemAvatar className={styles.userAvatar}>
-                                <Avatar src={profileImages[6] ? profileImages[6].src : ""} sx={{width: "4rem", height: "4rem"}} />
-                            </ListItemAvatar>
-                            <Typography sx={{fontSize: "1.5rem"}}>
-                                userNickname
-                            </Typography>
-                        </ListItem>
+                        {userList.map((user, index) => (
+                                <ListItem key={index} className={styles.userListItem}>
+                                    <ListItemAvatar className={styles.userAvatar}>
+                                        <Avatar src={profileImages[user.profileImageId] ? profileImages[user.profileImageId].src : ""} sx={{ width: "4rem", height: "4rem" }} />
+                                    </ListItemAvatar>
+                                    <Typography sx={{ fontSize: "1.5rem" }}>
+                                        {user.nickname}
+                                    </Typography>
+                                </ListItem>
+                            ))
+                        }
                     </List>
                 </Box>
                 <Box className={styles.footerContainer} onClick={handleExitClick}>
@@ -68,4 +71,5 @@ Sidebar.propTypes = {
     toggleSidebar: PropTypes.func.isRequired, // toggleSidebar는 함수 타입이고 필수 props
     roomName: PropTypes.string.isRequired,
     handleExitClick: PropTypes.func.isRequired,
+    userList: PropTypes.array.isRequired, // userList는 배열 타입이고 필수 props
 };
