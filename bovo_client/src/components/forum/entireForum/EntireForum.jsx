@@ -156,6 +156,9 @@ const EntireForum = ({ chatrooms }) => {
                                 backgroundColor: room.group_info.current_people === room.group_info.limit_people
                                     ? "#E8F1F6" // 모집완료 색상
                                     : "#F3E38B", // 모집중 색상
+                                position: "absolute",
+                                right: "1rem",
+                                bottom: "11rem",
                             }}
                         >
                             {room.group_info.current_people === room.group_info.limit_people
