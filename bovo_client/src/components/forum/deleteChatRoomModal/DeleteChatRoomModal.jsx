@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { Button, Dialog, DialogActions, DialogTitle, Typography } from "@mui/material";
 
-const DeleteChatRoomModal = ({open, onClose}) => {
+const DeleteChatRoomModal = ({open, onClose, onConfirm}) => {
     return (
         <Dialog
             open={open}
@@ -70,6 +70,7 @@ const DeleteChatRoomModal = ({open, onClose}) => {
                     취소
                 </Button>
                 <Button
+                    onClick={onConfirm}  // 확인 버튼 클릭 시 onConfirm 호출
                     sx={{
                         width: "12.5rem",
                         height: "5rem",
@@ -89,6 +90,7 @@ const DeleteChatRoomModal = ({open, onClose}) => {
 DeleteChatRoomModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,  // 채팅방 나가기 추가
 };
 
 export default DeleteChatRoomModal;
