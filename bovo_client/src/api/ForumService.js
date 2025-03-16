@@ -52,7 +52,7 @@ export const fetchChatRoomData = async (roomId) => {
 // 나의토론방 참여를 위한 데이터 요청
 export const fetchMyRoomData = async (roomId) => {
     try {
-      const response = await api.get(`/chatrooms/my/?roomId=${roomId}`);
+      const response = await api.get(`/chatrooms/my/${roomId}`);
       return response.data;
     } catch (error) {
       console.error('Failed to fetch room data:', error);
@@ -63,7 +63,7 @@ export const fetchMyRoomData = async (roomId) => {
 // 토론방 참여 후 userList 데이터 정보 요청
 export const fetchUserList = async (roomId) => {
     try {
-        const response = await api.get(`/chatrooms?roomId=${roomId}/users`);
+        const response = await api.get(`/chatrooms/users?roomId=${roomId}`);
         console.log("Received user list:", response.data);
         return response.data; // 사용자 목록 반환
     } catch (error) {
@@ -75,7 +75,7 @@ export const fetchUserList = async (roomId) => {
 // 채팅방 나가기 
 export const deleteChatRoomUser = async (roomId) => {
     try {
-        const response = await api.delete(`/chatrooms?roomId=${roomId}/users`);
+        const response = await api.delete(`/chatrooms/leave?roomId=${roomId}`);
         return response.data;
     } catch (error) {
         console.error("채팅방 나가기 요청에 실패했습니다.", error);
@@ -86,7 +86,7 @@ export const deleteChatRoomUser = async (roomId) => {
 // 독서기록 공유 
 export const getMemos = async (roomId) => {
     try {
-        const response = await api.get(`/chatrooms?roomId=${roomId}/memos`);
+        const response = await api.get(`/chatrooms/memos?roomId=${roomId}`);
         return response.data;  // 요청 성공 시 반환된 데이터
     } catch (error) {
         console.error("메모를 가져오는 데 실패했습니다:", error);
