@@ -48,7 +48,6 @@
     width: 8rem;
     height: 3rem;
     border-radius: 1.5625rem;
-    background-color: #F3E38B;
     font-size: 1.5rem;
     font-weight: 500;
     letter-spacing: 0.015rem;
@@ -60,21 +59,6 @@
     justify-content: center;
 }
 
-.forumRecruiteComplete {
-    width: 8rem;
-    height: 3rem;
-    border-radius: 1.5625rem;
-    background-color: #E8F1F6;
-    font-size: 1.5rem;
-    font-weight: 500;
-    letter-spacing: 0.015rem;
-    position: absolute;
-    right: 1rem;
-    bottom: 11rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 .bottomContainer {
     width: 39rem;

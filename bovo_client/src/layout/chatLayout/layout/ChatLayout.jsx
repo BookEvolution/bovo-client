@@ -2,7 +2,7 @@ import { Box, Container, IconButton, TextField } from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import styles from "./ChatLayout.module.css";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "../header/Header";
 import { useEffect, useState } from "react";
 import Sidebar from "../sidebar/Sidebar";
@@ -12,9 +12,11 @@ import ForumChat from "../../../pages/forumChat/ForumChat";
 import DeleteChatRoomModal from "../../../components/forum/deleteChatRoomModal/DeleteChatRoomModal";
 import { useDispatch, useSelector } from "react-redux";
 import { addMessage, clearChat } from "../../../store/chatInfo/ChatSlice.js";
+import { deleteChatRoomUser, fetchUserList, getMemos } from "../../../api/ForumService.js";
 
 const ChatLayout = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { roomId } = useParams();
     const location = useLocation();
 
@@ -27,25 +29,63 @@ const ChatLayout = () => {
     const [modalOpen, setModalOpen] = useState(false); //독서 기록 공유 모달 상태 관리
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [exitModalOpen, setExitModalOpen] = useState(false); // 채팅방 나가기 모달 상태
-    
+    const [userList, setUserList] = useState([]); // 사용자 목록 상태
     const [newMessage, setNewMessage] = useState("");
+    const [memos, setMemos] = useState([]);  // 메모 데이터 상태
+    const [selectedMemos, setSelectedMemos] = useState([]); // 메모 보내기
+
     console.log(chatMessages);
 
     const toggleSidebar = (open) => () => {
         setSidebarOpen(open);
+
+        // 사이드바 열 때 사용자 목록 요청
+        if (open) {
+            const fetchUsers = async () => {
+                try {
+                    const users = await fetchUserList(roomId);
+                    setUserList(users); // 받아온 사용자 목록을 상태에 저장
+                } catch (error) {
+                    console.error("사용자 목록을 가져오는 데 실패했습니다.", error);
+                }
+            };
+
+            fetchUsers();
+        }
     };
 
-    const handleOpenModal = () => setModalOpen(true);
+    // 기록 공유 모달 오픈 관련 함수
+    const handleOpenModal = async () => {
+        try {
+            const memosData = await getMemos(roomId); // 메모 데이터 요청
+            setMemos(memosData);  // 메모 상태에 저장
+            setModalOpen(true);  // 모달 열기
+        } catch (error) {
+            console.error("메모 데이터를 가져오는 데 실패했습니다:", error);
+        }
+    };
     const handleCloseModal = () => setModalOpen(false);
 
-    // 채팅방 나가기 모달 열기
-    const handleOpenExitModal = () => setExitModalOpen(true);
-    const handleCloseExitModal = () => setExitModalOpen(false);
-
-    // 채팅방 나가기 버튼 클릭 시
+    // 채팅방 나가기 버튼 클릭 시 모달 열기
     const handleExitClick = () => {
-        setSidebarOpen(false); // 사이트바 닫기
-        handleOpenExitModal(); // 채팅방 나가기 모달 열기
+        setSidebarOpen(false); // 사이드바 닫기
+        setExitModalOpen(true); // 모달 열기
+    };
+
+    // 채팅방 나가기 확인 버튼 클릭 시
+    const handleConfirmExit = async () => {
+        try {
+            await deleteChatRoomUser(roomId);  // 채팅방 나가기 API 요청
+            setExitModalOpen(false); // 모달 닫기
+            navigate("/forum"); // 채팅방 나가기 후 /forum 경로로 이동
+        } catch (error) {
+            console.error("채팅방 나가기 실패:", error);
+        }
+    };
+
+    // 모달 취소 버튼 클릭 시
+    const handleCancelExit = () => {
+        setExitModalOpen(false); // 모달 닫기
     };
 
     // ✅ WebSocket 연결 및 메시지 관리
@@ -80,10 +120,35 @@ const ChatLayout = () => {
         }
     };
 
+    const handleSelectMemo = (memo, checked) => {
+        // 선택된 메모 업데이트
+        if (checked) {
+            setSelectedMemos((prevSelected) => [...prevSelected, memo]);
+        } else {
+            setSelectedMemos((prevSelected) => prevSelected.filter(item => item !== memo));
+        }
+    };
+
+    const handleShareMemo = () => {
+        if (selectedMemos.length > 0) {
+            selectedMemos.forEach(memo => {
+                sendChatMessage(roomId, memo.memo_Q); // 메모 질문을 메시지로 보내기
+            });
+            setSelectedMemos([]); // 전송 후 선택된 메모 초기화
+            handleCloseModal(); // 모달 닫기
+        }
+    };
+
     return (
         <Container className={styles.layout}>
             <Header toggleSidebar={toggleSidebar} roomName={roomName} />
-            <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} roomName={roomName} handleExitClick={handleExitClick} />
+            <Sidebar 
+                open={sidebarOpen} 
+                toggleSidebar={toggleSidebar} 
+                roomName={roomName} 
+                handleExitClick={handleExitClick} 
+                userList={userList}  // 사용자 목록 전달
+            />
             <ForumChat chatMessages={chatMessages} />
             <Box className={styles.inputContainer}>
                 <IconButton className={styles.addBtn} onClick={handleOpenModal}>
@@ -126,12 +191,16 @@ const ChatLayout = () => {
             </Box>
             <ReadingShareModal 
                 open={modalOpen} 
-                onClose={handleCloseModal} 
+                onClose={handleCloseModal}
+                memos={memos}  // 메모 데이터를 전달 
             />
             {/* 채팅방 나가기 모달 */}
             <DeleteChatRoomModal 
-                open={exitModalOpen} 
-                onClose={handleCloseExitModal} 
+                open={exitModalOpen}
+                onClose={handleCancelExit}
+                onConfirm={handleConfirmExit}
+                handleSelectMemo={handleSelectMemo} // memo 선택 함수 추가
+                handleShareMemo={handleShareMemo} // 확인 버튼 클릭 시 호출되는 함수
             />
         </Container>
     );

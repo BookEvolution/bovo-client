@@ -3,6 +3,7 @@ import { Avatar, Box, List, ListItem, ListItemAvatar, Paper, Typography } from "
 import styles from "./ForumChat.module.css";
 import profileImages from "../../constant/ProfileImg";
 import { useEffect, useRef } from "react";
+import { formatDate } from "../../utils/FormatDate.js";
 
 const ForumChat = ({ chatMessages }) => {
     // sessionStorage에서 email 가져오기
@@ -24,6 +25,7 @@ const ForumChat = ({ chatMessages }) => {
             {chatMessages.map((msg) => {
                 // message의 email과 sessionStorage의 email이 동일한 경우 조건부로 스타일 변경
                 const isUserMessage = msg.email === userEmail;
+                const formattedTime = formatDate(msg.timestamp); // ✅ 안전하게 사용 가능
 
                 return (
                     <ListItem
@@ -52,20 +54,29 @@ const ForumChat = ({ chatMessages }) => {
                                 </Typography>
                             </Box>
                         )}
-                        <Paper 
-                            sx={{ 
-                                p: 1.5, 
-                                minWidth: "60%",
-                                maxWidth: "90%", 
-                                borderRadius: "0.75rem", 
-                                backgroundColor: isUserMessage ? "#D0E8F2" : "#f0f0f0", // 내 메시지에는 다른 색상 적용
-                                color: "#000",
+                        <Box 
+                            className={styles.msgContainer}
+                            sx={{
+                                flexDirection: isUserMessage ? "row-reverse" : "row", // 내 메시지는 row-reverse
                             }}
                         >
-                            <Typography sx={{ fontSize: "1.75rem", minHeight: "2.625rem" }}>
-                                {msg.message}
+                            <Paper 
+                                sx={{ 
+                                    p: 1.5, 
+                                    maxWidth: "90%", 
+                                    borderRadius: "0.75rem", 
+                                    backgroundColor: isUserMessage ? "#D0E8F2" : "#f0f0f0", // 내 메시지에는 다른 색상 적용
+                                    color: "#000",
+                                }}
+                            >
+                                <Typography sx={{ fontSize: "1.75rem", minHeight: "2.625rem" }}>
+                                    {msg.message}
+                                </Typography>
+                            </Paper>
+                            <Typography variant="caption" sx={{ fontSize: "1.5rem", color: "#666" }}>
+                                {formattedTime}
                             </Typography>
-                        </Paper>
+                        </Box>
                     </ListItem>
                 );
             })}

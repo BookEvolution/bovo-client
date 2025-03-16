@@ -3,7 +3,7 @@ import { Box, InputAdornment, TextField, Typography } from "@mui/material";
 import GroupIcon from '@mui/icons-material/Group';
 import SearchIcon from '@mui/icons-material/Search';
 import styles from "./EntireForum.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import JoinChatRoomModal from "../joinChatRoomModal/JoinChatRoomModal";
 import { fetchChatRoomData } from "../../../api/ForumService";
 
@@ -24,6 +24,11 @@ const EntireForum = ({ chatrooms }) => {
     };
 
     const handleClose = () => setOpen(false);
+
+    useEffect(() => {
+        // ✅ chatrooms가 변경될 때 filteredChatrooms를 최신 데이터로 갱신
+        setFilteredChatrooms(chatrooms);
+    }, [chatrooms]);
 
     const handleSearch = (text) => {
         if (text.trim() === "") {
@@ -50,8 +55,17 @@ const EntireForum = ({ chatrooms }) => {
                     <Box>
                         <img src={adminPick[0].book_info.book_img} alt={adminPick[0].book_info.book_name} />
                     </Box>
-                    <Box className={styles.recruiting}>
-                        모집 중
+                    <Box
+                        sx={{
+                            backgroundColor: adminPick[0].group_info.current_people === adminPick[0].group_info.limit_people
+                                ? "#E8F1F6" // 모집완료 색상
+                                : "#F3E38B", // 모집중 색상
+                        }}
+                        className={styles.recruiting}
+                    >
+                        {adminPick[0].group_info.current_people === adminPick[0].group_info.limit_people
+                            ? "모집완료"
+                            : "모집중"}
                     </Box>
                     <div className={styles.bottomContainer}>
                         <Typography sx={{ fontSize: "1.75rem", letterSpacing: "0.0175rem", fontWeight: 500, textAlign: "left" }}>
@@ -136,8 +150,17 @@ const EntireForum = ({ chatrooms }) => {
                         <Box className={styles.forumBook}>
                             <img src={room.book_info.book_img} alt="책 이미지" />
                         </Box>
-                        <Box className={styles.forumRecruiteComplete}>
-                            모집 완료
+                        <Box
+                            className={styles.recruiting}
+                            sx={{
+                                backgroundColor: room.group_info.current_people === room.group_info.limit_people
+                                    ? "#E8F1F6" // 모집완료 색상
+                                    : "#F3E38B", // 모집중 색상
+                            }}
+                        >
+                            {room.group_info.current_people === room.group_info.limit_people
+                                ? "모집완료"
+                                : "모집중"}
                         </Box>
                         <div className={styles.forumBottomContainer}>
                             <Typography

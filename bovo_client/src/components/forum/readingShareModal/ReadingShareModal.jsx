@@ -5,29 +5,15 @@ import styles from "./ReadingShareModal.module.css";
 import { useState } from "react";
 import TemplateListItem from '../templateListItem/TemplateListItem';
 
-const ReadingShareModal = ({ open, onClose }) => {
-    // 체크박스 상태 관리
-    const [checked, setChecked] = useState(false);
+const ReadingShareModal = ({ open, onClose, memos, handleSelectMemo, handleShareMemo }) => {
+    const [checkedItems, setCheckedItems] = useState([]);
 
-    const handleCheckboxChange = (event) => {
-        setChecked(event.target.checked);
+    // 선택된 메모를 부모 컴포넌트로 전달하는 함수
+    const handleCheckboxChange = (index) => (event) => {
+        const updatedCheckedItems = [...checkedItems];
+        updatedCheckedItems[index] = event.target.checked;
+        setCheckedItems(updatedCheckedItems);
     };
-
-    // // 데이터를 받아온 후 체크박스 상태 배열을 동적으로 생성
-    // const [checkedItems, setCheckedItems] = useState([]);
-
-    // // 데이터가 변경되면 체크박스 상태 배열을 동적으로 초기화
-    // useEffect(() => {
-    //     if (data && data.length > 0) {
-    //         setCheckedItems(new Array(data.length).fill(false));  // 데이터 길이에 맞춰 상태 배열 초기화
-    //     }
-    // }, [data]);  // data가 변경될 때마다 업데이트
-
-    // const handleCheckboxChange = (index) => (event) => {
-    //     const updatedCheckedItems = [...checkedItems];
-    //     updatedCheckedItems[index] = event.target.checked;
-    //     setCheckedItems(updatedCheckedItems);
-    // };
 
     return (
         <Dialog 
@@ -57,9 +43,22 @@ const ReadingShareModal = ({ open, onClose }) => {
                 </IconButton>
             </Box>
             <DialogContent>
-                <List className={styles.templateList}>
-                    <TemplateListItem checked={checked} handleCheckboxChange={handleCheckboxChange} />
-                </List>
+                {memos && memos.length > 0 ? (
+                        memos.map((memo, index) => (
+                            <List key={index} className={styles.templateList}>
+                                <TemplateListItem  
+                                    memo={memo} 
+                                    checked={checkedItems[index] || false} 
+                                    handleCheckboxChange={(event) => {
+                                        handleCheckboxChange(index, event.target.checked);
+                                        handleSelectMemo(memo, event.target.checked); // 부모 컴포넌트에서 선택된 메모 처리 함수 호출
+                                    }}
+                                />
+                            </List>
+                        ))
+                    ) : (
+                        <Box>데이터가 없습니다.</Box>
+                )}
             </DialogContent>
             <DialogActions>
                 <Button
@@ -71,6 +70,7 @@ const ReadingShareModal = ({ open, onClose }) => {
                         letterSpacing: "0.02rem",
                         color: "#739CD4"
                     }}
+                    onClick={handleShareMemo}
                 >
                     추가하기
                 </Button>
@@ -84,4 +84,7 @@ export default ReadingShareModal;
 ReadingShareModal.propTypes = {
     open: PropTypes.bool.isRequired, // open은 boolean 타입이고 필수 props
     onClose: PropTypes.func.isRequired, // onClose는 함수 타입이고 필수 props
+    memos: PropTypes.array.isRequired,  // memos는 배열 타입이고 필수 props
+    handleSelectMemo: PropTypes.func.isRequired, // 메모 선택 처리 함수
+    handleShareMemo: PropTypes.func.isRequired, // 메모 전송 처리 함수
 };

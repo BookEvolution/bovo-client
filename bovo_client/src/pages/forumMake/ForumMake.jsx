@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import 'dayjs/locale/ko';
 import styles from "./ForumMake.module.css";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createForumRoom } from "../../api/ForumService";
 import { useDispatch, useSelector } from "react-redux";
 import { clearBook } from "../../store/bookForum/BookSlice";
@@ -14,6 +14,7 @@ import { clearBook } from "../../store/bookForum/BookSlice";
 const ForumMake = () => {
     const book = useSelector((state) => state.book.book); // Redux에서 book 정보 가져오기
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [startDate, setStartDate] = useState(dayjs());
     const [endDate, setEndDate] = useState(dayjs().add(7, "day"));
     const [isPrivate, setIsPrivate] = useState(false);
@@ -53,10 +54,22 @@ const ForumMake = () => {
 
         try {
             const response = await createForumRoom(forumData);
-            alert("방이 성공적으로 생성되었습니다!");
+            // 방 생성 성공
+            if (response.roomId) {
+                const roomId = response.roomId;  // 서버에서 받은 roomId
+                const roomName = forumData.chatroom_name;  // 입력한 방 이름
+
+                // 방 생성 후 해당 채팅방으로 이동
+                navigate(`/forum/${roomId}`, {
+                    state: { roomName }  // state로 roomName 전달
+                });
+            } else {
+                alert("채팅방 생성에 실패했습니다.");
+            }
             dispatch(clearBook());
             console.log(response); // 생성된 방 정보 확인
         } catch (error) {
+            console.error("방 만들기 오류:", error);
             alert("방 만들기에 실패했습니다.");
         }
     };
