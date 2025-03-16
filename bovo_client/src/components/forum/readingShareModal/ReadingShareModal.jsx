@@ -2,16 +2,23 @@ import PropTypes from 'prop-types'; // PropTypes 임포트
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, List } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import styles from "./ReadingShareModal.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TemplateListItem from '../templateListItem/TemplateListItem';
 
 const ReadingShareModal = ({ open, onClose, memos, handleSelectMemo, handleShareMemo }) => {
     const [checkedItems, setCheckedItems] = useState([]);
 
+    // 모달이 열릴 때마다 checkedItems 초기화
+    useEffect(() => {
+        if (open) {
+            setCheckedItems(new Array(memos.length).fill(false));  // memos 길이에 맞게 초기화
+        }
+    }, [open, memos]);
+
     // 선택된 메모를 부모 컴포넌트로 전달하는 함수
-    const handleCheckboxChange = (index) => (event) => {
+    const handleCheckboxChange = (index, checked) => {
         const updatedCheckedItems = [...checkedItems];
-        updatedCheckedItems[index] = event.target.checked;
+        updatedCheckedItems[index] = checked;
         setCheckedItems(updatedCheckedItems);
     };
 
@@ -49,9 +56,9 @@ const ReadingShareModal = ({ open, onClose, memos, handleSelectMemo, handleShare
                                 <TemplateListItem  
                                     memo={memo} 
                                     checked={checkedItems[index] || false} 
-                                    handleCheckboxChange={(event) => {
-                                        handleCheckboxChange(index, event.target.checked);
-                                        handleSelectMemo(memo, event.target.checked); // 부모 컴포넌트에서 선택된 메모 처리 함수 호출
+                                    handleCheckboxChange={(checked) => {
+                                        handleCheckboxChange(index, checked); // 체크박스 상태 변경
+                                        handleSelectMemo(memo, checked); // 부모 컴포넌트에서 선택된 메모 처리 함수 호출
                                     }}
                                 />
                             </List>

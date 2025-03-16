@@ -14,7 +14,7 @@
 
 .templateList {
     width: 35.8125rem;
-    height: 43.75rem;
+    min-height: 6.75rem;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;

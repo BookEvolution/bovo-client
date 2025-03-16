@@ -59,12 +59,16 @@ const ChatLayout = () => {
         try {
             const memosData = await getMemos(roomId); // 메모 데이터 요청
             setMemos(memosData);  // 메모 상태에 저장
+            setSelectedMemos([]);  // 모달 열 때 선택된 메모 초기화
             setModalOpen(true);  // 모달 열기
         } catch (error) {
             console.error("메모 데이터를 가져오는 데 실패했습니다:", error);
         }
     };
-    const handleCloseModal = () => setModalOpen(false);
+    const handleCloseModal = () => {
+        setModalOpen(false);
+        setSelectedMemos([]);  // 모달 닫을 때 선택된 메모 초기화
+    };
 
     // 채팅방 나가기 버튼 클릭 시 모달 열기
     const handleExitClick = () => {
@@ -132,7 +136,8 @@ const ChatLayout = () => {
     const handleShareMemo = () => {
         if (selectedMemos.length > 0) {
             selectedMemos.forEach(memo => {
-                sendChatMessage(roomId, memo.memo_Q); // 메모 질문을 메시지로 보내기
+                const message = `${memo.memo_Q} : ${memo.memo_A}`;  // 책 제목과 메모 질문을 결합
+                sendChatMessage(roomId, message); // 메모 질문을 메시지로 보내기
             });
             setSelectedMemos([]); // 전송 후 선택된 메모 초기화
             handleCloseModal(); // 모달 닫기
@@ -192,6 +197,8 @@ const ChatLayout = () => {
             <ReadingShareModal 
                 open={modalOpen} 
                 onClose={handleCloseModal}
+                handleSelectMemo={handleSelectMemo} // memo 선택 함수 추가
+                handleShareMemo={handleShareMemo} // 확인 버튼 클릭 시 호출되는 함수
                 memos={memos}  // 메모 데이터를 전달 
             />
             {/* 채팅방 나가기 모달 */}
@@ -199,8 +206,6 @@ const ChatLayout = () => {
                 open={exitModalOpen}
                 onClose={handleCancelExit}
                 onConfirm={handleConfirmExit}
-                handleSelectMemo={handleSelectMemo} // memo 선택 함수 추가
-                handleShareMemo={handleShareMemo} // 확인 버튼 클릭 시 호출되는 함수
             />
         </Container>
     );
