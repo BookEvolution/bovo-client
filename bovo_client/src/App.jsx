@@ -34,7 +34,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        {/* <InterceptorWrapper /> useNavigate를 여기에서 사용 */}
+        <InterceptorWrapper /> 
         <Routes>
         <Route path='/kakao/bovo-auth' element={<KakaoCallback />} />
           <Route path='/login' element={<LoginLayout />}>
