@@ -1,14 +1,53 @@
 import PropTypes from "prop-types";  // PropTypes import
 import { Box, ListItem, Typography } from "@mui/material";
 import styles from "./MyForumList.module.css";
-import useFormattedDate from "../../../../hooks/useFormattedDate";
+import { formatDate } from "../../../../utils/FormatDate.js";
+import { fetchMyRoomData } from "../../../../api/ForumService.js";
+import { useDispatch } from "react-redux";
+import { addMessage } from "../../../../store/chatInfo/ChatSlice.js";
+import { useNavigate } from "react-router-dom";
 
 const MyForumList = ({myChatroom}) => {
-    // 각 myChatroom에 대해 날짜 포맷팅
-    const formattedDate = useFormattedDate(myChatroom.last_msg_info.last_message_date);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    // ✅ formatDate 함수 사용하여 날짜 포맷팅
+    const formattedDate = formatDate(myChatroom.last_msg_info.last_message_date);
+
+    const handleRoomClick = async (roomId) => {
+        try {
+            const response = await fetchMyRoomData(roomId);
+            if (response.status === 200) {
+                alert("방에 성공적으로 참여했습니다.");
+    
+                // 서버에서 받은 메시지 중 'CHAT' 유형만 처리
+                const chatMessages = response.data.filter((message) => message.messageType === "CHAT");
+    
+                // 서버에서 받은 메시지를 Redux 상태에 추가
+                chatMessages.forEach((message) => {
+                    dispatch(addMessage(message));
+                });
+                
+                // 서버에서 받은 메시지를 sessionStorage에도 저장 (새로고침 시 복원 가능)
+                sessionStorage.setItem("chatMessages", JSON.stringify(chatMessages));
+                
+                // Redux에 저장된 메시지를 사용하므로 navigate의 state는 필요 없음
+                navigate(`/forum/${myChatroom.id}`, { state: { roomName: myChatroom.chatroom_name } });
+            } else {
+                alert("방 참여에 실패했습니다.");
+            }
+        } catch (error) {
+          console.error("방 참여 오류:", error);
+          alert("방 참여 중 오류가 발생했습니다.");
+        }
+    };
 
     return (
-        <ListItem button="true" key={myChatroom.id} className={styles.myChatRoom}>
+        <ListItem 
+            button="true" 
+            key={myChatroom.id} 
+            className={styles.myChatRoom}
+            onClick={() => handleRoomClick(myChatroom.id)}
+        >
             <Box className={styles.chatContentContainer}>
                 <Box className={styles.chatBookWrapper}>
                     <img src={myChatroom.book_info.book_img} alt="책 대체 이미지" />
