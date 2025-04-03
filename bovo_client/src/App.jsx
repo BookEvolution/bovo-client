@@ -28,11 +28,13 @@ import KakaoCallback from './pages/login/KakaoCallback'
 import ChatLayout from './layout/chatLayout/layout/ChatLayout'
 import { useEffect } from 'react'
 import { enableInterceptor } from "./api/Auth.js";
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from './store/queryClient/queryClient.js'
 
 function App() {
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <InterceptorWrapper /> 
         <Routes>
@@ -72,7 +74,7 @@ function App() {
           <Route path='/*' element={<Navigate to={"/404"} />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </QueryClientProvider>
   )
 }
 
