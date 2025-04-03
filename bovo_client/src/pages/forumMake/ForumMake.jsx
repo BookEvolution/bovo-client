@@ -57,11 +57,11 @@ const ForumMake = () => {
             // 방 생성 성공
             if (response.roomId) {
                 const roomId = response.roomId;  // 서버에서 받은 roomId
-                const roomName = forumData.chatroom_name;  // 입력한 방 이름
+                const { chat_name } = forumData.chat_info;  // 입력한 방 이름
 
                 // 방 생성 후 해당 채팅방으로 이동
                 navigate(`/forum/${roomId}`, {
-                    state: { roomName }  // state로 roomName 전달
+                    state: { roomName: chat_name }  // state로 roomName 전달
                 });
             } else {
                 alert("채팅방 생성에 실패했습니다.");
