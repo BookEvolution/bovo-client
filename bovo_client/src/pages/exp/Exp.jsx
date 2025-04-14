@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import QuestInfoModal from "../../components/questInfoModal/QuestInfoModal";
 import BedgeInfoModal from "../../components/bedgeInfoModal/BedgeInfoModal";
 import bedgeImages from "../../constant/BedgeImg";
-import { fetchRewards } from "../../api/RewardService";
+import { useRewardsQuery } from "../../api/RewardService";
 import QuestList from "../../components/quest/questList/QuestList";
 
 const Exp = () => {
@@ -13,18 +13,15 @@ const Exp = () => {
     const [openBedgeModal, setOpenBedgeModal] = useState(false); // bedge info 모달 상태 추가
     const [quests, setQuests] = useState([]); // 퀘스트 및 뱃지 저장
     const [medal, setMedal] = useState();
+    const { data: rewardData, isLoading, isError } = useRewardsQuery();
 
-    // API 호출
+    // rewardData가 변경될 때마다 상태 업데이트
     useEffect(() => {
-        const getRewards = async () => {
-            const data = await fetchRewards();
-            if (data) {
-                setQuests(data.missions);
-                setMedal(data.medal_type);
-            }
-        };
-        getRewards();
-    }, []);
+        if (rewardData) {
+            setQuests(rewardData.missions);
+            setMedal(rewardData.medal_type);
+        }
+    }, [rewardData]);  // rewardData가 변경될 때만 실행
 
     // questInfoModal 관련 함수
     const handleOpenQuestModal = () => {
@@ -43,6 +40,10 @@ const Exp = () => {
     const handleCloseBedgeModal = () => {
         setOpenBedgeModal(false);
     };
+
+    // 로딩 중 또는 에러 처리
+    if (isLoading) return <Typography>로딩 중...</Typography>;
+    if (isError) return <Typography>데이터를 불러오는 데 실패했습니다.</Typography>;
 
     return (
         <Box className={styles.expPageConainer}>

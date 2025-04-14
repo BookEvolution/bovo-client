@@ -1,6 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import api from "./Auth";
 
-export const fetchRewards = async () => {
+const fetchRewards = async () => {
     try {
         const response = await api.get("/rewards");
         return response.data;
@@ -9,6 +10,14 @@ export const fetchRewards = async () => {
         return null;
     }
 };
+
+// React Query로 퀘스트 데이터 가져오기
+export const useRewardsQuery = () => {
+    return useQuery({
+        queryKey: ['rewards'],  // 데이터의 고유한 키
+        queryFn: fetchRewards,  // API 요청 함수
+    });
+}
 
 // 경험치 증가 요청 함수
 export const increaseExp = async (missionId) => {
