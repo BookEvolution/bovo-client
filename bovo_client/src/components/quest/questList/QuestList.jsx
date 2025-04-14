@@ -3,8 +3,24 @@ import { Box, LinearProgress, Typography } from "@mui/material";
 import styles from './QuestList.module.css';
 import QuestBtn from '../questBtn/QuestBtn';
 import { increaseExp } from '../../../api/RewardService';
+import { useMutation } from '@tanstack/react-query';
+import { queryClient } from '../../../store/queryClient/queryClient';
 
 const QuestList = ({ quest }) => {
+
+    // 📌 mutation 설정
+    const { mutate: increaseExpMutate, isLoading: isMutating } = useMutation({
+        mutationFn: () => increaseExp(quest.mission_id),
+        onSuccess: (data) => {
+            console.log('경험치 증가 성공:', data);
+            // ✅ 리워드 데이터를 다시 가져오기
+            queryClient.invalidateQueries(['rewards']);
+        },
+        onError: (error) => {
+            console.error('경험치 증가 실패:', error);
+        }
+    });
+
     // 미션 제목 반환
     const getMissionTitle = (missionId) => {
         switch (missionId) {
@@ -56,16 +72,10 @@ const QuestList = ({ quest }) => {
     const progress = isCompleted ? 100 : (currentCount / 7) * 100; // 7회 기준 진행률 계산
 
     // 확인 버튼 클릭 시 데이터 요청
-    const handleQuestButtonClick = async () => {
-        if (!isCompleted && currentCount === 7) {
-            try {
-                const response = await increaseExp(quest.mission_id); // mission_id 전송
-                console.log('성공적으로 경험치 증가:', response);
-                // 성공 시 추가 처리 (예: 사용자에게 알림, UI 업데이트 등)
-            } catch (error) {
-                console.error('경험치 증가 실패:', error);
-                // 실패 시 알림 처리 등
-            }
+     // ✅ 버튼 클릭 시 mutation 호출
+     const handleQuestButtonClick = () => {
+        if (!isCompleted && currentCount === 7 && !isMutating) {
+            increaseExpMutate();
         }
     };
 

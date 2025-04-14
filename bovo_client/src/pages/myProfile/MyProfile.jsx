@@ -2,10 +2,10 @@ import PropTypes from 'prop-types'; // PropTypes 임포트
 import { Box, Button, Container } from "@mui/material";
 import styles from "./MyProfile.module.css";
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ProfileInfoItem from "../../components/myProfile/profileInfoItem/ProfileInfoItem";
 import WithdrawModal from '../../components/withdrawModal/WithdrawModal';
-import { fetchMyProfileData } from '../../api/UserApi';
+import { useMyProfileQuery } from '../../api/UserApi';
 import { withdraw } from '../../api/AccountManager.js';
 import bedgeImages from '../../constant/BedgeImg.js';
 
@@ -14,29 +14,11 @@ const MyProfile = () => {
     const navigate = useNavigate();
     // 회원 탈퇴 모달 상태 관리
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-    const [userData, setUserData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [userMedalSrc, setUserMedalSrc] = useState(""); // 기본값 설정
+    // ✅ react-query 사용
+    const { data: userData, isLoading, isError, error } = useMyProfileQuery();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await fetchMyProfileData();
-                setUserData(data);
-                // ✅ `medal`에 해당하는 이미지 찾기
-                const foundMedal = bedgeImages.find((item) => item.key === data.medal)?.src;
-                setUserMedalSrc(foundMedal);
-            } catch (error) {
-                console.log(error)
-                setError("프로필 데이터를 불러오는 중 오류 발생");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
+    // ✅ 뱃지 이미지 가져오기
+    const userMedalSrc = bedgeImages.find((item) => item.key === userData?.medal)?.src;
 
     // 회원 탈퇴 모달 열기
     const openWithdrawModal = () => {
@@ -66,8 +48,8 @@ const MyProfile = () => {
         navigate("/login");
     };
 
-    if (loading) return <p>로딩 중...</p>;
-    if (error) return <p>{error}</p>;
+    if (isLoading) return <p>로딩 중...</p>;
+    if (isError) return <p>{error}</p>;
 
     return (
         <Container className={styles.myProfileContainer}>
