@@ -8,15 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleLogoutModal } from "../../store/logout/LogoutSlice.js";
 import LogoutModal from "../../components/logoutModal/LogoutModal";
 import { useEffect, useState } from "react";
-import { fetchMyPageData } from "../../api/UserApi.js";
+import { useMyPageQuery } from "../../api/UserApi.js";
 import { logout } from "../../api/AccountManager"; // ✅ logout 함수 import
 import profileImages from "../../constant/ProfileImg.js";
 import bedgeImages from "../../constant/BedgeImg.js";
 
 const MyPage = () => {
-    const [userData, setUserData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { data: userData, isLoading, isError, error } = useMyPageQuery(); // ✅ react-query 사용
     const [userMedalSrc, setUserMedalSrc] = useState(""); // 뱃지 이미지 상태
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -26,25 +24,13 @@ const MyPage = () => {
         dispatch(toggleLogoutModal(state));
     };
 
+    // ✅ 뱃지 이미지 설정
     useEffect(() => {
-
-        const fetchData = async () => {
-            try {
-                const data = await fetchMyPageData();
-                setUserData(data); // ✅ 받아온 데이터를 상태에 저장
-
-                // ✅ 데이터가 설정된 후 뱃지 이미지 경로 업데이트
-                const foundMedal = bedgeImages.find((item) => item.key === data?.medal)?.src;
-                setUserMedalSrc(foundMedal);
-            } catch (err) {
-                setError("데이터를 불러오는 중 오류가 발생했습니다.", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
+        if (userData?.medal) {
+            const foundMedal = bedgeImages.find((item) => item.key === userData.medal)?.src;
+            setUserMedalSrc(foundMedal);
+        }
+    }, [userData]);
 
     // ✅ 로그아웃 핸들러 함수
     const handleLogout = async () => {
@@ -53,7 +39,7 @@ const MyPage = () => {
         navigate("/login"); // ✅ 로그인 페이지로 이동
     };
 
-    if (loading) {
+    if (isLoading) {
         return (
             <Container className={styles.myPageContainer}>
                 <Typography sx={{ fontSize: "2rem", textAlign: "center" }}>
@@ -63,7 +49,7 @@ const MyPage = () => {
         );
     }
     
-    if (error) {
+    if (isError) {
         return (
             <Container className={styles.myPageContainer}>
                 <Typography sx={{ fontSize: "2rem", textAlign: "center", color: "red" }}>

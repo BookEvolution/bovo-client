@@ -3,7 +3,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import styles from "./MyProfileEdit.module.css";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { editUserProfile, fetchMyProfileEditData } from "../../api/UserApi";
+import { useEditProfileMutation, useMyProfileEditQuery } from "../../api/UserApi";
 import ProfileBottomSheet from "../../components/profileImgBottomsheet/ProfileBottomSheet";
 import { useNavigate } from "react-router-dom";
  
@@ -12,20 +12,17 @@ const MyProfileEdit = () => {
     const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
     const [selectedProfile, setSelectedProfile] = useState({ key: "", src: "" });
     const {register, handleSubmit, watch, setValue, formState: {isSubmitting, errors }} = useForm({mode : "onChange", defaultValues: { nickname: "", password: "", confirmPassword: "" }}); //프로필 수정 유효성 검사
+    const { data: profileData, isLoading, isError } = useMyProfileEditQuery();
+    // ✅ mutation 훅 사용
+    const { mutate: editProfile, isPending } = useEditProfileMutation();
 
+    // useEffect 삭제 대신 이 부분으로 처리
     useEffect(() => {
-        const loadProfileData = async () => {
-            try {
-                const data = await fetchMyProfileEditData();
-                setValue("nickname", data.nickname || "");
-                setSelectedProfile({ key: "profileImg", src: data.profile_pictures }); // 프로필 이미지 설정
-            } catch (error) {
-                console.error("프로필 데이터를 불러오는 중 오류 발생:", error);
-            }
-        };
-
-        loadProfileData();
-    }, [setValue]);
+        if (profileData) {
+            setValue("nickname", profileData.nickname || "");
+            setSelectedProfile({ key: "profileImg", src: profileData.profile_pictures });
+        }
+    }, [profileData, setValue]);
 
     const nameRegex = /^\S+$/;
     const passwordRegex = /^[A-Za-z0-9]+$/;
@@ -41,15 +38,24 @@ const MyProfileEdit = () => {
             password: data.password || null, // 비밀번호 변경하지 않으면 null
         };
     
-        try {
-            const response = await editUserProfile(updatedData); // 프로필 수정 요청
-            console.log("수정된 프로필:", response);
-            // 수정 성공 후 UI 업데이트 또는 리디렉션 처리
-            navigate("/mypage/myprofile"); // ✅ 수정 완료 후 이동
-        } catch (error) {
-            console.error("프로필 수정 실패:", error);
-        }
+        editProfile(updatedData, {
+            onSuccess: (response) => {
+                console.log("수정된 프로필:", response);
+                navigate("/mypage/myprofile");
+            },
+            onError: (error) => {
+                console.error("프로필 수정 실패:", error);
+            }
+        });
     };
+
+    if (isLoading) {
+        return <Typography>로딩 중...</Typography>;
+    }
+    
+    if (isError) {
+        return <Typography color="error">프로필 정보를 불러오는 중 오류가 발생했습니다.</Typography>;
+    }
 
     return (
         <Container className={styles.myProfileEditContainer}>
@@ -212,25 +218,41 @@ const MyProfileEdit = () => {
                             </Typography>
                     )}
                 </Box>
-                <Button 
-                    className={styles.editBtn}
-                    type="submit"
-                    sx={{
-                        borderRadius: "1.5625rem",
-                        backgroundColor: "#BDE5F1",
-                        fontSize: "2.1875rem",
-                        color: "#FFFFFF",
-                        "&.Mui-disabled": {  // ✅ 비활성화 시 글자색 강제 설정
+                {!isPending ? (
+                    <Button 
+                        className={styles.editBtn}
+                        type="submit"
+                        sx={{
+                            borderRadius: "1.5625rem",
+                            backgroundColor: "#BDE5F1",
+                            fontSize: "2.1875rem",
                             color: "#FFFFFF",
-                            backgroundColor: "#ccc", // 배경색도 유지
-                            opacity: 1, // 기본적으로 흐려지는 효과 제거
-                        }
-                    }}
-                    disabled={(nickname.trim() === "" || isSubmitting) 
-                                || (password !== "" && errors.confirmPassword)}
-                >
-                    확인
-                </Button>
+                            "&.Mui-disabled": {  // ✅ 비활성화 시 글자색 강제 설정
+                                color: "#FFFFFF",
+                                backgroundColor: "#ccc", // 배경색도 유지
+                                opacity: 1, // 기본적으로 흐려지는 효과 제거
+                            }
+                        }}
+                        disabled={(nickname.trim() === "" || isSubmitting) 
+                                    || (password !== "" && errors.confirmPassword)}
+                    >
+                        확인
+                    </Button>
+                ) : (
+                    <Button 
+                        className={styles.editBtn}
+                        type="button"
+                        sx={{
+                            borderRadius: "1.5625rem",
+                            backgroundColor: "#D9D9D9",
+                            fontSize: "2.1875rem",
+                            color: "#FFFFFF",
+                        }}
+                        disabled={true}
+                    >
+                        전송 중...
+                    </Button>
+                )}
             </form>
             <ProfileBottomSheet 
                 open={bottomSheetOpen} 
