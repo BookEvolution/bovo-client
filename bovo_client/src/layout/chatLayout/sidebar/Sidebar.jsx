@@ -33,7 +33,9 @@ const Sidebar = ({ open, toggleSidebar, roomName, handleExitClick, userList}) =>
                         대화 상대
                     </Typography>
                     <List className={styles.userList}>
-                        {userList.map((user, index) => (
+                        {/* userList가 유효한 배열인지 확인 */}
+                        {Array.isArray(userList) && userList.length > 0 ? (
+                            userList.map((user, index) => (
                                 <ListItem key={index} className={styles.userListItem}>
                                     <ListItemAvatar className={styles.userAvatar}>
                                         <Avatar src={profileImages[user.profileImageId] ? profileImages[user.profileImageId].src : ""} sx={{ width: "4rem", height: "4rem" }} />
@@ -43,7 +45,12 @@ const Sidebar = ({ open, toggleSidebar, roomName, handleExitClick, userList}) =>
                                     </Typography>
                                 </ListItem>
                             ))
-                        }
+                        ) : (
+                            // userList가 비어있거나 없는 경우 처리
+                            <Typography sx={{ fontSize: "1.5rem", marginLeft: "1rem" }}>
+                                사용자 목록이 없습니다.
+                            </Typography>
+                        )}
                     </List>
                 </Box>
                 <Box className={styles.footerContainer} onClick={handleExitClick}>

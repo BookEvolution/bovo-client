@@ -5,7 +5,7 @@ let client = null;
 // WebSocket 연결 함수
 export const connectChat = (roomId, onMessageReceived) => {
     client = new Client({
-        brokerURL: "wss://d955-2406-5900-902b-8631-f13a-55ce-2a61-3542.ngrok-free.app/ws-chat",
+        brokerURL: "wss://54.180.29.26:8080/ws-chat",
         reconnectDelay: 5000, // 자동 재연결
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,

@@ -1,51 +1,49 @@
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import styles from "./Forum.module.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import EntireForum from "../../components/forum/entireForum/EntireForum";
 import MyForum from "../../components/forum/myForum/MyForum";
 import { fetchAllChatrooms, fetchMyChatrooms } from "../../api/ForumService";
+import { useQuery } from "@tanstack/react-query";
 
 const Forum = () => {
     const [value, setValue] = useState(0); // 탭 상태
-    const [chatrooms, setChatrooms] = useState([]); // 전체 토론방 데이터
-    const [myChatrooms, setMyChatrooms] = useState([]); // 초기값을 빈 배열로 설정
 
-    // ✅ 전체 독서 토론방 목록 요청
-    const loadChatrooms = async () => {
-        try {
-            const data = await fetchAllChatrooms();  
-            setChatrooms(data);
-        } catch (error) {
-            console.error("토론방 목록을 불러오는 중 오류 발생", error);
-        }
-    };
+     // ✅ 전체 토론방 데이터
+     const {
+        data: chatrooms = [],
+        isLoading: isLoadingAll,
+        error: errorAll,
+        refetch: refetchAll,
+    } = useQuery({
+        queryKey: ["allChatrooms"],
+        queryFn: fetchAllChatrooms,
+        enabled: value === 0, // 해당 탭이 활성화될 때만 요청
+    });
 
-    // ✅ 나의 독서 토론방 목록 요청
-    const loadMyChatroom = async () => {
-        try {
-            const data = await fetchMyChatrooms();  
-            setMyChatrooms(data);
-        } catch (error) {
-            console.error("나의 토론방 데이터를 불러오는 중 오류 발생", error);
-        }
-    };
+    // ✅ 나의 토론방 데이터
+    const {
+        data: myChatrooms = [],
+        isLoading: isLoadingMy,
+        error: errorMy,
+        refetch: refetchMy,
+    } = useQuery({
+        queryKey: ["myChatrooms"],
+        queryFn: fetchMyChatrooms,
+        enabled: value === 1, // 해당 탭이 활성화될 때만 요청
+    });
 
-    // ✅ 탭 변경 시 데이터 요청
     const handleChange = (event, newValue) => {
         setValue(newValue);
 
+        // 선택된 탭에 따라 refetch 트리거 (선택적)
         if (newValue === 0) {
-            loadChatrooms(); // 전체 토론방 목록 로드
+            refetchAll();
         } else if (newValue === 1) {
-            loadMyChatroom(); // 내 토론방 목록 로드
+            refetchMy();
         }
     };
-
-    // ✅ 초기 데이터 요청
-    useEffect(() => {
-        loadChatrooms(); // 처음 컴포넌트가 마운트될 때 전체 채팅방 목록 요청
-    }, []); // 의존성 배열이 빈 배열이면 컴포넌트 마운트 시 한 번만 실행됩니다.
 
     return (
         <Box className={styles.ForumContainer}>
@@ -87,8 +85,30 @@ const Forum = () => {
                     </Button>
                 </Link>
             </Box>
-            {value === 0 && <EntireForum chatrooms={chatrooms} />}
-            {value === 1 && <MyForum myChatrooms={myChatrooms}/>}
+            {/* ✅ 조건부 렌더링 (로딩, 에러 처리 포함) */}
+            {value === 0 && (
+                <>
+                    {isLoadingAll ? (
+                        <p>로딩 중...</p>
+                    ) : errorAll ? (
+                        <p>토론방을 불러오는 중 오류가 발생했습니다.</p>
+                    ) : (
+                        <EntireForum chatrooms={chatrooms} />
+                    )}
+                </>
+            )}
+
+            {value === 1 && (
+                <>
+                    {isLoadingMy ? (
+                        <p>로딩 중...</p>
+                    ) : errorMy ? (
+                        <p>내 토론방을 불러오는 중 오류가 발생했습니다.</p>
+                    ) : (
+                        <MyForum myChatrooms={myChatrooms} />
+                    )}
+                </>
+            )}
         </Box>
     );
 };

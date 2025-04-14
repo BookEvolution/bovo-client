@@ -13,6 +13,7 @@ import DeleteChatRoomModal from "../../../components/forum/deleteChatRoomModal/D
 import { useDispatch, useSelector } from "react-redux";
 import { addMessage, clearChat } from "../../../store/chatInfo/ChatSlice.js";
 import { deleteChatRoomUser, fetchUserList, getMemos } from "../../../api/ForumService.js";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const ChatLayout = () => {
     const dispatch = useDispatch();
@@ -29,10 +30,32 @@ const ChatLayout = () => {
     const [modalOpen, setModalOpen] = useState(false); //독서 기록 공유 모달 상태 관리
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [exitModalOpen, setExitModalOpen] = useState(false); // 채팅방 나가기 모달 상태
-    const [userList, setUserList] = useState([]); // 사용자 목록 상태
     const [newMessage, setNewMessage] = useState("");
-    const [memos, setMemos] = useState([]);  // 메모 데이터 상태
     const [selectedMemos, setSelectedMemos] = useState([]); // 메모 보내기
+
+    // React Query 훅을 통해 사용자 목록과 메모 데이터 요청
+    const { data: userList, refetch: refetchUserList } = useQuery({
+        queryKey : ['userList', roomId],
+        queryFn: () => fetchUserList(roomId),
+        enabled: false  // 초기에는 실행하지 않음
+    });
+
+    const { data: memos, refetch: refetchMemos } = useQuery({
+        queryKey : ['memos', roomId],
+        queryFn : () => getMemos(roomId),
+        enabled: false // 초기에는 실행하지 않음
+    });
+
+    const { mutate } = useMutation({
+        mutationFn: () => deleteChatRoomUser(roomId),
+        onSuccess: () => {
+            setExitModalOpen(false);
+            navigate("/forum");
+        },
+        onError: (error) => {
+            console.error("채팅방 나가기 실패:", error);
+        }
+    });
 
     console.log(chatMessages);
 
@@ -41,24 +64,14 @@ const ChatLayout = () => {
 
         // 사이드바 열 때 사용자 목록 요청
         if (open) {
-            const fetchUsers = async () => {
-                try {
-                    const users = await fetchUserList(roomId);
-                    setUserList(users); // 받아온 사용자 목록을 상태에 저장
-                } catch (error) {
-                    console.error("사용자 목록을 가져오는 데 실패했습니다.", error);
-                }
-            };
-
-            fetchUsers();
+            refetchUserList();  // 사용자 목록 refetch
         }
     };
 
     // 기록 공유 모달 오픈 관련 함수
     const handleOpenModal = async () => {
         try {
-            const memosData = await getMemos(roomId); // 메모 데이터 요청
-            setMemos(memosData);  // 메모 상태에 저장
+            refetchMemos();  // 메모 목록 refetch
             setSelectedMemos([]);  // 모달 열 때 선택된 메모 초기화
             setModalOpen(true);  // 모달 열기
         } catch (error) {
@@ -76,15 +89,9 @@ const ChatLayout = () => {
         setExitModalOpen(true); // 모달 열기
     };
 
-    // 채팅방 나가기 확인 버튼 클릭 시
-    const handleConfirmExit = async () => {
-        try {
-            await deleteChatRoomUser(roomId);  // 채팅방 나가기 API 요청
-            setExitModalOpen(false); // 모달 닫기
-            navigate("/forum"); // 채팅방 나가기 후 /forum 경로로 이동
-        } catch (error) {
-            console.error("채팅방 나가기 실패:", error);
-        }
+    // 채팅방 나가기 확인 버튼 클릭시
+    const handleConfirmExit = () => {
+        mutate(roomId);
     };
 
     // 모달 취소 버튼 클릭 시
