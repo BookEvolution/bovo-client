@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types'; // PropTypes 임포트
-import { Box, Button, Container } from "@mui/material";
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import styles from "./MyProfile.module.css";
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';

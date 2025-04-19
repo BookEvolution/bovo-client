@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";  // PropTypes import
-import { List } from "@mui/material";
+import List from '@mui/material/List';
 import styles from "./MyForum.module.css";
 import MyForumList from "./myForumList/MyForumList";
 

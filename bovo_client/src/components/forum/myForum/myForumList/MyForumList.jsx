@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";  // PropTypes import
-import { Box, ListItem, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import ListItem from '@mui/material/ListItem';
+import Typography from "@mui/material/Typography";
 import styles from "./MyForumList.module.css";
 import { formatDate } from "../../../../utils/FormatDate.js";
 import { fetchMyRoomData } from "../../../../api/ForumService.js";

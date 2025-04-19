@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
-import { Box, Container, IconButton } from "@mui/material";
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import styles from "./Header.module.css";
 import logoImage from "../../assets/logo/logo.png"
 import SearchIcon from "@mui/icons-material/Search";

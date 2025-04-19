@@ -1,5 +1,8 @@
 import PropTypes from "prop-types";
-import { Box, Button, Container, Drawer } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Drawer from "@mui/material/Drawer";
 import styles from "./ProfileBottomSheet.module.css";
 import { useEffect, useState } from "react";
 import profileImages from "../../constant/ProfileImg.js";

@@ -1,4 +1,6 @@
-import { Box, Container, Typography } from "@mui/material";
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import styles from './ServiceInfo.module.css';
 import logo from '../../assets/logo/logo.png';
 

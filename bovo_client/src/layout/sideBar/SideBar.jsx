@@ -1,8 +1,12 @@
 import PropTypes from 'prop-types'; // PropTypes 임포트
-import { Box, Container, Drawer, IconButton, ListItem } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import LogoutIcon from "@mui/icons-material/ExitToApp"; // 로그아웃 아이콘
-import InfoIcon from "@mui/icons-material/Info"; // 서비스 정보 아이콘
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import ListItem from '@mui/material/ListItem';
+import CloseIcon from '@mui/icons-material/Close';
+import LogoutIcon from '@mui/icons-material/ExitToApp';
+import InfoIcon from '@mui/icons-material/Info';
 import styles from "./SideBar.module.css";
 import logoImage from '../../assets/logo/logo.png';
 import { Link } from "react-router-dom";

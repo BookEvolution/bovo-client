@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
-import { Box, LinearProgress, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import LinearProgress from "@mui/material/LinearProgress";
+import Typography from "@mui/material/Typography";
 import styles from './QuestList.module.css';
 import QuestBtn from '../questBtn/QuestBtn';
 import { increaseExp } from '../../../api/RewardService';

@@ -1,5 +1,11 @@
 import PropTypes from "prop-types"; // PropTypes 임포트
-import { Avatar, Box, List, ListItem, ListItemAvatar, Paper, Typography } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 import styles from "./ForumChat.module.css";
 import profileImages from "../../constant/ProfileImg";
 import { useEffect, useRef } from "react";

@@ -1,4 +1,8 @@
-import { Container, Box, Typography, LinearProgress, Link } from "@mui/material";
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import LinearProgress from '@mui/material/LinearProgress';
+import Link from '@mui/material/Link';
 import AddIcon from "@mui/icons-material/Add";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import styles from './MyPage.module.css';

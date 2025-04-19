@@ -1,4 +1,7 @@
-import { Box, Container, IconButton, TextField } from "@mui/material";
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import TextField from "@mui/material/TextField";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import styles from "./ChatLayout.module.css";
