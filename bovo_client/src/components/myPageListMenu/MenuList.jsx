@@ -4,7 +4,11 @@ import EventIcon from "@mui/icons-material/Event";
 import InfoIcon from "@mui/icons-material/Info";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { Box, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import styles from "./MenuList.module.css";
 import { Link } from "react-router-dom";
 

@@ -36,7 +36,7 @@
 
 .bookInfoWrapper {
     width: 18rem;
-    height: 11rem;
+    min-height: 11rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

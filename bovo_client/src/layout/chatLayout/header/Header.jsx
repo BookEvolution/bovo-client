@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types'; // PropTypes 임포트
-import { Box, IconButton, Typography } from "@mui/material";
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import MenuIcon from "@mui/icons-material/Menu";
+import MenuIcon from '@mui/icons-material/Menu';
 import styles from "./Header.module.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';

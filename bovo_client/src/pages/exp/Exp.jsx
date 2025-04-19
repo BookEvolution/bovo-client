@@ -1,4 +1,5 @@
-import { Box, Typography } from "@mui/material";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import InfoIcon from '@mui/icons-material/Info';
 import styles from './Exp.module.css';
 import { useEffect, useState } from "react";

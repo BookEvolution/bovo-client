@@ -1,5 +1,10 @@
 import PropTypes from "prop-types";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Checkbox, Typography } from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import Typography from "@mui/material/Typography";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";

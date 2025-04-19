@@ -1,4 +1,8 @@
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "./MyProfileEdit.module.css";
 import { useForm } from "react-hook-form";

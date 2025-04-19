@@ -1,5 +1,13 @@
 import PropTypes from 'prop-types'; // PropTypes 임포트
-import { Avatar, Box, Container, Drawer, IconButton, List, ListItem, ListItemAvatar, Typography } from "@mui/material";
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import styles from "./Sidebar.module.css";

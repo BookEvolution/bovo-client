@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import Container from '@mui/material/Container';
 import styles from "./Layout.module.css";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Header from "../header/Header";

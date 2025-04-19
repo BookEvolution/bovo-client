@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'; // PropTypes 임포트
-import { Box, Typography } from "@mui/material";
+import Box from '@mui/material/Box';
+import Typography from "@mui/material/Typography";
 import styles from "./ProfileInfoItem.module.css";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium"; // 추가
 

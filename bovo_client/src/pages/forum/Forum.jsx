@@ -1,4 +1,7 @@
-import { Box, Button, Tab, Tabs } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import styles from "./Forum.module.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";

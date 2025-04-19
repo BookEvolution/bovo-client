@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types';
-import { Box, InputAdornment, TextField, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import GroupIcon from '@mui/icons-material/Group';
 import SearchIcon from '@mui/icons-material/Search';
 import styles from "./EntireForum.module.css";
