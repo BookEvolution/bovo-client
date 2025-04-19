@@ -8,71 +8,75 @@ import KakaoSignUp from './pages/kakaoSignUp/KakaoSignUp'
 import Layout from './layout/basicLayout/Layout'
 import Main from './pages/main/Main'
 import BookSearch from './pages/bookSearch/BookSearch'
-import BookSearchDetail from './pages/bookSearchDetail/BookSearchDetail'
 import Archive from './pages/archive/Archive'
-import Note from './pages/note/Note'
-import NoteDetail from './pages/noteDetail/NoteDetail'
-import NoteEdit from './pages/noteEdit/NoteEdit'
-import NoteCombine from './pages/noteCombine/NoteCombine'
-import Forum from './pages/forum/Forum'
-import ForumMake from './pages/forumMake/ForumMake'
-import ForumChat from './pages/forumChat/ForumChat'
-import MyPage from './pages/myPage/MyPage'
-import MyProfile from './pages/myProfile/MyProfile'
-import ServiceInfo from './pages/serviceInfo/ServiceInfo'
-import Exp from './pages/exp/Exp'
-import MyProfileEdit from './pages/myProfileEdit/MyProfileEdit'
-import Calendar from './pages/calendar/Calendar'
-import ErrorPage from './pages/errorPage/ErrorPage'
 import KakaoCallback from './pages/login/KakaoCallback'
-import ChatLayout from './layout/chatLayout/layout/ChatLayout'
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { enableInterceptor } from "./api/Auth.js";
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './store/queryClient/queryClient.js'
+import LoadingSpinner from './components/loadingSpinner/LoadingSpinner.jsx'
+
 
 function App() {
+  // Lazy 컴포넌트
+  const BookSearchDetail = lazy(() => import('./pages/bookSearchDetail/BookSearchDetail'));
+  const Note = lazy(() => import('./pages/note/Note'));
+  const NoteDetail = lazy(() => import('./pages/noteDetail/NoteDetail'));
+  const NoteEdit = lazy(() => import('./pages/noteEdit/NoteEdit'));
+  const NoteCombine = lazy(() => import('./pages/noteCombine/NoteCombine'));
+  const Forum = lazy(() => import('./pages/forum/Forum'));
+  const ForumMake = lazy(() => import('./pages/forumMake/ForumMake'));
+  const ChatLayout = lazy(() => import('./layout/chatLayout/layout/ChatLayout'));
+  const ForumChat = lazy(() => import('./pages/forumChat/ForumChat'));
+  const MyPage = lazy(() => import('./pages/myPage/MyPage'));
+  const MyProfile = lazy(() => import('./pages/myProfile/MyProfile'));
+  const MyProfileEdit = lazy(() => import('./pages/myProfileEdit/MyProfileEdit'));
+  const ServiceInfo = lazy(() => import('./pages/serviceInfo/ServiceInfo'));
+  const Exp = lazy(() => import('./pages/exp/Exp'));
+  const Calendar = lazy(() => import('./pages/calendar/Calendar'));
+  const ErrorPage = lazy(() => import('./pages/errorPage/ErrorPage'));
 
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <InterceptorWrapper /> 
-        <Routes>
-        <Route path='/kakao/bovo-auth' element={<KakaoCallback />} />
-          <Route path='/login' element={<LoginLayout />}>
-            <Route index element={<Login />}/>
-          </Route>
-          <Route path='/sign-up' element={<SignUpLayout />}>
-            <Route path='/sign-up/basic' element={<SignUp />} />
-            <Route path='/sign-up/kakao' element={<KakaoSignUp />} />
-          </Route>
-          <Route path='/' element={<Layout />}>
-            <Route index element={<Main />} />
-            <Route path='/search' element={<BookSearch />} />
-            {/* <Route path='/search/:isbn' element={<BookSearchDetail />} /> */}
-            <Route path='/search/search-detail' element={<BookSearchDetail />} />
-            <Route path='/archive' element={<Archive />} />
-            <Route path='/archive/:book_id' element={<Note />} />
-            <Route path='/archive/:book_id/memo' element={<NoteDetail />} />
-            <Route path='/archive/edit/:book_id' element={<NoteEdit />} />
-            <Route path='/archive/edit/:book_id/:memo_id' element={<NoteEdit />} />
-            <Route path='/archive/:book_id/memos' element={<NoteCombine />} />
-            <Route path='/forum' element={<Forum />} />
-            <Route path='/forum/forum-make' element={<ForumMake />} />
-            <Route path='/mypage' element={<MyPage />} />
-            <Route path='/mypage/myprofile' element={<MyProfile />} />
-            <Route path='/mypage/service-info' element={<ServiceInfo />} />
-            <Route path='/mypage/exp' element={<Exp />} />
-            <Route path='/mypage/myprofile/edit' element={<MyProfileEdit />} />
-            <Route path='/calendar' element={<Calendar />} />
-            <Route path='/404' element={<ErrorPage />} />
-          </Route>
-          <Route path='/auth/kakao/callback' element={<KakaoCallback />} />
-          <Route path='/forum/:roomId' element={<ChatLayout />}>
-            <Route index element={<ForumChat />} />
-          </Route>
-          <Route path='/*' element={<Navigate to={"/404"} />} />
-        </Routes>
+        <Suspense fallback={<LoadingSpinner />}>
+          <InterceptorWrapper /> 
+          <Routes>
+            <Route path='/kakao/bovo-auth' element={<KakaoCallback />} />
+            <Route path='/login' element={<LoginLayout />}>
+              <Route index element={<Login />}/>
+            </Route>
+            <Route path='/sign-up' element={<SignUpLayout />}>
+              <Route path='/sign-up/basic' element={<SignUp />} />
+              <Route path='/sign-up/kakao' element={<KakaoSignUp />} />
+            </Route>
+            <Route path='/' element={<Layout />}>
+              <Route index element={<Main />} />
+              <Route path='/search' element={<BookSearch />} />
+              <Route path='/search/search-detail' element={<BookSearchDetail />} />
+              <Route path='/archive' element={<Archive />} />
+              <Route path='/archive/:book_id' element={<Note />} />
+              <Route path='/archive/:book_id/memo' element={<NoteDetail />} />
+              <Route path='/archive/edit/:book_id' element={<NoteEdit />} />
+              <Route path='/archive/edit/:book_id/:memo_id' element={<NoteEdit />} />
+              <Route path='/archive/:book_id/memos' element={<NoteCombine />} />
+              <Route path='/forum' element={<Forum />} />
+              <Route path='/forum/forum-make' element={<ForumMake />} />
+              <Route path='/mypage' element={<MyPage />} />
+              <Route path='/mypage/myprofile' element={<MyProfile />} />
+              <Route path='/mypage/service-info' element={<ServiceInfo />} />
+              <Route path='/mypage/exp' element={<Exp />} />
+              <Route path='/mypage/myprofile/edit' element={<MyProfileEdit />} />
+              <Route path='/calendar' element={<Calendar />} />
+              <Route path='/404' element={<ErrorPage />} />
+            </Route>
+            <Route path='/auth/kakao/callback' element={<KakaoCallback />} />
+            <Route path='/forum/:roomId' element={<ChatLayout />}>
+              <Route index element={<ForumChat />} />
+            </Route>
+            <Route path='/*' element={<Navigate to={"/404"} />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </QueryClientProvider>
   )
