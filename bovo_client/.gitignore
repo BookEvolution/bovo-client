@@ -23,3 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# 번들 분석 파일
+bundle-stats.html
