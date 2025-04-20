@@ -1,8 +1,10 @@
 import { useState } from "react";
-// import { useEffect } from "react";  //비활성화 필요
-import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Typography, Container } from "@mui/material";
-import ProfileBottomSheet from "../../components/profileImgBottomsheet/ProfileBottomSheet";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import ProfileBottomSheet from "../../components/profileImgBottomSheet/ProfileBottomSheet";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import CompleteSignUpModal from "../../components/signUpCompleteModal/CompleteSignUpModal";
@@ -12,7 +14,6 @@ import { disableInterceptor, enableInterceptor } from "../../api/Auth";
 const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
 const KakaoSignUp = () => {
-    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [inputError, setInputError] = useState("");
     const [emailError, setEmailError] = useState("");

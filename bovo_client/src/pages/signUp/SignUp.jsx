@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Typography, Container } from "@mui/material";
-import ProfileBottomSheet from "../../components/profileImgBottomsheet/ProfileBottomSheet";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import ProfileBottomSheet from "../../components/profileImgBottomSheet/ProfileBottomSheet";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import logo from "../../assets/logo/logo.png";
@@ -11,7 +14,6 @@ import profileImages from "../../constant/ProfileImg";
 const API_URL = import.meta.env.VITE_BACKEND_API_URL;
 
 const SignUp = () => {
-    const navigate = useNavigate();
     const [profileImage, setProfileImage] = useState(profileImages[0].src);
     const [nickname, setNickname] = useState("");
     const [email, setEmail] = useState("");

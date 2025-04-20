@@ -1,14 +1,16 @@
 import { useState } from "react";
-// import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Typography, Container } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 import axios from "axios";
 import kakaoBtn from "../../assets/button/btn_kakao.png";
 import { disableInterceptor, enableInterceptor, setAccessToken } from "../../api/Auth";
 
 const CLIENT_ID = import.meta.env.VITE_KAKAO_LOGIN_API_KEY;
 const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
-console.log(import.meta.env.VITE_KAKAO_REDIRECT_URI);
 
 const handleKakaoLogin = () => {
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
@@ -38,7 +40,7 @@ const Login = () => {
 
         try {
             const response = await axios.post(
-                "https://c374-112-158-33-80.ngrok-free.app/login",
+                "http://54.180.29.26:8080/login",
                 { email, password },
                 {
                     withCredentials: true,
@@ -139,7 +141,12 @@ const Login = () => {
                     )}
                 </Box>
 
-                <Box display="flex" flexDirection="column" alignItems="center" width="100%">
+                <Box display="flex" flexDirection="column" width="100%">
+                {errorMessage && (
+                    <Typography textAlign="right" color="#FF0000" fontSize="1.5rem" sx={{ margin:"-1rem", marginRight:"0.2rem"}}>
+                        {errorMessage}
+                    </Typography>
+                )}
                     <Button 
                         fullWidth 
                         variant="contained" 

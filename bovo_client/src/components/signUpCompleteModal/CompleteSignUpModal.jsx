@@ -1,4 +1,9 @@
-import { Modal, Box, Typography, Button } from "@mui/material";
+//회원가입 완료 모달
+import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
 import { useNavigate } from "react-router-dom";
 
 const CompleteSignUpModal = ({ open, handleClose }) => {
@@ -10,7 +15,7 @@ const CompleteSignUpModal = ({ open, handleClose }) => {
     };
 
     return (
-        <Modal open={open} onClose={handleClose} BackdropProps={{sx:{backgroundColor:"rgba(81,81,81,0.5)"}}}>
+        <Modal open={open} onClose={handleClose} BackdropProps={{ sx: { backgroundColor: "rgba(81,81,81,0.5)" } }}>
             <Box
                 sx={{
                     position: "absolute",
@@ -24,7 +29,7 @@ const CompleteSignUpModal = ({ open, handleClose }) => {
                     textAlign: "center",
                 }}
             >
-                <Typography sx={{ fontSize: "3.3rem", fontWeight: "600", mt: 4,mb: 2 }}>
+                <Typography sx={{ fontSize: "3.3rem", fontWeight: "600", mt: 4, mb: 2 }}>
                     회원가입 완료!
                 </Typography>
                 <Typography sx={{ fontSize: "1.7rem", color: "#666", mb: 4 }}>
@@ -39,7 +44,7 @@ const CompleteSignUpModal = ({ open, handleClose }) => {
                         fontWeight: "600",
                         padding: "1rem",
                         borderRadius: "1rem",
-                        marginBottom:"1rem"
+                        marginBottom: "1rem",
                     }}
                     onClick={handleNavigateToLogin}
                 >
@@ -48,6 +53,11 @@ const CompleteSignUpModal = ({ open, handleClose }) => {
             </Box>
         </Modal>
     );
+};
+
+CompleteSignUpModal.propTypes = {
+    open: PropTypes.bool.isRequired,
+    handleClose: PropTypes.func.isRequired,
 };
 
 export default CompleteSignUpModal;
