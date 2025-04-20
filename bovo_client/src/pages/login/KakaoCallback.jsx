@@ -19,7 +19,7 @@ const KakaoCallback = () => {
         disableInterceptor();
 
         axios.post(
-            "https://aa62-112-158-33-80.ngrok-free.app/kakao/login", 
+            "http://54.180.29.26:8080/kakao/login", 
             { authCode: authCode },
             {
                 headers: { "Content-Type": "application/json" },

@@ -1,15 +1,16 @@
-import { useNavigate } from "react-router-dom"; 
-import { Box, Typography, Button, Modal } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { setBook } from "../../store/bookForum/BookSlice";
+// 책 상태 선택 후 기록하기 버튼 클릭 시 나타나는 등록 완료 모달
+import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
 
-const ForumCompleteModal = ({ open, onClose, book }) => {
+const NoteCreateModal = ({ open, onClose, book }) => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
-    const handleMoveToForum = () => {
-        dispatch(setBook(book)); // 선택된 책 정보를 Redux에 저장
-        navigate("/forum/forum-make"); 
+    const handleMoveToArchive = () => {
+        navigate("/archive");
     };
 
     return (
@@ -32,8 +33,8 @@ const ForumCompleteModal = ({ open, onClose, book }) => {
                             width: "24rem",
                             height: "33rem",
                             borderRadius: "0.5rem",
-                            marginBottom: "1.5rem",
                             objectFit: "cover",
+                            marginBottom: "1.5rem",
                             marginTop: "2rem",
                         }}
                     />
@@ -42,13 +43,12 @@ const ForumCompleteModal = ({ open, onClose, book }) => {
                         sx={{
                             width: "24rem",
                             height: "33rem",
-                            borderRadius: "0.5rem",
-                            marginBottom: "1.5rem",
                             backgroundColor: "#DDE5ED",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            marginLeft: "5.65rem",
+                            borderRadius: "0.5rem",
+                            marginBottom: "1.5rem",
                             marginTop: "2rem",
                         }}
                     >
@@ -56,13 +56,13 @@ const ForumCompleteModal = ({ open, onClose, book }) => {
                     </Box>
                 )}
 
-                <Typography variant="h6" sx={{ fontSize: "2.2rem", fontWeight: "600", marginTop: "1rem", marginBottom: "3rem" }}>
-                    책 등록 완료!
+                <Typography sx={{ fontSize: "2.2rem", fontWeight: "600", marginTop: "1rem", marginBottom: "3rem" }}>
+                    등록 완료!
                 </Typography>
 
                 <Button
                     variant="contained"
-                    onClick={handleMoveToForum}
+                    onClick={handleMoveToArchive}
                     sx={{
                         fontSize: "2.2rem",
                         fontWeight: "600",
@@ -75,11 +75,20 @@ const ForumCompleteModal = ({ open, onClose, book }) => {
                         marginBottom: "1rem",
                     }}
                 >
-                    토론방 만들기
+                    내 서재로
                 </Button>
             </Box>
         </Modal>
     );
 };
 
-export default ForumCompleteModal;
+NoteCreateModal.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    book: PropTypes.shape({
+        thumbnail: PropTypes.string,
+        title: PropTypes.string,
+    }).isRequired,
+};
+
+export default NoteCreateModal;
