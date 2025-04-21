@@ -76,9 +76,10 @@ const DateCell = ({ day, todayBg = "#fff", books = [], onClick, isSixRows, isCur
                         top: `${3.4 + visibleBooks.length * 2.2}rem`,
                         left: "50%",
                         transform: "translateX(-50%)",
-                        fontSize: "1.1rem",
+                        fontSize: "1.2rem",
                         fontWeight: 600,
                         color: "#739CD4",
+                        width: "85%",
                     }}
                 >
                     +{hiddenBooksCount} more

@@ -21,7 +21,7 @@ const Dropdown = ({ selectedYearMonth, setSelectedYearMonth }) => {
     return (
         <Box
             sx={{
-                width: "40rem",
+                width: "41rem",
                 height: "8rem",
                 backgroundColor: "#739CD4",
                 display: "flex",

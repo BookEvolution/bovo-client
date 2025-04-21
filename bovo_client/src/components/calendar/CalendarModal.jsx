@@ -26,6 +26,7 @@ const CalendarModal = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: "90%",
+          height: "auto",
           maxWidth: "38rem",
           backgroundColor: "#ffffff",
           borderRadius: "1.2rem",
@@ -36,6 +37,7 @@ const CalendarModal = ({
           justifyContent: "space-between",
         }}
       >
+
         <Box
           sx={{
             display: "flex",
@@ -44,7 +46,14 @@ const CalendarModal = ({
             mb: 2,
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: 700, fontSize: "2.8rem", marginLeft: "2rem" }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+              fontSize: "2.8rem",
+              marginLeft: "2rem",
+            }}
+          >
             독서 기록
           </Typography>
           <CloseRoundedIcon
@@ -57,11 +66,11 @@ const CalendarModal = ({
           sx={{
             flex: 1,
             margin: "1rem 1rem",
-            overflowY: "auto",
+            overflowY: selectedBooks.length > 2 ? "auto" : "visible", 
+            maxHeight: selectedBooks.length > 2 ? "32rem" : "none",    
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: selectedBooks.length === 0 ? "center" : "flex-start",
           }}
         >
           {selectedBooks.length === 0 ? (
@@ -72,12 +81,12 @@ const CalendarModal = ({
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                height: "25rem",
+                height: "28rem",
                 gap: 3,
               }}
             >
               <LibraryBooksIcon sx={{ fontSize: "7rem", color: "#b0b0b0" }} />
-              <Typography sx={{ fontSize: "1.9rem", color: "#888" ,whiteSpace: "pre-line"}}>
+              <Typography sx={{ fontSize: "1.9rem", color: "#888", whiteSpace: "pre-line" }}>
                 기록된 도서가 없습니다{"\n"}
                 (데이터 연결 필요)
               </Typography>
@@ -95,20 +104,20 @@ const CalendarModal = ({
                   padding: "1.2rem 1rem",
                   marginBottom: "1.1rem",
                   gap: 4,
-                  cursor: "pointer",
-                  width: "100%",
+                  width: "93%",
                 }}
               >
                 <Box
                   sx={{
-                    width: "9rem",
-                    height: "11rem",
+                    width: "9.5rem",
+                    height: "12rem",
                     backgroundColor: book.thumbnail ? "transparent" : "#d3d3d3",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
                     borderRadius: "0.4rem",
                     overflow: "hidden",
+                    margin: "0.7rem 0rem 0.7rem 1rem",
                   }}
                 >
                   {book.thumbnail ? (
@@ -119,7 +128,9 @@ const CalendarModal = ({
                       sx={{ width: "100%", height: "100%", objectFit: "cover" }}
                     />
                   ) : (
-                    <Typography sx={{ fontSize: "1.2rem", color: "#666" }}>이미지 없음</Typography>
+                    <Typography sx={{ fontSize: "1.2rem", color: "#666" }}>
+                      이미지 없음
+                    </Typography>
                   )}
                 </Box>
 
@@ -128,21 +139,31 @@ const CalendarModal = ({
                     sx={{
                       fontWeight: 600,
                       fontSize: "1.9rem",
-                      marginBottom: "0.5rem",
+                      marginBottom: "0.3rem",
+                      maxWidth:"19rem",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
+                      wordBreak: "break-word",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: "vertical",
+                      marginLeft: "0.5rem",
                     }}
                   >
-                    {book.title}
+                    {book.title || "제목 없음"}
                   </Typography>
                   <Typography
                     sx={{
                       fontSize: "1.3rem",
                       color: "#555",
+                      maxWidth:"18.5rem",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
+                      wordBreak: "break-word",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: "vertical",
+                      marginLeft: "0.5rem",
                       marginBottom: "1rem",
                     }}
                   >
@@ -184,7 +205,9 @@ const CalendarModal = ({
           onClick={handleMoveToRecord}
           disabled={!selectedBook}
           sx={{
-            marginTop: "1rem",
+            width: "100%",
+            maxWidth: "35.5rem",
+            margin: "1rem auto",
             backgroundColor: !selectedBook ? "#D8D8D8" : "#739CD4",
             fontSize: "1.8rem",
             borderRadius: "0.6rem",
@@ -209,4 +232,3 @@ CalendarModal.propTypes = {
 };
 
 export default CalendarModal;
-
