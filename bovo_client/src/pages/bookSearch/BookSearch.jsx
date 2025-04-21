@@ -6,7 +6,7 @@ import { Box } from "@mui/material";
 import { useState } from "react";
 import BookSearchBar from "../../components/bookSearch/BookSearchBar";
 import BookList from "../../components/bookSearch/BookList";
-import SearchBarDetails from "../../components/bookSearch/SearchBarDetails"; // 추가
+import SearchBarDetails from "../../components/bookSearch/SearchBarDetails";
 import useBookSearch from "../../hooks/useBookSearch";
 
 const BookSearch = () => {

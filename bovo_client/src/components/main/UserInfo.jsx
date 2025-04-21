@@ -41,7 +41,7 @@ const UserInfo = ({ level, nickname, profile_picture, total_book_num }) => (
         <Box sx={{ position: "absolute", top: "11rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Typography
                 sx={{
-                    width: "11rem",
+                    width: "10rem",
                     fontSize: "5rem",
                     fontWeight: "800",
                     color: "#739CD4",
@@ -52,16 +52,16 @@ const UserInfo = ({ level, nickname, profile_picture, total_book_num }) => (
             </Typography>
             <Typography
                 sx={{
-                    width: "10rem",
+                    width: "11rem",
                     fontSize: "2rem",
                     textAlign: "center",
-                    marginTop: "5rem",
-                    marginLeft: "3rem",
+                    marginTop: "5.3rem",
+                    marginLeft: "2rem",
                 }}
             >
                 권째 기록 중
             </Typography>
-            <img src={profile_picture} alt="프로필" style={{ width: "12rem", height: "12rem", marginLeft: "1rem" }} />
+            <img src={profile_picture} alt="프로필" style={{ width: "12rem", height: "12rem", marginLeft: "1.5rem" }} />
         </Box>
     </Box>
 );
