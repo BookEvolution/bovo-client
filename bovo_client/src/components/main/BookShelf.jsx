@@ -54,7 +54,7 @@ sx={{ position: "relative", width, height, backgroundColor, borderRadius: "0.2re
         <Box sx={{ position: "absolute", top: 0, left: "10%", transform: "translateX(-50%)", width: "0.35rem", height: "19rem", backgroundColor: "#fff" }} />
         <Box sx={{ position: "absolute", top: 0, left: "90%", transform: "translateX(-50%)", width: "0.35rem", height: "19rem", backgroundColor: "#fff" }} />
         <Typography variant="caption" sx={{ writingMode: "vertical-rl", textOrientation: "upright", fontSize: "1.7rem", fontWeight: "500", letterSpacing: "0.001em", wordSpacing: "-0.9em", whiteSpace: "nowrap", zIndex: 1, marginBottom: "0.5rem" }}>
-            {title.length > 8 ? `${title.substring(0, 8)}:` : title}
+            {title.length > 8 ? `${title.substring(0, 7)}:` : title}
         </Typography>
     </Box>
 );
