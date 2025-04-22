@@ -11,7 +11,7 @@ const KakaoCallback = () => {
         const authCode = urlParams.get("code");
 
         if (!authCode) {
-            console.error("인가 코드가 없음");
+            console.error("인가 코드 없음");
             return;
         }
 

@@ -40,7 +40,7 @@ const SignUp = () => {
 
     return (
         <Container sx={{ width: "45rem", marginTop: "18.26rem" }}>
-        <Box display="flex" flexDirection="column" alignItems="center" mb={5}>
+        <Box display="flex" flexDirection="column" alignItems="center">
             <ProfileImgSelect
             profileImage={profileImage}
             setProfileImage={setProfileImage}

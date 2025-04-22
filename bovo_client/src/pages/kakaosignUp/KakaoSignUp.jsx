@@ -31,7 +31,7 @@ const KakaoSignUp = () => {
 
     return (
         <Container sx={{ width: "45rem", marginTop: "23rem" }}>
-        <Box display="flex" flexDirection="column" alignItems="center" mb={5}>
+        <Box display="flex" flexDirection="column" alignItems="center" >
             <Typography fontSize="3rem" fontWeight="500" marginBottom="3rem">
             사용자 설정
             </Typography>
