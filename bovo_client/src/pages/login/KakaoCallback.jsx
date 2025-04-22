@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { kakaoLogin } from "../../api/Login";   
+import useKakaoLoginHandler from "../../hooks/useKakaoLogin";
 
 const KakaoCallback = () => {
     const navigate = useNavigate();
+    const { handleKakaoLogin } = useKakaoLoginHandler(navigate);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -14,22 +15,8 @@ const KakaoCallback = () => {
             return;
         }
 
-        kakaoLogin(authCode)
-            .then((response) => {
-                const status = response.status;
-                if (status === 200) {
-                    navigate("/");
-                } else if (status === 201) {
-                    navigate("/sign-up/kakao");
-                } else {
-                    navigate("/login");
-                }
-            })
-            .catch((error) => {
-                console.error("카카오 로그인 실패:", error);
-                navigate("/login");
-            });
-    }, [navigate]);
+        handleKakaoLogin(authCode);
+    }, [navigate, handleKakaoLogin]);
 
     return <div>로그인 처리 중...</div>;
 };

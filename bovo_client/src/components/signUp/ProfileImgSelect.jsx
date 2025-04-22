@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ProfileBottomSheet from "../profileImgBottomSheet/ProfileBottomSheet";
@@ -44,6 +45,13 @@ const ProfileImgSelect = ({ profileImage, setProfileImage, isBottomSheetOpen, se
             />
         </>
     );
+};
+
+ProfileImgSelect.propTypes = {
+    profileImage: PropTypes.string.isRequired,
+    setProfileImage: PropTypes.func.isRequired,
+    isBottomSheetOpen: PropTypes.bool.isRequired,
+    setIsBottomSheetOpen: PropTypes.func.isRequired,
 };
 
 export default ProfileImgSelect;

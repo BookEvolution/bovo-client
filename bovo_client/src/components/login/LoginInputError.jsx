@@ -1,4 +1,7 @@
-import { Box, TextField, Typography } from "@mui/material";
+import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 
 const LoginInputError = ({
     email,
@@ -23,9 +26,9 @@ const LoginInputError = ({
                 />
                 <Typography
                     textAlign="right"
-                    fontSize="1.3rem"
+                    fontSize="1.5rem"
                     color={emailError ? "#FF0000" : "transparent"}
-                    sx={{ marginTop: "0.5rem", marginRight: "0.5rem" }}
+                    sx={{ margin: "0.3rem"}}
                 >
                     {emailError || "placeholder"}
                 </Typography>
@@ -44,9 +47,9 @@ const LoginInputError = ({
                 />
                 <Typography
                     textAlign="right"
-                    fontSize="1.3rem"
+                    fontSize="1.5rem"
                     color={passwordError ? "#FF0000" : "transparent"}
-                    sx={{ marginTop: "0.5rem", marginRight: "0.5rem" }}
+                    sx={{ margin: "0.3rem" }}
                 >
                     {passwordError || "placeholder"}
                 </Typography>
@@ -56,7 +59,7 @@ const LoginInputError = ({
                 textAlign="right"
                 fontSize="1.5rem"
                 color={errorMessage ? "#FF0000" : "transparent"}
-                sx={{ marginTop: "-2rem", marginBottom: "1rem", marginRight: "0.5rem" }}
+                sx={{ margin: "-2rem 0.5rem 0.5rem 0rem" }}
             >
                 {errorMessage || "placeholder"}
             </Typography>
@@ -75,6 +78,16 @@ const inputStyle = {
 const inputTextStyle = {
     fontSize: "1.8rem",
     paddingLeft: "1.4rem",
+};
+
+LoginInputError.propTypes = {
+    email: PropTypes.string.isRequired,
+    setEmail: PropTypes.func.isRequired,
+    password: PropTypes.string.isRequired,
+    setPassword: PropTypes.func.isRequired,
+    emailError: PropTypes.string,
+    passwordError: PropTypes.string,
+    errorMessage: PropTypes.string,
 };
 
 export default LoginInputError;
