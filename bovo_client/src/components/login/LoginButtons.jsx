@@ -1,4 +1,6 @@
-import { Box, Button } from "@mui/material";
+import PropTypes from "prop-types"; 
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import kakaoBtn from "../../assets/button/btn_kakao.png";
 import { getKakaoAuthUrl } from "../../utils/KakaoAuth";
 
@@ -66,6 +68,11 @@ const LoginButtonGroup = ({ handleLogin, handleSignUp }) => {
             </Box>
         </>
     );
+};
+
+LoginButtonGroup.propTypes = {
+    handleLogin: PropTypes.func.isRequired,
+    handleSignUp: PropTypes.func.isRequired,
 };
 
 export default LoginButtonGroup;

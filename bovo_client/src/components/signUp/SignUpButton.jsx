@@ -1,4 +1,7 @@
-import { Box, Button, Typography } from "@mui/material";
+import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import logo from "../../assets/logo/logo.png";
 
 const SignUpButton = ({ disabled, onClick, top = "80.5rem", inputError, showWelcome = true }) => {
@@ -80,5 +83,12 @@ const SignUpButton = ({ disabled, onClick, top = "80.5rem", inputError, showWelc
     );
 };
 
-export default SignUpButton;
+SignUpButton.propTypes = {
+    disabled: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired,
+    top: PropTypes.string,
+    inputError: PropTypes.string,
+    showWelcome: PropTypes.bool,
+};
 
+export default SignUpButton;

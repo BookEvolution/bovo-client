@@ -93,7 +93,7 @@ const RecentBook = ({ recent_book_info, navigate }) => {
                         sx={{
                             fontSize: "2.1rem",
                             fontWeight: "700",
-                            maxWidth: "19.5rem",
+                            maxWidth: "17rem",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             WebkitBoxOrient: "vertical",
@@ -102,6 +102,7 @@ const RecentBook = ({ recent_book_info, navigate }) => {
                             wordBreak: "break-word",
                             lineHeight: "2.5rem",
                             letterSpacing: "0.01rem",
+                            marginLeft: "0.5rem",
                         }}
                     >
                         {bookName}
@@ -111,18 +112,19 @@ const RecentBook = ({ recent_book_info, navigate }) => {
                             fontSize: "1.5rem",
                             color: "#6D6D6D",
                             marginTop: "0.8rem",
-                            maxWidth: "17.7rem",
+                            maxWidth: "16.4rem",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             WebkitBoxOrient: "vertical",
                             WebkitLineClamp: 1,
                             display: "-webkit-box",
                             wordBreak: "break-word",
+                            marginLeft: "0.5rem",
                         }}
                     >
                         {bookAuthor}
                     </Typography>
-                    <Typography sx={{ fontSize: "1.5rem", color: "#6D6D6D", marginTop: "0.5rem", maxWidth: "18rem" }}>
+                    <Typography sx={{ fontSize: "1.5rem", color: "#6D6D6D", marginTop: "0.5rem", maxWidth: "18rem" , marginLeft: "0.5rem",}}>
                         읽기 시작: {readingStartDate ? new Date(readingStartDate).toLocaleDateString() : "날짜 없음"}
                     </Typography>
                     <Box sx={{ marginTop: "0.5rem", display: "flex", alignItems: "center" }}>
