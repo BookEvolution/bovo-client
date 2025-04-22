@@ -1,7 +1,3 @@
-// //주요 확인 사항
-// // main, calendar 수정까지는 괜찮았는데 BookSearch 수정 후 무한 무한 로딩 가끔 발생 -> 확인 필요
-// // '읽는중' 책 메인화면 표시 안됨 현상 나타남 -> bear, podo 새로 생성한 계정 모두 발생한 현상이라 확인 필요
-
 import { Box } from "@mui/material";
 import { useState } from "react";
 import BookSearchBar from "../../components/bookSearch/BookSearchBar";

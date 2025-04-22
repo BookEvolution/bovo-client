@@ -26,14 +26,14 @@ const useLogin = (navigate) => {
         console.error("로그인 오류:", error);
         if (error.response) {
             if (error.response.status === 404) {
-            setEmailError("등록되지 않은 이메일입니다.");
+            setEmailError("등록되지 않은 이메일입니다");
             } else if (error.response.status === 400) {
-            setPasswordError("비밀번호가 일치하지 않습니다.");
+            setPasswordError("비밀번호가 일치하지 않습니다");
             } else {
-            setErrorMessage("로그인 중 오류가 발생했습니다.");
+            setErrorMessage("로그인 중 오류가 발생했습니다");
             }
         } else {
-            setErrorMessage("서버와의 연결에 실패했습니다.");
+            setErrorMessage("서버와의 연결에 실패했습니다");
         }
         }
     };

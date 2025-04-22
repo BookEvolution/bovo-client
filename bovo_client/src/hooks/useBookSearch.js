@@ -1,47 +1,45 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { BookSearch } from "../api/BookSearch";
 
 const useBookSearch = (searchTerm, sort) => {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(1);
 
-    const fetchBooks = async (query, newPage = 1) => {
+    const fetchBooks = useCallback(async (query, sortOption, pageNum = 1) => {
         if (!query.trim()) {
-            setBooks([]);
-            setHasMore(false);
-            return;
+        setBooks([]);
+        setHasMore(false);
+        return;
         }
 
         setLoading(true);
-        const { data, error } = await BookSearch(query, sort, newPage);
+        const { data, error } = await BookSearch(query, sortOption, pageNum);
         if (!error) {
-            if (newPage === 1) {
-                setBooks(data);
-            } else {
-                setBooks((prev) => [...prev, ...data]);
-            }
-            setHasMore(data.length >= 20);
+        if (pageNum === 1) {
+            setBooks(data);
         } else {
-            setBooks([]);
-            setHasMore(false);
+            setBooks((prev) => [...prev, ...data]);
+        }
+        setHasMore(data.length >= 20);
+        } else {
+        setBooks([]);
+        setHasMore(false);
         }
         setLoading(false);
-    };
+    }, []);
 
     const fetchMoreBooks = () => {
-        setPage((prevPage) => {
-            const nextPage = prevPage + 1;
-            fetchBooks(searchTerm, nextPage);
-            return nextPage;
-        });
+        const nextPage = page + 1;
+        setPage(nextPage);
+        fetchBooks(searchTerm, sort, nextPage);
     };
 
     useEffect(() => {
         setPage(1);
-        fetchBooks(searchTerm, 1);
-    }, [searchTerm, sort]);
+        fetchBooks(searchTerm, sort, 1);
+    }, [searchTerm, sort, fetchBooks]);
 
     return { books, loading, fetchMoreBooks, hasMore };
 };

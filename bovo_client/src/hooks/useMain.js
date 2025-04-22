@@ -7,15 +7,16 @@ function generateBookStyleByTitle(bookTitle) {
     for (let i = 0; i < bookTitle.length; i++) {
         hash = bookTitle.charCodeAt(i) + ((hash << 5) - hash);
     }
-    hash = Math.abs(hash); 
+    hash = Math.abs(hash);
 
     const designs = ["lineA", "lineB", "lineC", "lineD", "lineE", "default"];
     const colors = ["#C1D5F0", "#B4F1E8", "#C3C1F0", "#DFE6FF", "#FBEFAB", "#BAEEF3", "#B3E4FE"];
 
     const width = `${(hash % 2) + 3.9}rem`;
 
+    const displayTitleLength = bookTitle.length > 8 ? 7 : bookTitle.length;
     const baseHeight = 14.8;
-    const extraHeight = bookTitle.length > 4 ? (bookTitle.length - 4) * 0.18 : 0;
+    const extraHeight = displayTitleLength > 4 ? (displayTitleLength - 4) * 0.22 : 0;
     const height = `${(baseHeight + extraHeight).toFixed(2)}rem`;
 
     const backgroundColor = colors[hash % colors.length];
@@ -27,9 +28,9 @@ function generateBookStyleByTitle(bookTitle) {
         backgroundColor,
         design,
     };
-    }
+}
 
-    const useMainData = () => {
+const useMainData = () => {
     const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
     const [bookStyles, setBookStyles] = useState({});
@@ -46,14 +47,14 @@ function generateBookStyleByTitle(bookTitle) {
             }
             console.log("MainData", data);
             setUserData(data);
-    
+
             const newBooks = data.book_list ? Object.values(data.book_list) : [];
-            const updatedStyles = {}; // ⭐ 여기에만 선언 (초기화)
-    
+            const updatedStyles = {};
+
             newBooks.forEach((book) => {
                 updatedStyles[book] = generateBookStyleByTitle(book);
             });
-    
+
             sessionStorage.setItem("bookStyles", JSON.stringify(updatedStyles));
             setBookStyles(updatedStyles);
         });
