@@ -2,19 +2,17 @@
 
 import { useState } from "react";
 import templateData from "../../assets/data/template.json";
-import {
-  Dialog,
-  TextField,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Box,
-  IconButton,
-  Select,
-  MenuItem,
-  Chip,
-} from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Chip from "@mui/material/Chip";
 import CloseIcon from "@mui/icons-material/Close";
 import PropTypes from "prop-types";
 

@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { Box, Typography, Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import DeleteModal from "../../components/deleteModal/DeleteModal";
 import { noteDetailData } from "../../api/NoteApi";
 import useBook from "../../hooks/useBook";

@@ -2,7 +2,9 @@ import { memoPropType } from "../../utils/propTypes";
 import PropTypes from "prop-types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Box, IconButton, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 
 const SortableItem = ({ memo, isDragging }) => {

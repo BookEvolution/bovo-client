@@ -5,7 +5,8 @@ import useArchive from "../../hooks/useArchive";
 import useArchiveSearch from "../../hooks/useArchiveSearch";
 import ArchiveTabs from "../../components/archive/ArchiveTabs";
 import BookList from "../../components/archive/BookList";
-import { Box, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 const Archive = () => {
   // 책 데이터 및 로딩, 에러

@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import NoteInfo from "../../components/note/NoteInfo";
 import NoteList from "../../components/note/NoteList";
 import useBook from "../../hooks/useBook";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 
 const Note = () => {
   const { book_id } = useParams();
