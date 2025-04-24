@@ -1,6 +1,9 @@
 /** 책 상세보기에서 상단의 책 정보를 나타내는 부분 */
 
-import { Box, IconButton, Rating, Chip } from "@mui/material";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Rating from "@mui/material/Rating";
+import Chip from "@mui/material/Chip";
 import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 import NoteBottomSheet from "../noteBottomSheet/NoteBottomSheet";

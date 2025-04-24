@@ -1,5 +1,9 @@
 import PropTypes from "prop-types";
-import { Tabs, Tab, Box, TextField, Typography } from "@mui/material";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import SearchIcon from "@mui/icons-material/Search";
 
 const ArchiveTabs = ({ currentTab, setCurrentTab, searchQuery, setSearchQuery, bookCount }) => {

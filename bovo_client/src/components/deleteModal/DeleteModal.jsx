@@ -1,7 +1,11 @@
 /** Note에서 사용하는 삭제 모달 */
 
 import PropTypes from "prop-types";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
 import useDelete from "../../hooks/useDelete";
 
 const DeleteModal = ({ open, onClose, targetId, targetType, bookId, onSuccess }) => {

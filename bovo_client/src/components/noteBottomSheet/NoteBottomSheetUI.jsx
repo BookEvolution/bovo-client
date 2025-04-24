@@ -1,9 +1,13 @@
 import PropTypes from "prop-types";
 import { bookPropType } from "../../utils/propTypes";
-import {
-    Box, Modal, Typography, Button,
-    ToggleButton, ToggleButtonGroup, Rating, Slide
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Rating from "@mui/material/Rating";
+import Slide from "@mui/material/Slide";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
