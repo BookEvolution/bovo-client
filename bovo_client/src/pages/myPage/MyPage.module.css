@@ -93,8 +93,6 @@
 
 /* 독서 성과 관련 CSS */
 .rpContainer {
-    width: 33.75rem;
-    height: 15.625;
     margin-bottom: 3.75rem;
     display: flex;
     flex-direction: column;
