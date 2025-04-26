@@ -88,7 +88,7 @@ const MyPage = () => {
                     {userData?.level || 1}
                 </Typography>
             </Box>
-            <Container className={styles.expBarContainer}>
+            <Box className={styles.expBarContainer}>
                 <Box className={styles.expBarWrapper}>
                     <LinearProgress
                         variant="determinate"
@@ -119,8 +119,8 @@ const MyPage = () => {
                         /100
                     </Typography>
                 </Box>
-            </Container>
-            <Container className={styles.rpContainer}>
+            </Box>
+            <Box className={styles.rpContainer}>
                 <Box className={styles.rpHeader}>
                     <Typography 
                         className={styles.rpTitle}
@@ -178,7 +178,7 @@ const MyPage = () => {
                         </Box>
                     </Box>
                 </Box>
-            </Container>
+            </Box>
             <MenuList onLogout={handleLogoutModal} />
             {isLogout && <LogoutModal handleLogout={handleLogout}/>}
         </Container>
