@@ -25,10 +25,10 @@ const MenuList = ({ onLogout }) => {
             className={styles.menuListContainer} 
             sx={{ backgroundColor: "#E5F1FB", borderRadius: "1.625rem" }}
         >
-            {menuItem.map((item, index) => (
+            {menuItem.map((item) => (
                 item.type === "action" ? (
                     <ListItemButton 
-                        key={index}
+                        key={item.text}
                         className={styles.menuBtn} 
                         onClick={() => onLogout(true)}
                     >
@@ -45,7 +45,7 @@ const MenuList = ({ onLogout }) => {
                     </ListItemButton>
                 ) : (
                     <ListItemButton 
-                        key={index}
+                        key={item.text}
                         className={styles.menuBtn} 
                         component={Link} // Link로 감싸기
                         to={item.path} 
