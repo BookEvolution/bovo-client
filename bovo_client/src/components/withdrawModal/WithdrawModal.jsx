@@ -6,10 +6,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import styles from './WithdrawModal.module.css';
 
-const WithdrawModal = ({open, onClose, handleWithdraw}) => {
+const WithdrawModal = ({isOpen, onClose, handleWithdraw}) => {
     return (
         <Dialog 
-            open={open} 
+            open={isOpen} 
             sx={{
                 "& .MuiDialog-paper": {
                     width: "41.25rem",               // 너비 변경
@@ -92,7 +92,7 @@ const WithdrawModal = ({open, onClose, handleWithdraw}) => {
 
 // props 타입 정의
 WithdrawModal.propTypes = {
-    open: PropTypes.func.isRequired, 
+    isOpen: PropTypes.bool.isRequired, 
     onClose: PropTypes.func.isRequired,
     handleWithdraw: PropTypes.func.isRequired
 };
