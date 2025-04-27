@@ -51,7 +51,7 @@ const MyProfile = () => {
     };
 
     if (isLoading) return <p>로딩 중...</p>;
-    if (isError) return <p>{error}</p>;
+    if (isError) return <p>{error?.message || "오류가 발생했습니다."}</p>;
 
     return (
         <Container className={styles.myProfileContainer}>
