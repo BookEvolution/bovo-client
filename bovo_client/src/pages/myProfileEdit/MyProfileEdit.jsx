@@ -216,40 +216,23 @@ const MyProfileEdit = () => {
                             </Typography>
                     )}
                 </Box>
-                {!isPending ? (
-                    <Button 
-                        className={styles.editBtn}
-                        type="submit"
-                        sx={{
-                            borderRadius: "1.5625rem",
-                            backgroundColor: "#BDE5F1",
-                            fontSize: "2.1875rem",
-                            color: "#FFFFFF",
-                            "&.Mui-disabled": {  // ✅ 비활성화 시 글자색 강제 설정
-                                color: "#FFFFFF",
-                                backgroundColor: "#ccc", // 배경색도 유지
-                                opacity: 1, // 기본적으로 흐려지는 효과 제거
-                            }
-                        }}
-                        disabled={!isValid}
-                    >
-                        확인
-                    </Button>
-                ) : (
-                    <Button 
-                        className={styles.editBtn}
-                        type="button"
-                        sx={{
-                            borderRadius: "1.5625rem",
-                            backgroundColor: "#D9D9D9",
-                            fontSize: "2.1875rem",
-                            color: "#FFFFFF",
-                        }}
-                        disabled={true}
-                    >
-                        전송 중...
-                    </Button>
-                )}
+                <Button 
+                    className={styles.editBtn}
+                    type={isPending ? "button" : "submit"}
+                    sx={{
+                        borderRadius: "1.5625rem",
+                        backgroundColor: "#BDE5F1",
+                        fontSize: "2.1875rem",
+                        color: "#FFFFFF",
+                        "&.Mui-disabled": {  // ✅ 비활성화 시 글자색 강제 설정
+                            backgroundColor: "#D9D9D9", // 배경색도 유지
+                            opacity: 1, // 기본적으로 흐려지는 효과 제거
+                        }
+                    }}
+                    disabled={isPending || !isValid}
+                >
+                    {isPending ? "전송 중..." : "확인"}
+                </Button>
             </form>
             <ProfileBottomSheet 
                 open={bottomSheetOpen} 
