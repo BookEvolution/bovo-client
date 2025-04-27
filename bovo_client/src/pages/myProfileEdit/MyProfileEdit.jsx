@@ -15,7 +15,7 @@ const MyProfileEdit = () => {
     const navigate = useNavigate(); // ✅ useNavigate 추가
     const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
     const [selectedProfile, setSelectedProfile] = useState({ key: "", src: "" });
-    const {register, handleSubmit, watch, setValue, formState: {isSubmitting, errors }} = useForm({mode : "onChange", defaultValues: { nickname: "", password: "", confirmPassword: "" }}); //프로필 수정 유효성 검사
+    const {register, handleSubmit, setValue, getValues, formState: { errors, isValid }, trigger} = useForm({ mode: "onSubmit", defaultValues: { nickname: "", password: "", confirmPassword: "" }}); //프로필 수정 유효성 검사
     const { data: profileData, isLoading, isError } = useMyProfileEditQuery();
     // ✅ mutation 훅 사용
     const { mutate: editProfile, isPending } = useEditProfileMutation();
@@ -30,9 +30,6 @@ const MyProfileEdit = () => {
 
     const nameRegex = /^\S+$/;
     const passwordRegex = /^[A-Za-z0-9]+$/;
-
-    const password = watch("password");
-    const nickname = watch("nickname");
 
     const onSubmit = async (data) => {
         // 비밀번호가 비어있다면 null로 설정
@@ -51,6 +48,10 @@ const MyProfileEdit = () => {
                 console.error("프로필 수정 실패:", error);
             }
         });
+    };
+
+    const handleBlur = async (field) => {
+        await trigger(field);  // onBlur 시 유효성 검사 실행
     };
 
     if (isLoading) {
@@ -101,6 +102,7 @@ const MyProfileEdit = () => {
                                 pattern: { value: nameRegex, message: "닉네임에 공백을 포함할 수 없습니다." },
                             })}
                             error={!!errors.nickname}
+                            onBlur={() => handleBlur("nickname")}
                             sx={{
                                 backgroundColor: "#E8F1F6",
                                 width: "100%",
@@ -149,6 +151,7 @@ const MyProfileEdit = () => {
                             })}
                             InputProps={{ autoComplete: "new-password" }}
                             error={!!errors.password}
+                            onBlur={() => handleBlur("password")}
                             sx={{
                                 backgroundColor: "#E8F1F6",
                                 width: "100%",
@@ -194,9 +197,14 @@ const MyProfileEdit = () => {
                             InputProps={{ autoComplete: "new-password" }}
                             {...register("confirmPassword", {
                                 pattern: { value: passwordRegex, message: "특수문자 및 공백을 포함할 수 없습니다." },
-                                validate: (value) => password === "" || value === password || "비밀번호가 일치하지 않습니다.",
+                                validate: (value) => {
+                                    const password = getValues('password');
+                                    if (!password) return true; // password 비어있으면 confirmPassword 검사 안 함
+                                    return value === password || "비밀번호가 일치하지 않습니다.";
+                                },
                             })}
                             error={!!errors.confirmPassword}
+                            onBlur={() => handleBlur("confirmPassword")}
                             sx={{
                                 backgroundColor: "#E8F1F6",
                                 width: "100%",
@@ -237,8 +245,7 @@ const MyProfileEdit = () => {
                                 opacity: 1, // 기본적으로 흐려지는 효과 제거
                             }
                         }}
-                        disabled={(nickname.trim() === "" || isSubmitting) 
-                                    || (password !== "" && errors.confirmPassword)}
+                        disabled={!isValid}
                     >
                         확인
                     </Button>
