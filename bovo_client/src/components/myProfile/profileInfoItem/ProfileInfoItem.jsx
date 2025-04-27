@@ -11,16 +11,16 @@ const ProfileInfoItem = ({ title, content, src }) => {
             <Typography sx={{ fontSize: "1.75rem" }} fontWeight="bold">
                 {title}
             </Typography>
-            {content !== "" ? (
+            {content !== null ? (
                 <Typography sx={{ fontSize: "1.75rem", textAlign: "right" }}>
                     {content}
                 </Typography>
             ) : (
                 <Box className={styles.imgWrapper} sx={{ textAlign: "right" }}>
-                    {src === "NONE" ? (
-                        <WorkspacePremiumIcon sx={{ fontSize: "4rem", color: "#D9D9D9" }} />
-                    ) : (
+                    {src ? (
                         <img src={src} alt="독서 성과 이미지" className={styles.bedgeImg} />
+                    ) : (
+                        <WorkspacePremiumIcon sx={{ fontSize: "4rem", color: "#D9D9D9" }} />
                     )} 
                 </Box>
             )}
@@ -33,6 +33,6 @@ export default ProfileInfoItem;
 // props 타입 정의
 ProfileInfoItem.propTypes = {
     title: PropTypes.string.isRequired, 
-    content: PropTypes.string.isRequired,
-    src: PropTypes.string.isRequired
+    content: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    src: PropTypes.string
 };
