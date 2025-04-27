@@ -7,6 +7,17 @@ import DialogTitle from "@mui/material/DialogTitle";
 import styles from './WithdrawModal.module.css';
 
 const WithdrawModal = ({isOpen, onClose, handleWithdraw}) => {
+    // 회원탈퇴 modal btn관련 공통 style 선언
+    const btnSx = {
+        width: "12.5rem",
+        height: "5rem",
+        borderRadius: "1.5rem",
+        backgroundColor: "white",
+        fontSize: "2rem",
+        letterSpacing: "0",
+        textAlign: "center",
+    }
+
     return (
         <Dialog 
             open={isOpen} 
@@ -58,14 +69,8 @@ const WithdrawModal = ({isOpen, onClose, handleWithdraw}) => {
                 <Button 
                     onClick={onClose}
                     sx={{
-                        width: "12.5rem",
-                        height: "5rem",
-                        borderRadius: "1.5rem",
-                        backgroundColor: "white",
+                        ...btnSx,
                         color: "#739CD4",
-                        fontSize: "2rem",
-                        letterSpacing: "0",
-                        textAlign: "center",
                     }}  
                 >
                     취소
@@ -73,14 +78,8 @@ const WithdrawModal = ({isOpen, onClose, handleWithdraw}) => {
                 <Button 
                     onClick={handleWithdraw}
                     sx={{
-                        width: "12.5rem",
-                        height: "5rem",
-                        borderRadius: "1.5rem",
-                        backgroundColor: "white",
+                        ...btnSx,
                         color: "#FCA18D",
-                        fontSize: "2rem",
-                        letterSpacing: "0",
-                        textAlign: "center",
                     }} 
                 >
                     확인
