@@ -9,8 +9,10 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useEditProfileMutation, useMyProfileEditQuery } from "../../api/UserApi";
 import ProfileBottomSheet from "../../components/profileImgBottomsheet/ProfileBottomSheet";
+import LoadingSpinner from "../../components/loadingSpinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
- 
+
+
 const MyProfileEdit = () => {
     const navigate = useNavigate(); // ✅ useNavigate 추가
     const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
@@ -19,8 +21,29 @@ const MyProfileEdit = () => {
     const { data: profileData, isLoading, isError } = useMyProfileEditQuery();
     // ✅ mutation 훅 사용
     const { mutate: editProfile, isPending } = useEditProfileMutation();
+    // 정규식 검정
+    const nameRegex = /^\S+$/;
+    const passwordRegex = /^[A-Za-z0-9]+$/;
+    // 유효성 검사 규칙
+    const validationRules = {
+        nickname: {
+            validate: (value) => (value.trim() === "" ? "닉네임을 입력하세요." : true), 
+            pattern: { value: nameRegex, message: "닉네임에 공백을 포함할 수 없습니다." },
+        },
+        password: {
+            pattern: { value: passwordRegex, message: "특수문자 및 공백을 포함할 수 없습니다." },
+        },
+        confirmPassword: (getValues) => ({
+            pattern: { value: passwordRegex, message: "특수문자 및 공백을 포함할 수 없습니다." },
+            validate: (value) => {
+                const password = getValues('password');
+                if (!password) return true; // password 비어있으면 confirmPassword 검사 안 함
+                return value === password || "비밀번호가 일치하지 않습니다.";
+            },
+        }),
+    };
 
-    // useEffect 삭제 대신 이 부분으로 처리
+    // 컴포넌트 첫 진입시 default value 입력 데이터
     useEffect(() => {
         if (profileData) {
             setValue("nickname", profileData.nickname || "");
@@ -28,8 +51,6 @@ const MyProfileEdit = () => {
         }
     }, [profileData, setValue]);
 
-    const nameRegex = /^\S+$/;
-    const passwordRegex = /^[A-Za-z0-9]+$/;
 
     const onSubmit = async (data) => {
         // 비밀번호가 비어있다면 null로 설정
@@ -55,7 +76,7 @@ const MyProfileEdit = () => {
     };
 
     if (isLoading) {
-        return <Typography>로딩 중...</Typography>;
+        return <LoadingSpinner />;
     }
     
     if (isError) {
@@ -97,10 +118,7 @@ const MyProfileEdit = () => {
                             variant="outlined"
                             fullWidth
                             InputProps={{ autoComplete: "username" }}
-                            {...register('nickname', {
-                                validate: (value) => (value.trim() === "" ? "닉네임을 입력하세요." : true), 
-                                pattern: { value: nameRegex, message: "닉네임에 공백을 포함할 수 없습니다." },
-                            })}
+                            {...register('nickname', validationRules.nickname)}
                             error={!!errors.nickname}
                             onBlur={() => handleBlur("nickname")}
                             sx={{
@@ -145,10 +163,7 @@ const MyProfileEdit = () => {
                             type="password"
                             placeholder="새 비밀번호를 입력하세요"
                             fullWidth
-                            {...register('password', {
-                                pattern: { value: passwordRegex, 
-                                        message: "특수문자 및 공백을 포함할 수 없습니다." },
-                            })}
+                            {...register('password', validationRules.password)}
                             InputProps={{ autoComplete: "new-password" }}
                             error={!!errors.password}
                             onBlur={() => handleBlur("password")}
@@ -195,14 +210,7 @@ const MyProfileEdit = () => {
                             placeholder="비밀번호를 다시 입력하세요"
                             fullWidth
                             InputProps={{ autoComplete: "new-password" }}
-                            {...register("confirmPassword", {
-                                pattern: { value: passwordRegex, message: "특수문자 및 공백을 포함할 수 없습니다." },
-                                validate: (value) => {
-                                    const password = getValues('password');
-                                    if (!password) return true; // password 비어있으면 confirmPassword 검사 안 함
-                                    return value === password || "비밀번호가 일치하지 않습니다.";
-                                },
-                            })}
+                            {...register("confirmPassword", validationRules.confirmPassword(getValues))}
                             error={!!errors.confirmPassword}
                             onBlur={() => handleBlur("confirmPassword")}
                             sx={{
