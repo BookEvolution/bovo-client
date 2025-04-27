@@ -110,6 +110,7 @@
 .rpTitle {
     width: 8.25rem;
     height: 100%;
+    padding-left: 1rem;
     display: flex;
     align-items: center;
     justify-self: center;
@@ -118,6 +119,7 @@
 .rpLink {
     width: 6.875rem;
     height: 2rem;
+    padding-right: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
