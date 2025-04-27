@@ -13,6 +13,35 @@ import LoadingSpinner from "../../components/loadingSpinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 
 
+// 공통 textfield sx 속성(style)
+const commonTextFieldSx = {
+    backgroundColor: "#E8F1F6",
+    width: "100%",
+    height: "2.5rem",
+    "& input": {
+      display: "flex",
+      alignItems: "center",
+      fontSize: "1.75rem",
+      height: "2.5rem",
+      padding: "0 1rem",
+    },
+    "& fieldset": { border: "none" },
+};
+
+// textfield 제목 sx 속성(style)
+const inputTitleSx = {
+    fontSize: "1.75rem",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginLeft: "1rem",
+};
+
+// error 문구 sx 속성(style)
+const errorTextSx = {
+    fontSize: "1.75rem",
+    textAlign: "right",
+};
+
 const MyProfileEdit = () => {
     const navigate = useNavigate(); // ✅ useNavigate 추가
     const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
@@ -104,12 +133,7 @@ const MyProfileEdit = () => {
                     <Box className={styles.inputBox}>
                         <Typography
                             className={styles.inputTitle} 
-                            sx={{
-                                fontSize: "1.75rem", 
-                                fontWeight: "bold",
-                                textAlign: "center",
-                                marginLeft: "1rem"
-                            }}
+                            sx={inputTitleSx}
                         >
                             닉네임
                         </Typography>
@@ -121,26 +145,14 @@ const MyProfileEdit = () => {
                             {...register('nickname', validationRules.nickname)}
                             error={!!errors.nickname}
                             onBlur={() => handleBlur("nickname")}
-                            sx={{
-                                backgroundColor: "#E8F1F6",
-                                width: "100%",
-                                height: "2.5rem",  // ✅ 입력창 높이 조정
-                                "& input": {
-                                    display: "flex",
-                                    alignItems: "center", // ✅ Y축 중앙 정렬
-                                    fontSize: "1.75rem",
-                                    height: "2.5rem", 
-                                    padding: "0 1rem", // ✅ 내부 여백 제거
-                                },
-                                "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
-                            }}
+                            sx={commonTextFieldSx}
                         />
                     </Box>
                     {errors.nickname && (
                         <Typography 
                             className={styles.errorText} 
                             color="error"
-                            sx={{ fontSize: "1.75rem", textAlign: "right" }}
+                            sx={errorTextSx}
                         >
                             {errors.nickname ? errors.nickname.message : "\u00A0"}
                         </Typography>
@@ -150,12 +162,7 @@ const MyProfileEdit = () => {
                     <Box className={styles.inputBox}>
                         <Typography
                             className={styles.inputTitle}
-                            sx={{
-                                fontSize: "1.75rem",
-                                fontWeight: "bold",
-                                textAlign: "center",
-                                marginLeft: "1rem"
-                            }}
+                            sx={inputTitleSx}
                         >
                             새 비밀번호
                         </Typography>
@@ -167,26 +174,14 @@ const MyProfileEdit = () => {
                             InputProps={{ autoComplete: "new-password" }}
                             error={!!errors.password}
                             onBlur={() => handleBlur("password")}
-                            sx={{
-                                backgroundColor: "#E8F1F6",
-                                width: "100%",
-                                height: "2.5rem",  // ✅ 입력창 높이 조정
-                                "& input": {
-                                    display: "flex",
-                                    alignItems: "center", // ✅ Y축 중앙 정렬
-                                    fontSize: "1.75rem",
-                                    height: "2.5rem", 
-                                    padding: "0 1rem", // ✅ 내부 여백 제거
-                                },
-                                "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
-                            }}
+                            sx={commonTextFieldSx}
                         />
                     </Box>
                     {errors.password && (
                             <Typography 
                                 className={styles.errorText}
                                 color="error" 
-                                sx={{ fontSize: "1.75rem", textAlign: "right" }}
+                                sx={errorTextSx}
                             >
                                 {errors.password ? errors.password.message : "\u00A0"}
                             </Typography>
@@ -196,12 +191,7 @@ const MyProfileEdit = () => {
                     <Box className={styles.inputBox}>
                         <Typography
                             className={styles.inputTitle}
-                            sx={{
-                                fontSize: "1.75rem",
-                                fontWeight: "bold",
-                                textAlign: "center",
-                                marginLeft: "1rem"
-                            }}
+                            sx={inputTitleSx}
                         >
                             비밀번호 확인
                         </Typography>
@@ -213,26 +203,14 @@ const MyProfileEdit = () => {
                             {...register("confirmPassword", validationRules.confirmPassword(getValues))}
                             error={!!errors.confirmPassword}
                             onBlur={() => handleBlur("confirmPassword")}
-                            sx={{
-                                backgroundColor: "#E8F1F6",
-                                width: "100%",
-                                height: "2.5rem",  // ✅ 입력창 높이 조정
-                                "& input": {
-                                    display: "flex",
-                                    alignItems: "center", // ✅ Y축 중앙 정렬
-                                    fontSize: "1.75rem",
-                                    height: "2.5rem", 
-                                    padding: "0 1rem", // ✅ 내부 여백 제거
-                                },
-                                "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
-                            }}
+                            sx={commonTextFieldSx}
                         />
                     </Box>
                     {errors.confirmPassword && (
                             <Typography
                                 className={styles.errorText} 
                                 color="error" 
-                                sx={{ fontSize: "1.75rem", textAlign: "right" }}
+                                sx={errorTextSx}
                             >
                                 {errors.confirmPassword ? errors.confirmPassword.message : "\u00A0"}
                             </Typography>
