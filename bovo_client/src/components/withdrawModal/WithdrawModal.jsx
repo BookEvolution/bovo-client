@@ -6,10 +6,21 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import styles from './WithdrawModal.module.css';
 
-const WithdrawModal = ({open, onClose, handleWithdraw}) => {
+const WithdrawModal = ({isOpen, onClose, handleWithdraw}) => {
+    // 회원탈퇴 modal btn관련 공통 style 선언
+    const btnSx = {
+        width: "12.5rem",
+        height: "5rem",
+        borderRadius: "1.5rem",
+        backgroundColor: "white",
+        fontSize: "2rem",
+        letterSpacing: "0",
+        textAlign: "center",
+    }
+
     return (
         <Dialog 
-            open={open} 
+            open={isOpen} 
             sx={{
                 "& .MuiDialog-paper": {
                     width: "41.25rem",               // 너비 변경
@@ -58,14 +69,8 @@ const WithdrawModal = ({open, onClose, handleWithdraw}) => {
                 <Button 
                     onClick={onClose}
                     sx={{
-                        width: "12.5rem",
-                        height: "5rem",
-                        borderRadius: "1.5rem",
-                        backgroundColor: "white",
+                        ...btnSx,
                         color: "#739CD4",
-                        fontSize: "2rem",
-                        letterSpacing: "0",
-                        textAlign: "center",
                     }}  
                 >
                     취소
@@ -73,14 +78,8 @@ const WithdrawModal = ({open, onClose, handleWithdraw}) => {
                 <Button 
                     onClick={handleWithdraw}
                     sx={{
-                        width: "12.5rem",
-                        height: "5rem",
-                        borderRadius: "1.5rem",
-                        backgroundColor: "white",
+                        ...btnSx,
                         color: "#FCA18D",
-                        fontSize: "2rem",
-                        letterSpacing: "0",
-                        textAlign: "center",
                     }} 
                 >
                     확인
@@ -92,7 +91,7 @@ const WithdrawModal = ({open, onClose, handleWithdraw}) => {
 
 // props 타입 정의
 WithdrawModal.propTypes = {
-    open: PropTypes.func.isRequired, 
+    isOpen: PropTypes.bool.isRequired, 
     onClose: PropTypes.func.isRequired,
     handleWithdraw: PropTypes.func.isRequired
 };

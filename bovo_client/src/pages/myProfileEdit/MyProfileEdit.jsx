@@ -9,18 +9,70 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useEditProfileMutation, useMyProfileEditQuery } from "../../api/UserApi";
 import ProfileBottomSheet from "../../components/profileImgBottomsheet/ProfileBottomSheet";
+import LoadingSpinner from "../../components/loadingSpinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
- 
+
+
+// 공통 textfield sx 속성(style)
+const commonTextFieldSx = {
+    backgroundColor: "#E8F1F6",
+    width: "100%",
+    height: "2.5rem",
+    "& input": {
+      display: "flex",
+      alignItems: "center",
+      fontSize: "1.75rem",
+      height: "2.5rem",
+      padding: "0 1rem",
+    },
+    "& fieldset": { border: "none" },
+};
+
+// textfield 제목 sx 속성(style)
+const inputTitleSx = {
+    fontSize: "1.75rem",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginLeft: "1rem",
+};
+
+// error 문구 sx 속성(style)
+const errorTextSx = {
+    fontSize: "1.75rem",
+    textAlign: "right",
+};
+
 const MyProfileEdit = () => {
     const navigate = useNavigate(); // ✅ useNavigate 추가
     const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
     const [selectedProfile, setSelectedProfile] = useState({ key: "", src: "" });
-    const {register, handleSubmit, watch, setValue, formState: {isSubmitting, errors }} = useForm({mode : "onChange", defaultValues: { nickname: "", password: "", confirmPassword: "" }}); //프로필 수정 유효성 검사
+    const {register, handleSubmit, setValue, getValues, formState: { errors, isValid }, trigger} = useForm({ mode: "onSubmit", defaultValues: { nickname: "", password: "", confirmPassword: "" }}); //프로필 수정 유효성 검사
     const { data: profileData, isLoading, isError } = useMyProfileEditQuery();
     // ✅ mutation 훅 사용
     const { mutate: editProfile, isPending } = useEditProfileMutation();
+    // 정규식 검정
+    const nameRegex = /^\S+$/;
+    const passwordRegex = /^[A-Za-z0-9]+$/;
+    // 유효성 검사 규칙
+    const validationRules = {
+        nickname: {
+            validate: (value) => (value.trim() === "" ? "닉네임을 입력하세요." : true), 
+            pattern: { value: nameRegex, message: "닉네임에 공백을 포함할 수 없습니다." },
+        },
+        password: {
+            pattern: { value: passwordRegex, message: "특수문자 및 공백을 포함할 수 없습니다." },
+        },
+        confirmPassword: (getValues) => ({
+            pattern: { value: passwordRegex, message: "특수문자 및 공백을 포함할 수 없습니다." },
+            validate: (value) => {
+                const password = getValues('password');
+                if (!password) return true; // password 비어있으면 confirmPassword 검사 안 함
+                return value === password || "비밀번호가 일치하지 않습니다.";
+            },
+        }),
+    };
 
-    // useEffect 삭제 대신 이 부분으로 처리
+    // 컴포넌트 첫 진입시 default value 입력 데이터
     useEffect(() => {
         if (profileData) {
             setValue("nickname", profileData.nickname || "");
@@ -28,11 +80,6 @@ const MyProfileEdit = () => {
         }
     }, [profileData, setValue]);
 
-    const nameRegex = /^\S+$/;
-    const passwordRegex = /^[A-Za-z0-9]+$/;
-
-    const password = watch("password");
-    const nickname = watch("nickname");
 
     const onSubmit = async (data) => {
         // 비밀번호가 비어있다면 null로 설정
@@ -53,8 +100,12 @@ const MyProfileEdit = () => {
         });
     };
 
+    const handleBlur = async (field) => {
+        await trigger(field);  // onBlur 시 유효성 검사 실행
+    };
+
     if (isLoading) {
-        return <Typography>로딩 중...</Typography>;
+        return <LoadingSpinner />;
     }
     
     if (isError) {
@@ -82,12 +133,7 @@ const MyProfileEdit = () => {
                     <Box className={styles.inputBox}>
                         <Typography
                             className={styles.inputTitle} 
-                            sx={{
-                                fontSize: "1.75rem", 
-                                fontWeight: "bold",
-                                textAlign: "center",
-                                marginLeft: "1rem"
-                            }}
+                            sx={inputTitleSx}
                         >
                             닉네임
                         </Typography>
@@ -96,31 +142,17 @@ const MyProfileEdit = () => {
                             variant="outlined"
                             fullWidth
                             InputProps={{ autoComplete: "username" }}
-                            {...register('nickname', {
-                                validate: (value) => (value.trim() === "" ? "닉네임을 입력하세요." : true), 
-                                pattern: { value: nameRegex, message: "닉네임에 공백을 포함할 수 없습니다." },
-                            })}
+                            {...register('nickname', validationRules.nickname)}
                             error={!!errors.nickname}
-                            sx={{
-                                backgroundColor: "#E8F1F6",
-                                width: "100%",
-                                height: "2.5rem",  // ✅ 입력창 높이 조정
-                                "& input": {
-                                    display: "flex",
-                                    alignItems: "center", // ✅ Y축 중앙 정렬
-                                    fontSize: "1.75rem",
-                                    height: "2.5rem", 
-                                    padding: "0 1rem", // ✅ 내부 여백 제거
-                                },
-                                "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
-                            }}
+                            onBlur={() => handleBlur("nickname")}
+                            sx={commonTextFieldSx}
                         />
                     </Box>
                     {errors.nickname && (
                         <Typography 
                             className={styles.errorText} 
                             color="error"
-                            sx={{ fontSize: "1.75rem", textAlign: "right" }}
+                            sx={errorTextSx}
                         >
                             {errors.nickname ? errors.nickname.message : "\u00A0"}
                         </Typography>
@@ -130,12 +162,7 @@ const MyProfileEdit = () => {
                     <Box className={styles.inputBox}>
                         <Typography
                             className={styles.inputTitle}
-                            sx={{
-                                fontSize: "1.75rem",
-                                fontWeight: "bold",
-                                textAlign: "center",
-                                marginLeft: "1rem"
-                            }}
+                            sx={inputTitleSx}
                         >
                             새 비밀번호
                         </Typography>
@@ -143,32 +170,18 @@ const MyProfileEdit = () => {
                             type="password"
                             placeholder="새 비밀번호를 입력하세요"
                             fullWidth
-                            {...register('password', {
-                                pattern: { value: passwordRegex, 
-                                        message: "특수문자 및 공백을 포함할 수 없습니다." },
-                            })}
+                            {...register('password', validationRules.password)}
                             InputProps={{ autoComplete: "new-password" }}
                             error={!!errors.password}
-                            sx={{
-                                backgroundColor: "#E8F1F6",
-                                width: "100%",
-                                height: "2.5rem",  // ✅ 입력창 높이 조정
-                                "& input": {
-                                    display: "flex",
-                                    alignItems: "center", // ✅ Y축 중앙 정렬
-                                    fontSize: "1.75rem",
-                                    height: "2.5rem", 
-                                    padding: "0 1rem", // ✅ 내부 여백 제거
-                                },
-                                "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
-                            }}
+                            onBlur={() => handleBlur("password")}
+                            sx={commonTextFieldSx}
                         />
                     </Box>
                     {errors.password && (
                             <Typography 
                                 className={styles.errorText}
                                 color="error" 
-                                sx={{ fontSize: "1.75rem", textAlign: "right" }}
+                                sx={errorTextSx}
                             >
                                 {errors.password ? errors.password.message : "\u00A0"}
                             </Typography>
@@ -178,12 +191,7 @@ const MyProfileEdit = () => {
                     <Box className={styles.inputBox}>
                         <Typography
                             className={styles.inputTitle}
-                            sx={{
-                                fontSize: "1.75rem",
-                                fontWeight: "bold",
-                                textAlign: "center",
-                                marginLeft: "1rem"
-                            }}
+                            sx={inputTitleSx}
                         >
                             비밀번호 확인
                         </Typography>
@@ -192,71 +200,39 @@ const MyProfileEdit = () => {
                             placeholder="비밀번호를 다시 입력하세요"
                             fullWidth
                             InputProps={{ autoComplete: "new-password" }}
-                            {...register("confirmPassword", {
-                                pattern: { value: passwordRegex, message: "특수문자 및 공백을 포함할 수 없습니다." },
-                                validate: (value) => password === "" || value === password || "비밀번호가 일치하지 않습니다.",
-                            })}
+                            {...register("confirmPassword", validationRules.confirmPassword(getValues))}
                             error={!!errors.confirmPassword}
-                            sx={{
-                                backgroundColor: "#E8F1F6",
-                                width: "100%",
-                                height: "2.5rem",  // ✅ 입력창 높이 조정
-                                "& input": {
-                                    display: "flex",
-                                    alignItems: "center", // ✅ Y축 중앙 정렬
-                                    fontSize: "1.75rem",
-                                    height: "2.5rem", 
-                                    padding: "0 1rem", // ✅ 내부 여백 제거
-                                },
-                                "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
-                            }}
+                            onBlur={() => handleBlur("confirmPassword")}
+                            sx={commonTextFieldSx}
                         />
                     </Box>
                     {errors.confirmPassword && (
                             <Typography
                                 className={styles.errorText} 
                                 color="error" 
-                                sx={{ fontSize: "1.75rem", textAlign: "right" }}
+                                sx={errorTextSx}
                             >
                                 {errors.confirmPassword ? errors.confirmPassword.message : "\u00A0"}
                             </Typography>
                     )}
                 </Box>
-                {!isPending ? (
-                    <Button 
-                        className={styles.editBtn}
-                        type="submit"
-                        sx={{
-                            borderRadius: "1.5625rem",
-                            backgroundColor: "#BDE5F1",
-                            fontSize: "2.1875rem",
-                            color: "#FFFFFF",
-                            "&.Mui-disabled": {  // ✅ 비활성화 시 글자색 강제 설정
-                                color: "#FFFFFF",
-                                backgroundColor: "#ccc", // 배경색도 유지
-                                opacity: 1, // 기본적으로 흐려지는 효과 제거
-                            }
-                        }}
-                        disabled={(nickname.trim() === "" || isSubmitting) 
-                                    || (password !== "" && errors.confirmPassword)}
-                    >
-                        확인
-                    </Button>
-                ) : (
-                    <Button 
-                        className={styles.editBtn}
-                        type="button"
-                        sx={{
-                            borderRadius: "1.5625rem",
-                            backgroundColor: "#D9D9D9",
-                            fontSize: "2.1875rem",
-                            color: "#FFFFFF",
-                        }}
-                        disabled={true}
-                    >
-                        전송 중...
-                    </Button>
-                )}
+                <Button 
+                    className={styles.editBtn}
+                    type={isPending ? "button" : "submit"}
+                    sx={{
+                        borderRadius: "1.5625rem",
+                        backgroundColor: "#BDE5F1",
+                        fontSize: "2.1875rem",
+                        color: "#FFFFFF",
+                        "&.Mui-disabled": {  // ✅ 비활성화 시 글자색 강제 설정
+                            backgroundColor: "#D9D9D9", // 배경색도 유지
+                            opacity: 1, // 기본적으로 흐려지는 효과 제거
+                        }
+                    }}
+                    disabled={isPending || !isValid}
+                >
+                    {isPending ? "전송 중..." : "확인"}
+                </Button>
             </form>
             <ProfileBottomSheet 
                 open={bottomSheetOpen} 

@@ -8,6 +8,7 @@ import BedgeInfoModal from "../../components/bedgeInfoModal/BedgeInfoModal";
 import bedgeImages from "../../constant/BedgeImg";
 import { useRewardsQuery } from "../../api/RewardService";
 import QuestList from "../../components/quest/questList/QuestList";
+import LoadingSpinner from '../../components/loadingSpinner/LoadingSpinner';
 
 const Exp = () => {
     const [openQuestModal, setOpenQuestModal] = useState(false); // quest info 모달 상태 추가
@@ -25,25 +26,13 @@ const Exp = () => {
     }, [rewardData]);  // rewardData가 변경될 때만 실행
 
     // questInfoModal 관련 함수
-    const handleOpenQuestModal = () => {
-        setOpenQuestModal(true);
-    };
-
-    const handleCloseQuestModal = () => {
-        setOpenQuestModal(false);
-    };
+    const handleOpenQuestModal = (open) => setOpenQuestModal(open);
 
     // bedgeInfoModal 관련 함수
-    const handleOpenBedgeModal = () => {
-        setOpenBedgeModal(true);
-    };
-
-    const handleCloseBedgeModal = () => {
-        setOpenBedgeModal(false);
-    };
+    const handleOpenBedgeModal = (open) => setOpenBedgeModal(open);
 
     // 로딩 중 또는 에러 처리
-    if (isLoading) return <Typography>로딩 중...</Typography>;
+    if (isLoading) return <LoadingSpinner />;
     if (isError) return <Typography>데이터를 불러오는 데 실패했습니다.</Typography>;
 
     return (
@@ -56,7 +45,7 @@ const Exp = () => {
                     >
                         퀘스트 항목
                     </Typography>
-                    <Box className={styles.iconWrapper} onClick={handleOpenQuestModal}>
+                    <Box className={styles.iconWrapper} onClick={() => handleOpenQuestModal(true)}>
                         <InfoIcon sx={{fontSize: "2rem"}}/>
                     </Box>
                 </Box>
@@ -74,7 +63,7 @@ const Exp = () => {
                     >
                         지난주 독서 성과
                     </Typography>
-                    <Box className={styles.iconWrapper} onClick={handleOpenBedgeModal}>
+                    <Box className={styles.iconWrapper} onClick={() => handleOpenBedgeModal(true)}>
                         <InfoIcon sx={{fontSize: "2rem"}}/>
                     </Box>
                 </Box>
@@ -109,8 +98,8 @@ const Exp = () => {
                     </Box>
                 </Box>
             </Box>
-            <QuestInfoModal open={openQuestModal} onClose={handleCloseQuestModal} />
-            <BedgeInfoModal open={openBedgeModal} onClose={handleCloseBedgeModal} />
+            <QuestInfoModal open={openQuestModal} onClose={() => handleOpenQuestModal(false)} />
+            <BedgeInfoModal open={openBedgeModal} onClose={() => handleOpenBedgeModal(false)} />
         </Box>
     );
 };

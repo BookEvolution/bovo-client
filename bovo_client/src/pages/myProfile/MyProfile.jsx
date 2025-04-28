@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'; // PropTypes 임포트
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -11,7 +10,7 @@ import { useMyProfileQuery } from '../../api/UserApi';
 import { withdraw } from '../../api/AccountManager.js';
 import bedgeImages from '../../constant/BedgeImg.js';
 
-// MyProfile 페이지지
+// MyProfile 페이지
 const MyProfile = () => {
     const navigate = useNavigate();
     // 회원 탈퇴 모달 상태 관리
@@ -20,7 +19,8 @@ const MyProfile = () => {
     const { data: userData, isLoading, isError, error } = useMyProfileQuery();
 
     // ✅ 뱃지 이미지 가져오기
-    const userMedalSrc = bedgeImages.find((item) => item.key === userData?.medal)?.src;
+    const foundMedal = bedgeImages.find((item) => item.key === userData?.medal);
+    const userMedalSrc = foundMedal ? foundMedal.src : null;
 
     // 회원 탈퇴 모달 열기
     const openWithdrawModal = () => {
@@ -51,7 +51,7 @@ const MyProfile = () => {
     };
 
     if (isLoading) return <p>로딩 중...</p>;
-    if (isError) return <p>{error}</p>;
+    if (isError) return <p>{error?.message || "오류가 발생했습니다."}</p>;
 
     return (
         <Container className={styles.myProfileContainer}>
@@ -91,15 +91,9 @@ const MyProfile = () => {
                 </Button>
             </Box>
             { isWithdrawModalOpen && 
-                <WithdrawModal open={openWithdrawModal} onClose={closeWithdrawModal} handleWithdraw={handleWithdraw}/>}
+                <WithdrawModal isOpen={isWithdrawModalOpen} onClose={closeWithdrawModal} handleWithdraw={handleWithdraw}/>}
         </Container>
     );
-};
-
-// props 타입 정의
-ProfileInfoItem.propTypes = {
-    title: PropTypes.string.isRequired, // title은 string 타입이고 필수 props
-    content: PropTypes.node.isRequired, // content는 string 또는 JSX 요소(ReactNode) 가능
 };
 
 export default MyProfile;

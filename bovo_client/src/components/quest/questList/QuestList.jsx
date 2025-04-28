@@ -7,6 +7,7 @@ import QuestBtn from '../questBtn/QuestBtn';
 import { increaseExp } from '../../../api/RewardService';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../../../store/queryClient/queryClient';
+import { missionKeys } from '../../../constant/QuestList';
 
 const QuestList = ({ quest }) => {
 
@@ -23,62 +24,18 @@ const QuestList = ({ quest }) => {
         }
     });
 
-    // 미션 제목 반환
-    const getMissionTitle = (missionId) => {
-        switch (missionId) {
-            case 1:
-                return "출석";
-            case 2:
-                return "커뮤니티 참여";
-            case 3:
-                return "책 등록";
-            default:
-                return "독서 기록";
-        }
-    };
+    // 📌 mission 정보 가져오기
+    const mission = missionKeys[quest.mission_id] || {};
 
-    // 미션별 cnt 값 반환
-    const getMissionCount = (quest) => {
-        switch (quest.mission_id) {
-            case 1:
-                return quest.login_cnt;
-            case 2:
-                return quest.community_cnt;
-            case 3:
-                return quest.book_reg_cnt;
-            case 4:
-                return quest.note_cnt;
-            default:
-                return 0;
-        }
-    };
-
-    // 미션 완료 여부 반환
-    const isMissionCompleted = (quest) => {
-        switch (quest.mission_id) {
-            case 1:
-                return quest.is_login_completed;
-            case 2:
-                return quest.is_community_completed;
-            case 3:
-                return quest.is_book_reg_completed;
-            case 4:
-                return quest.is_note_completed;
-            default:
-                return false;
-        }
-    };
-
-    const currentCount = getMissionCount(quest);
-    const isCompleted = isMissionCompleted(quest);
+    const title = mission.title;
+    const currentCount = quest?.[mission.countKey];
+    const isCompleted = quest?.[mission.completedKey] === 7 ? true : false;
     const progress = isCompleted ? 100 : (currentCount / 7) * 100; // 7회 기준 진행률 계산
 
-    // 확인 버튼 클릭 시 데이터 요청
-     // ✅ 버튼 클릭 시 mutation 호출
-     const handleQuestButtonClick = () => {
-        if (!isCompleted && currentCount === 7 && !isMutating) {
-            increaseExpMutate();
-        }
+    // 확인 버튼 클릭 시 mutation 호출
+    const handleQuestButtonClick = () => {
+        if (isMutating) return;
+        increaseExpMutate();
     };
 
     return (
@@ -88,7 +45,7 @@ const QuestList = ({ quest }) => {
                     sx={{fontSize: "1.75rem", display: "flex", alignItems: "center"}} 
                     fontWeight="bold"
                 >
-                    {getMissionTitle(quest.mission_id)} &nbsp;
+                    {title} &nbsp;
                 </Typography>
                 <Typography
                     sx={{

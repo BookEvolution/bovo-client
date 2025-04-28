@@ -10,7 +10,7 @@ const ServiceInfo = () => {
             <Box className={styles.logoBox}>
                 <img src={logo} alt="logo" />
             </Box>
-            <Container className={styles.infoContentContainer}>
+            <Box className={styles.infoContentContainer}>
                 <Box className={styles.versionInfo}>
                     <Typography sx={{ fontSize: "1.75rem" }} fontWeight="bold">
                         버전 정보
@@ -82,7 +82,7 @@ const ServiceInfo = () => {
                         2. 법적 의무가 있는 경우, 해당 기간 동안 보관 후 삭제
                     </Typography>
                 </Box>
-            </Container>
+            </Box>
         </Container>
     );
 };

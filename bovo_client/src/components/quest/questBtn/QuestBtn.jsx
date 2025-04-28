@@ -1,36 +1,37 @@
 import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
 import styles from './QuestBtn.module.css';
+import { QuestButtonStyle } from '../../../constant/QuestBtnStyle';
+
+// 버튼 스타일을 결정하는 헬퍼 함수
+const getButtonStyle = (isCompleted, currentCount) => {
+    if (isCompleted && currentCount === 7) return QuestButtonStyle.completeBtn;
+    if (!isCompleted && currentCount === 7) return QuestButtonStyle.confirmBtn;
+    return QuestButtonStyle.notAcquiredBtn;
+};
 
 const QuestBtn = ({ isCompleted, currentCount, onClick }) => {
-    let backgroundColor, color, text;
+    // 버튼 스타일과 텍스트 추출
+    const { btnSx, btnText, isNotConfirm } = getButtonStyle(isCompleted, currentCount);
 
-    if (isCompleted && currentCount === 7) {
-        backgroundColor = "#FFFFFF";
-        color = "#739CD4";
-        text = "퀘스트 달성";
-    } else if (!isCompleted && currentCount === 7) {
-        backgroundColor = "#739CD4";
-        color = "#FFFFFF";
-        text = "확인";
-    } else if (!isCompleted && currentCount !== 7) {
-        backgroundColor = "#E8F1F6";
-        color = "#8D90A0";
-        text = "미획득";
-    }
+    const handleClick = () => {
+        if (isNotConfirm) {
+            onClick(); // onClick이 설정되어 있을 경우 호출
+        }
+    };
 
     return (
         <Button
             className={styles.questBtn}
-            onClick={onClick}
+            onClick={handleClick}
             sx={{
                 borderRadius: "0.625rem",
-                backgroundColor: backgroundColor,
-                color: color,
                 fontSize: "1.25rem",
+                ...btnSx,
             }}
+            disabled={!isNotConfirm}
         >
-            {text}
+            {btnText}
         </Button>
     );
 };
