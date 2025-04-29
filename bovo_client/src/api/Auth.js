@@ -3,8 +3,10 @@ import axios from "axios";
 let requestInterceptor = null; // 인터셉터 저장 변수
 let onUnauthorizedCallback = null; // 콜백 저장
 
+const apiKey = import.meta.env.VITE_BACKEND_API_URL;
+
 const api = axios.create({
-  baseURL: "http://54.180.29.26:8080",
+  baseURL: `${apiKey}`,
   withCredentials: true, // 쿠키 포함
 });
 

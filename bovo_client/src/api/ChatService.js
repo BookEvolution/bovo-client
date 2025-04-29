@@ -2,10 +2,12 @@ import { Client } from "@stomp/stompjs";
 
 let client = null;
 
+const wsKey = import.meta.env.VITE_WS_API_URL;
+
 // WebSocket 연결 함수
 export const connectChat = (roomId, onMessageReceived) => {
     client = new Client({
-        brokerURL: "wss://54.180.29.26:8080/ws-chat",
+        brokerURL: `${wsKey}`,
         reconnectDelay: 5000, // 자동 재연결
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
