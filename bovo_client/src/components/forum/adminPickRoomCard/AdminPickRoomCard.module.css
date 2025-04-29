@@ -23,34 +23,6 @@
     justify-content: center;
 }
 
-.recruiteComplete {
-    width: 8rem;
-    height: 3rem;
-    border-radius: 1.5625rem;
-    background-color: #F3E38B;
-    font-size: 1.5rem;
-    font-weight: 500;
-    letter-spacing: 0.015rem;
-    position: absolute;
-    right: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.forumRecruiting {
-    width: 8rem;
-    height: 3rem;
-    border-radius: 1.5625rem;
-    font-size: 1.5rem;
-    font-weight: 500;
-    letter-spacing: 0.015rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-
 .bottomContainer {
     width: 39rem;
     height: 10rem;
