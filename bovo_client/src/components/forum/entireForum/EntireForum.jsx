@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import GroupIcon from '@mui/icons-material/Group';
 import styles from "./EntireForum.module.css";
 import { useEffect, useState } from "react";
 import JoinChatRoomModal from "../joinChatRoomModal/JoinChatRoomModal";
 import { fetchChatRoomData } from "../../../api/ForumService";
 import AdminPickRoomCard from '../adminPickRoomCard/AdminPickRoomCard';
 import SearchBar from '../searchBar/SearchBar';
+import ForumCard from '../forumCard/ForumCard';
 
 const EntireForum = ({ chatrooms }) => {
     const [open, setOpen] = useState(false); // 모달 상태
@@ -67,66 +67,8 @@ const EntireForum = ({ chatrooms }) => {
             </Box>
             <Box className={styles.forumListContainer}>
             {filteredChatrooms.filter(room => room.admin !== true).map((room) => (
-                    <Box key={room.id} className={styles.forumList} onClick={() => handleOpen(room.id)}>
-                        <Box className={styles.forumBook}>
-                            <img src={room.book_info.book_img} alt="책 이미지" />
-                        </Box>
-                        <Typography
-                            className={styles.recruiting}
-                            sx={{
-                                backgroundColor: room.group_info.current_people === room.group_info.limit_people
-                                    ? "#E8F1F6" // 모집완료 색상
-                                    : "#F3E38B", // 모집중 색상
-                                position: "absolute",
-                                right: "1rem",
-                                bottom: "11rem",
-                            }}
-                        >
-                            {room.group_info.current_people === room.group_info.limit_people
-                                ? "모집완료"
-                                : "모집중"}
-                        </Typography>
-                        <div className={styles.forumBottomContainer}>
-                            <Typography
-                                className={styles.forumInfoText} 
-                                sx={{
-                                    textOverflow: "ellipsis", 
-                                    fontSize: "1.75rem", 
-                                    letterSpacing: "0.0175rem", 
-                                    fontWeight: 500, 
-                                    textAlign: "left" 
-                                    }}
-                            >
-                                {room.chatroom_name}
-                            </Typography>
-                            <Typography
-                                className={styles.forumInfoText} 
-                                sx={{ 
-                                     textOverflow: "ellipsis", 
-                                     fontSize: "1.25rem", 
-                                     fontWeight: 500, 
-                                     letterSpacing: "0.0125rem" 
-                                    }}
-                            >
-                                {room.chatroom_ds}
-                            </Typography>
-                            <Box className={styles.groupLimitContainer}>
-                                <Box className={styles.IconWrapper}>
-                                    <GroupIcon sx={{ fontSize: "2rem" }} />
-                                </Box>
-                                <Typography sx={{ fontSize: "1.75rem", fontWeight: 500, lineHeight: "0.0125rem" }}>
-                                    {room.group_info.current_people}
-                                </Typography>
-                                <Typography sx={{ fontSize: "1.75rem", fontWeight: 500, lineHeight: "0.0125rem" }}>
-                                    /
-                                </Typography>
-                                <Typography sx={{ fontSize: "1.75rem", fontWeight: 500, lineHeight: "0.0125rem" }}>
-                                    {room.group_info.limit_people}
-                                </Typography>
-                            </Box>
-                        </div>
-                    </Box>
-                ))}
+                <ForumCard key={room.id} room={room} onClick={handleOpen} />
+            ))}
             </Box>
             <JoinChatRoomModal open={open} onClose={handleClose} chatRoomData={chatRoomData}/>
         </Box>
