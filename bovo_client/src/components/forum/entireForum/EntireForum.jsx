@@ -9,6 +9,7 @@ import styles from "./EntireForum.module.css";
 import { useEffect, useState } from "react";
 import JoinChatRoomModal from "../joinChatRoomModal/JoinChatRoomModal";
 import { fetchChatRoomData } from "../../../api/ForumService";
+import AdminPickRoomCard from '../adminPickRoomCard/AdminPickRoomCard';
 
 const EntireForum = ({ chatrooms }) => {
     const [open, setOpen] = useState(false); // 모달 상태
@@ -48,59 +49,13 @@ const EntireForum = ({ chatrooms }) => {
     };
 
     // admin이 true인 항목을 필터링
-    const adminPick = chatrooms.filter(room => room.admin === true);
+    const adminPick = chatrooms.find(room => room.admin === true);
 
     return (
         <Box className={styles.entireForumContainer}>
             {/* adminPickWrapper에 admin이 true인 항목만 표시 */}
-            {adminPick.length > 0 && (
-                <Box className={styles.adminPickWrapper} onClick={() => handleOpen(adminPick[0].id)}>
-                    <Box>
-                        <img src={adminPick[0].book_info.book_img} alt={adminPick[0].book_info.book_name} />
-                    </Box>
-                    <Box
-                        sx={{
-                            backgroundColor: adminPick[0].group_info.current_people === adminPick[0].group_info.limit_people
-                                ? "#E8F1F6" // 모집완료 색상
-                                : "#F3E38B", // 모집중 색상
-                        }}
-                        className={styles.recruiting}
-                    >
-                        {adminPick[0].group_info.current_people === adminPick[0].group_info.limit_people
-                            ? "모집완료"
-                            : "모집중"}
-                    </Box>
-                    <div className={styles.bottomContainer}>
-                        <Typography sx={{ fontSize: "1.75rem", letterSpacing: "0.0175rem", fontWeight: 500, textAlign: "left" }}>
-                            {adminPick[0].chatroom_name}
-                        </Typography>
-                        <Box className={styles.dueDateWrapper}>
-                            <Typography sx={{ fontSize: "1.25rem", fontWeight: 500, letterSpacing: "0.0125rem" }}>
-                                {adminPick[0].duration.start_date}
-                            </Typography>
-                            <Typography sx={{ fontSize: "1.25rem", fontWeight: 500, letterSpacing: "0.0125rem" }}>
-                                ~
-                            </Typography>
-                            <Typography sx={{ fontSize: "1.25rem", fontWeight: 500, letterSpacing: "0.0125rem" }}>
-                                {adminPick[0].duration.end_date}
-                            </Typography>
-                        </Box>
-                        <Box className={styles.groupLimitContainer}>
-                            <Box className={styles.IconWrapper}>
-                                <GroupIcon sx={{ fontSize: "2rem" }} />
-                            </Box>
-                            <Typography sx={{ fontSize: "1.75rem", fontWeight: 500, lineHeight: "0.0125rem" }}>
-                                {adminPick[0].group_info.current_people}
-                            </Typography>
-                            <Typography sx={{ fontSize: "1.75rem", fontWeight: 500, lineHeight: "0.0125rem" }}>
-                                /
-                            </Typography>
-                            <Typography sx={{ fontSize: "1.75rem", fontWeight: 500, lineHeight: "0.0125rem" }}>
-                                {adminPick[0].group_info.limit_people}
-                            </Typography>
-                        </Box>
-                    </div>
-                </Box>
+            {adminPick && (
+                <AdminPickRoomCard adminPickRoom={adminPick} handleOpen={handleOpen} />
             )}
             <Box>
                 <Typography
@@ -239,5 +194,5 @@ const chatroomPropType = PropTypes.shape({
 
 // EntireForum 컴포넌트의 PropTypes 설정
 EntireForum.propTypes = {
-chatrooms: PropTypes.arrayOf(chatroomPropType).isRequired,
+    chatrooms: PropTypes.arrayOf(chatroomPropType).isRequired,
 };
