@@ -7,7 +7,7 @@ import JoinChatRoomModal from "../joinChatRoomModal/JoinChatRoomModal";
 import { fetchChatRoomData } from "../../../api/ForumService";
 import AdminPickRoomCard from '../adminPickRoomCard/AdminPickRoomCard';
 import SearchBar from '../searchBar/SearchBar';
-import ForumCard from '../forumCard/ForumCard';
+import ForumList from '../forumList/ForumList';
 
 const EntireForum = ({ chatrooms }) => {
     const [open, setOpen] = useState(false); // 모달 상태
@@ -66,9 +66,7 @@ const EntireForum = ({ chatrooms }) => {
                 <SearchBar onSearch={handleSearch} />
             </Box>
             <Box className={styles.forumListContainer}>
-            {filteredChatrooms.filter(room => room.admin !== true).map((room) => (
-                <ForumCard key={room.id} room={room} onClick={handleOpen} />
-            ))}
+            <ForumList chatrooms={filteredChatrooms} onCardClick={handleOpen} />
             </Box>
             <JoinChatRoomModal open={open} onClose={handleClose} chatRoomData={chatRoomData}/>
         </Box>
