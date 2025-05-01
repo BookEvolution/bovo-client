@@ -18,6 +18,49 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearBook } from "../../store/bookForum/BookSlice";
 import { useMutation } from "@tanstack/react-query";
 
+// 공통 스타일
+const inputTitleStyle = {
+    fontSize: "1.5rem",
+    textAlign: "center",
+};
+  
+const textFieldStyle = {
+    width: "100%",
+    height: "3rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    "& input": {
+      display: "flex",
+      alignItems: "center",
+      fontSize: "1.5rem",
+      height: "2.5rem",
+      padding: "0 1rem",
+    },
+    "& fieldset": { border: "none" },
+};
+  
+const datePickerStyle = {
+    width: "100%",
+    "& .MuiOutlinedInput-root": {
+      height: "3rem",
+      padding: "0",
+      display: "flex",
+      alignItems: "center",
+    },
+    "& input": {
+      fontSize: "1.2rem",
+      textAlign: "center",
+      padding: "0",
+      height: "3rem",
+    },
+    "& fieldset": {
+      border: "none",
+      height: "100%",
+    },
+};
+
+
 const ForumMake = () => {
     const book = useSelector((state) => state.book.book); // Redux에서 book 정보 가져오기
     const dispatch = useDispatch();
@@ -99,9 +142,8 @@ const ForumMake = () => {
                 <Typography
                     className={styles.inputTitle} 
                     sx={{
-                        fontSize: "1.5rem", 
+                        ...inputTitleStyle,
                         color: "rgba(0, 0, 0, 0.5)",
-                        textAlign: "center",
                     }}
                 >
                     방 제목
@@ -112,20 +154,8 @@ const ForumMake = () => {
                     value={chatName} 
                     onChange={(e) => setChatName(e.target.value)}
                     sx={{
+                        ...textFieldStyle,
                         backgroundColor: "#E8F1F6",
-                        width: "100%",
-                        height: "3rem",  // ✅ 입력창 높이 조정
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        "& input": {
-                            display: "flex",
-                            alignItems: "center", // ✅ Y축 중앙 정렬
-                            fontSize: "1.5rem",
-                            height: "2.5rem", 
-                            padding: "0 1rem", // ✅ 내부 여백 제거
-                        },
-                        "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
                     }}
                 />
             </Box>
@@ -133,9 +163,8 @@ const ForumMake = () => {
                 <Typography
                     className={styles.inputTitle} 
                     sx={{
-                        fontSize: "1.5rem", 
+                        ...inputTitleStyle,
                         color: "rgba(0, 0, 0, 0.5)",
-                        textAlign: "center",
                     }}
                 >
                     세부 설명
@@ -148,20 +177,8 @@ const ForumMake = () => {
                     value={chatDetail} 
                     onChange={(e) => setChatDetail(e.target.value)} 
                     sx={{
+                        ...textFieldStyle,
                         backgroundColor: "#E8F1F6",
-                        width: "100%",
-                        height: "5rem",  // ✅ 입력창 높이 조정
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        "& input": {
-                            display: "flex",
-                            alignItems: "center", // ✅ Y축 중앙 정렬
-                            fontSize: "1.5rem",
-                            height: "2.5rem", 
-                            padding: "0 1rem", // ✅ 내부 여백 제거
-                        },
-                        "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
                     }}
                 />
             </Box>
@@ -169,9 +186,8 @@ const ForumMake = () => {
                 <Typography
                     className={styles.inputTitle} 
                     sx={{
-                        fontSize: "1.5rem", 
+                        ...inputTitleStyle,
                         color: "rgba(0, 0, 0, 0.5)",
-                        textAlign: "center",
                     }}
                 >
                     기간 설정
@@ -183,25 +199,7 @@ const ForumMake = () => {
                         onChange={(newValue) => setStartDate(newValue)}
                         format="YYYY.MM.DD" // 날짜 형식 변경
                         disablePortal
-                        sx={{
-                            width: "100%",
-                            "& .MuiOutlinedInput-root": { // DatePicker의 input 스타일 수정
-                                height: "3rem", // 전체 높이 조정
-                                padding: "0", // 내부 패딩 제거
-                                display: "flex",
-                                alignItems: "center",
-                            },
-                            "& input": { // 실제 입력 필드 스타일 조정
-                                fontSize: "1.2rem",
-                                textAlign: "center",
-                                padding: "0", // 내부 패딩 제거
-                                height: "3rem", // 입력 필드 높이 맞추기
-                            },
-                            "& fieldset": { // 아웃라인 박스 크기 조정
-                                border: "none",
-                                height: "100%", // fieldset이 입력 필드보다 커지는 현상 방지
-                            },
-                        }}
+                        sx={datePickerStyle}
                         slotProps={{
                             textField: {
                                 inputProps: { 'aria-hidden': 'false' }, // 접근성 오류 방지
@@ -226,25 +224,7 @@ const ForumMake = () => {
                         onChange={(newValue) => setEndDate(newValue)}
                         format="YYYY.MM.DD"
                         disablePortal
-                        sx={{
-                            width: "100%",
-                            "& .MuiOutlinedInput-root": { // DatePicker의 input 스타일 수정
-                                height: "3rem", // 전체 높이 조정
-                                padding: "0", // 내부 패딩 제거
-                                display: "flex",
-                                alignItems: "center",
-                            },
-                            "& input": { // 실제 입력 필드 스타일 조정
-                                fontSize: "1.2rem",
-                                textAlign: "center",
-                                padding: "0", // 내부 패딩 제거
-                                height: "3rem", // 입력 필드 높이 맞추기
-                            },
-                            "& fieldset": { // 아웃라인 박스 크기 조정
-                                border: "none",
-                                height: "100%", // fieldset이 입력 필드보다 커지는 현상 방지
-                            },
-                        }}
+                        sx={datePickerStyle}
                         slotProps={{
                             textField: {
                                 inputProps: { 'aria-hidden': 'false' }, // 접근성 오류 방지
@@ -255,11 +235,10 @@ const ForumMake = () => {
             </Box>
             <Box className={styles.inputBox}>
                 <Typography
-                    className={styles.inputTitle} 
+                    className={styles.inputTitle}
                     sx={{
-                        fontSize: "1.5rem", 
+                        ...inputTitleStyle,
                         color: "rgba(0, 0, 0, 0.5)",
-                        textAlign: "center",
                     }}
                 >
                     모집 인원
@@ -281,20 +260,8 @@ const ForumMake = () => {
                         pattern: "[0-9]*", // 모바일 키보드에서 숫자 키패드가 뜨도록 설정
                     }}
                     sx={{
+                        ...textFieldStyle,
                         backgroundColor: "#E8F1F6",
-                        width: "100%",
-                        height: "3rem",  // ✅ 입력창 높이 조정
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        "& input": {
-                            display: "flex",
-                            alignItems: "center", // ✅ Y축 중앙 정렬
-                            fontSize: "1.5rem",
-                            height: "2.5rem", 
-                            padding: "0 1rem", // ✅ 내부 여백 제거
-                        },
-                        "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
                     }}
                 />
             </Box>
@@ -306,7 +273,7 @@ const ForumMake = () => {
                 />
                 {/* 비밀방 설정 */}
                 <Box 
-                    className={styles.inputBox}
+                    className={styles.secretInputBox}
                     sx={{
                         backgroundColor: isPrivate ? "#E8F1F6": "#D9D9D9"
                     }}
@@ -314,9 +281,8 @@ const ForumMake = () => {
                     <Typography
                         className={styles.inputTitle} 
                         sx={{
-                            fontSize: "1.5rem", 
+                            ...inputTitleStyle,
                             color: isPrivate ? "rgba(0, 0, 0, 0.5)" : "#000000",
-                            textAlign: "center",
                         }}
                     >
                         질문
@@ -328,26 +294,14 @@ const ForumMake = () => {
                         value={secretQuestion} 
                         onChange={(e) => setSecretQuestion(e.target.value)}
                         sx={{
+                            ...textFieldStyle,
                             backgroundColor: isPrivate ? "#E8F1F6": "#D9D9D9",
-                            width: "100%",
-                            height: "3rem",  // ✅ 입력창 높이 조정
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            "& input": {
-                                display: "flex",
-                                alignItems: "center", // ✅ Y축 중앙 정렬
-                                fontSize: "1.5rem",
-                                height: "2.5rem", 
-                                padding: "0 1rem", // ✅ 내부 여백 제거
-                            },
-                            "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
                         }}
                     />
                     
                 </Box>
                 <Box 
-                    className={styles.inputBox}
+                    className={styles.secretInputBox}
                     sx={{
                         backgroundColor: isPrivate ? "#E8F1F6": "#D9D9D9"
                     }}
@@ -355,9 +309,8 @@ const ForumMake = () => {
                     <Typography
                         className={styles.inputTitle} 
                         sx={{
-                            fontSize: "1.5rem", 
+                            ...inputTitleStyle,
                             color: isPrivate ? "rgba(0, 0, 0, 0.5)" : "#000000",
-                            textAlign: "center",
                         }}
                     >
                         답변
@@ -369,20 +322,8 @@ const ForumMake = () => {
                         value={secretAnswer} 
                         onChange={(e) => setSecretAnswer(e.target.value)}
                         sx={{
+                            ...textFieldStyle,
                             backgroundColor: isPrivate ? "#E8F1F6": "#D9D9D9",
-                            width: "100%",
-                            height: "3rem",  // ✅ 입력창 높이 조정
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            "& input": {
-                                display: "flex",
-                                alignItems: "center", // ✅ Y축 중앙 정렬
-                                fontSize: "1.5rem",
-                                height: "2.5rem", 
-                                padding: "0 1rem", // ✅ 내부 여백 제거
-                            },
-                            "& fieldset": { border: "none" }, // ✅ 아웃라인 제거
                         }}
                     />
                 </Box>

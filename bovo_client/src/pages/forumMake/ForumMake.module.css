@@ -70,6 +70,16 @@
     gap: 0.625rem;
 }
 
+.secretInputBox {
+    width: 38rem;
+    height: 3rem;
+    padding: 1.5rem 2rem;
+    border-radius: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .makeRoomBtn {
     width: 20rem;
     height: 6rem;
