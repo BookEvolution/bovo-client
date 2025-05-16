@@ -1,10 +1,10 @@
-// 책 상태 선택 후 기록하기 버튼 클릭 시 나타나는 등록 완료 모달
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+import ImageNotSupportedRoundedIcon from "@mui/icons-material/ImageNotSupportedRounded"; // 추가
 
 const NoteCreateModal = ({ open, onClose, book }) => {
     const navigate = useNavigate();
@@ -43,16 +43,19 @@ const NoteCreateModal = ({ open, onClose, book }) => {
                         sx={{
                             width: "24rem",
                             height: "33rem",
-                            backgroundColor: "#DDE5ED",
+                            backgroundColor: "#E0E0E0",
+                            borderRadius: "0.5rem",
                             display: "flex",
+                            flexDirection: "column",
                             alignItems: "center",
                             justifyContent: "center",
-                            borderRadius: "0.5rem",
                             marginBottom: "1.5rem",
                             marginTop: "2rem",
+                            marginLeft: "6rem",
                         }}
                     >
-                        <Typography sx={{ fontSize: "1.8rem", color: "#5F5F5F" }}>이미지 없음</Typography>
+                        <ImageNotSupportedRoundedIcon sx={{ fontSize: "5rem", color: "#9E9E9E", marginBottom: "0.5rem" }} />
+                        <Typography sx={{ fontSize: "1.6rem", color: "#757575" }}>이미지 없음</Typography>
                     </Box>
                 )}
 

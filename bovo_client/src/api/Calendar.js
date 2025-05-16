@@ -6,6 +6,7 @@ export const fetchCalendarEvents = async (year, month) => {
         const formattedMonth = String(month).padStart(2, "0");
         const response = await api.get(`/my-page/calendar?year=${year}&month=${formattedMonth}`);
 
+        console.log("캘린더 데이터:", response.data.book_calendar_list);
         if (response.status === 200) {
             return { data: response.data.book_calendar_list, error: null };
         }
