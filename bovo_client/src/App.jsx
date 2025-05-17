@@ -52,23 +52,23 @@ function App() {
             </Route>
             <Route path='/main' element={<Layout />}>
               <Route index element={<Main />} />
-              <Route path='/search' element={<BookSearch />} />
-              <Route path='/search/search-detail' element={<BookSearchDetail />} />
-              <Route path='/archive' element={<Archive />} />
-              <Route path='/archive/:book_id' element={<Note />} />
-              <Route path='/archive/:book_id/memo' element={<NoteDetail />} />
-              <Route path='/archive/edit/:book_id' element={<NoteEdit />} />
-              <Route path='/archive/edit/:book_id/:memo_id' element={<NoteEdit />} />
-              <Route path='/archive/:book_id/memos' element={<NoteCombine />} />
-              <Route path='/forum' element={<Forum />} />
-              <Route path='/forum/forum-make' element={<ForumMake />} />
-              <Route path='/mypage' element={<MyPage />} />
-              <Route path='/mypage/myprofile' element={<MyProfile />} />
-              <Route path='/mypage/service-info' element={<ServiceInfo />} />
-              <Route path='/mypage/exp' element={<Exp />} />
-              <Route path='/mypage/myprofile/edit' element={<MyProfileEdit />} />
-              <Route path='/calendar' element={<Calendar />} />
-              <Route path='/404' element={<ErrorPage />} />
+              <Route path='/main/search' element={<BookSearch />} />
+              <Route path='/main/search/search-detail' element={<BookSearchDetail />} />
+              <Route path='/main/archive' element={<Archive />} />
+              <Route path='/main/archive/:book_id' element={<Note />} />
+              <Route path='/main/archive/:book_id/memo' element={<NoteDetail />} />
+              <Route path='/main/archive/edit/:book_id' element={<NoteEdit />} />
+              <Route path='/main/archive/edit/:book_id/:memo_id' element={<NoteEdit />} />
+              <Route path='/main/archive/:book_id/memos' element={<NoteCombine />} />
+              <Route path='/main/forum' element={<Forum />} />
+              <Route path='/main/forum/forum-make' element={<ForumMake />} />
+              <Route path='/main/mypage' element={<MyPage />} />
+              <Route path='/main/mypage/myprofile' element={<MyProfile />} />
+              <Route path='/main/mypage/service-info' element={<ServiceInfo />} />
+              <Route path='/main/mypage/exp' element={<Exp />} />
+              <Route path='/main/mypage/myprofile/edit' element={<MyProfileEdit />} />
+              <Route path='/main/calendar' element={<Calendar />} />
+              <Route path='/main/404' element={<ErrorPage />} />
             </Route>
             <Route path='/auth/kakao/callback' element={<KakaoCallback />} />
             <Route path='/forum/:roomId' element={<ChatLayout />}>
