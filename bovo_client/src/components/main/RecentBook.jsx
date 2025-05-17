@@ -10,7 +10,7 @@ const RecentBook = ({ recent_book_info, navigate }) => {
     if (!recent_book_info) {
         return (
             <Box
-                onClick={() => navigate("/search")}
+                onClick={() => navigate("/main/search")}
                 sx={{
                     position: "relative",
                     top: "23rem",
@@ -55,7 +55,7 @@ const RecentBook = ({ recent_book_info, navigate }) => {
 
     return (
         <Box
-            onClick={() => navigate("/archive")}
+            onClick={() => navigate("/main/archive")}
             sx={{
                 position: "relative",
                 top: "23rem",

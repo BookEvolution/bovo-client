@@ -53,7 +53,7 @@ const ChatLayout = () => {
         mutationFn: () => deleteChatRoomUser(roomId),
         onSuccess: () => {
             setExitModalOpen(false);
-            navigate("/forum");
+            navigate("/main/forum");
         },
         onError: (error) => {
             console.error("채팅방 나가기 실패:", error);

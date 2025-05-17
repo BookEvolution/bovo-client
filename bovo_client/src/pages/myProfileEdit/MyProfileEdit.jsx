@@ -92,7 +92,7 @@ const MyProfileEdit = () => {
         editProfile(updatedData, {
             onSuccess: (response) => {
                 console.log("수정된 프로필:", response);
-                navigate("/mypage/myprofile");
+                navigate("/main/mypage/myprofile");
             },
             onError: (error) => {
                 console.error("프로필 수정 실패:", error);

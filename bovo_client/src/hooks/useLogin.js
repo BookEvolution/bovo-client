@@ -20,7 +20,7 @@ const useLogin = (navigate) => {
         try {
         const status = await loginUser(email, password);
         if (status === 200) {
-            navigate("/");
+            navigate("/main");
         }
         } catch (error) {
         console.error("로그인 오류:", error);

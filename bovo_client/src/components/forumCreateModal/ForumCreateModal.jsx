@@ -14,7 +14,7 @@ const ForumCreateModal = ({ open, onClose, book }) => {
 
     const handleMoveToForum = () => {
         dispatch(setBook(book));
-        navigate("/forum/forum-make");
+        navigate("/main/forum/forum-make");
     };
 
     return (

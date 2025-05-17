@@ -21,7 +21,7 @@ const Layout = () => {
     const handleLogout = async () => {
         await logout();
         dispatch(toggleLogoutModal(false)); 
-        navigate("/login");
+        navigate("/");
     };
 
     return (

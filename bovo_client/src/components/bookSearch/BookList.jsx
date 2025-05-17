@@ -52,7 +52,7 @@ const BookList = ({ books, searchTerm, fetchMoreBooks, hasMore }) => {
                                     cursor: "pointer",
                                 }}
                                 onClick={() =>
-                                    navigate("/search/search-detail", { state: { book } })
+                                    navigate("/main/search/search-detail", { state: { book } })
                                 }
                             >
                                 {book.thumbnail ? (

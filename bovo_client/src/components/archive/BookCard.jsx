@@ -9,7 +9,7 @@ const BookCard = ({ book, showDate, showRating }) => {
 
   return (
     <Box
-      onClick={() => navigate(`/archive/${book.book_id}`)}  // 선택하면 상세 페이지
+      onClick={() => navigate(`/main/archive/${book.book_id}`)}  // 선택하면 상세 페이지
       sx={{
         width: "39rem",
         height: "15rem",

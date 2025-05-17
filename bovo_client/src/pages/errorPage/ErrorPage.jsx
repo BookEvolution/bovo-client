@@ -31,7 +31,7 @@ const ErrorPage = () => {
                       fontSize: "2.1875rem",
                       borderRadius: "1.5625rem" 
                     }}
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/main")}
             >
                 메인으로
             </Button>

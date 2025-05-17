@@ -73,7 +73,7 @@ export const useNoteEdit = () => {
       } else {
         await createMemo(bookId, updatedMemoData);
       }
-      navigate(`/archive/${bookId}`);
+      navigate(`/main/archive/${bookId}`);
     } catch (error) {
       console.error("메모 저장 실패:", error.response?.data || error.message);
     }

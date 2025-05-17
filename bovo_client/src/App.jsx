@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import './App.css'
 import LoginLayout from './layout/loginLayout/LoginLayout'
@@ -10,7 +11,7 @@ import Main from './pages/main/Main'
 import BookSearch from './pages/bookSearch/BookSearch'
 import Archive from './pages/archive/Archive'
 import KakaoCallback from './pages/login/KakaoCallback'
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { enableInterceptor } from "./api/Auth.js";
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './store/queryClient/queryClient.js'
@@ -40,38 +41,37 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Suspense fallback={<LoadingSpinner />}>
-          <InterceptorWrapper /> 
           <Routes>
             <Route path='/kakao/bovo-auth' element={<KakaoCallback />} />
-            <Route path='/login' element={<LoginLayout />}>
+            <Route path='/' element={<LoginLayout />}>
               <Route index element={<Login />}/>
             </Route>
             <Route path='/sign-up' element={<SignUpLayout />}>
               <Route path='/sign-up/basic' element={<SignUp />} />
               <Route path='/sign-up/kakao' element={<KakaoSignUp />} />
             </Route>
-            <Route path='/' element={<Layout />}>
+            <Route path='/main' element={<ProtectedRoute><Layout /></ProtectedRoute>}>
               <Route index element={<Main />} />
-              <Route path='/search' element={<BookSearch />} />
-              <Route path='/search/search-detail' element={<BookSearchDetail />} />
-              <Route path='/archive' element={<Archive />} />
-              <Route path='/archive/:book_id' element={<Note />} />
-              <Route path='/archive/:book_id/memo' element={<NoteDetail />} />
-              <Route path='/archive/edit/:book_id' element={<NoteEdit />} />
-              <Route path='/archive/edit/:book_id/:memo_id' element={<NoteEdit />} />
-              <Route path='/archive/:book_id/memos' element={<NoteCombine />} />
-              <Route path='/forum' element={<Forum />} />
-              <Route path='/forum/forum-make' element={<ForumMake />} />
-              <Route path='/mypage' element={<MyPage />} />
-              <Route path='/mypage/myprofile' element={<MyProfile />} />
-              <Route path='/mypage/service-info' element={<ServiceInfo />} />
-              <Route path='/mypage/exp' element={<Exp />} />
-              <Route path='/mypage/myprofile/edit' element={<MyProfileEdit />} />
-              <Route path='/calendar' element={<Calendar />} />
-              <Route path='/404' element={<ErrorPage />} />
+              <Route path='/main/search' element={<BookSearch />} />
+              <Route path='/main/search/search-detail' element={<BookSearchDetail />} />
+              <Route path='/main/archive' element={<Archive />} />
+              <Route path='/main/archive/:book_id' element={<Note />} />
+              <Route path='/main/archive/:book_id/memo' element={<NoteDetail />} />
+              <Route path='/main/archive/edit/:book_id' element={<NoteEdit />} />
+              <Route path='/main/archive/edit/:book_id/:memo_id' element={<NoteEdit />} />
+              <Route path='/main/archive/:book_id/memos' element={<NoteCombine />} />
+              <Route path='/main/forum' element={<Forum />} />
+              <Route path='/main/forum/forum-make' element={<ForumMake />} />
+              <Route path='/main/mypage' element={<MyPage />} />
+              <Route path='/main/mypage/myprofile' element={<MyProfile />} />
+              <Route path='/main/mypage/service-info' element={<ServiceInfo />} />
+              <Route path='/main/mypage/exp' element={<Exp />} />
+              <Route path='/main/mypage/myprofile/edit' element={<MyProfileEdit />} />
+              <Route path='/main/calendar' element={<Calendar />} />
+              <Route path='/main/404' element={<ErrorPage />} />
             </Route>
             <Route path='/auth/kakao/callback' element={<KakaoCallback />} />
-            <Route path='/forum/:roomId' element={<ChatLayout />}>
+            <Route path='/forum/:roomId' element={<ProtectedRoute><ChatLayout /></ProtectedRoute>}>
               <Route index element={<ForumChat />} />
             </Route>
             <Route path='/*' element={<Navigate to={"/404"} />} />
@@ -82,16 +82,34 @@ function App() {
   )
 }
 
-function InterceptorWrapper() {
+// 보호된 라우트 컴포넌트 (기존 코드와 동일)
+const ProtectedRoute = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    enableInterceptor(() => {
-      navigate("/login"); // 토큰 만료 시 로그인 페이지로 이동
-    });
+    const token = sessionStorage.getItem('accessToken');
+    setIsAuthenticated(!!token);
+
+    if (!token) {
+      navigate('/'); // 기본 로그인 페이지로 이동
+    } else {
+      enableInterceptor(() => {
+        navigate("/"); // 토큰 만료 시 로그인 페이지로 이동
+      });
+    }
   }, [navigate]);
 
-  return null; // UI를 렌더링하지 않는 컴포넌트
-}
+  if (isAuthenticated === null) {
+    return <LoadingSpinner />; // 초기 인증 상태 확인 중 로딩 표시
+  }
+
+  return isAuthenticated ? children : null;
+};
+
+// prop types 정의
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired, // children은 React 노드이며 필수
+};
 
 export default App;

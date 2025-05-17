@@ -10,7 +10,7 @@ const NoteCreateModal = ({ open, onClose, book }) => {
     const navigate = useNavigate();
 
     const handleMoveToArchive = () => {
-        navigate("/archive");
+        navigate("/main/archive");
     };
 
     return (

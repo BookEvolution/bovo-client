@@ -11,11 +11,11 @@ const useDelete = () => {
       if (targetType === "memo") {
         await deleteMemo(bookId, targetId);
         console.log(`기록 삭제 완료 - memoId: ${targetId}`);
-        navigate(`/archive/${bookId}`);
+        navigate(`/main/archive/${bookId}`);
       } else {
         await deleteBook(targetId);
         console.log(`책 삭제 완료 - bookId: ${targetId}`);
-        navigate("/archive");
+        navigate("/main/archive");
       }
 
       onSuccess();

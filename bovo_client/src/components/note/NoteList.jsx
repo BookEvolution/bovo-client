@@ -29,7 +29,7 @@ const NoteList = ({ memos }) => {
   // 메모 수정
   const handleEdit = (e, memo_id) => {
     e.stopPropagation();
-    navigate(`/archive/edit/${book_id}/${memo_id}`);
+    navigate(`/main/archive/edit/${book_id}/${memo_id}`);
   };
 
   // 메모 삭제
@@ -77,10 +77,10 @@ const NoteList = ({ memos }) => {
 
         {/* 정렬 및 추가 버튼 */}
         <Box sx={{ display: "flex", fontSize: "2.5rem" }}>
-          <IconButton onClick={() => navigate(`/archive/${book?.book_id}/memos`)}>
+          <IconButton onClick={() => navigate(`/main/archive/${book?.book_id}/memos`)}>
             <ListAltOutlinedIcon sx={{ fontSize: "2.5rem", color: "black" }} />
           </IconButton>
-          <IconButton onClick={() => navigate(`/archive/edit/${book_id}`)}>
+          <IconButton onClick={() => navigate(`/main/archive/edit/${book_id}`)}>
             <AddBoxOutlinedIcon sx={{ fontSize: "2.5rem", color: "black" }} />
           </IconButton>
         </Box>
@@ -159,7 +159,7 @@ const NoteList = ({ memos }) => {
                   mb: "1.5rem",
                   cursor: "pointer",
                 }}
-                onClick={() => navigate(`/archive/${book?.book_id}/memo?memoId=${memo.memo_id}`)}
+                onClick={() => navigate(`/main/archive/${book?.book_id}/memo?memoId=${memo.memo_id}`)}
               >
                 <Box
                   sx={{

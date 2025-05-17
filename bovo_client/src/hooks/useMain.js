@@ -41,7 +41,7 @@ const useMainData = () => {
                 if (error.response?.status === 401) {
                     console.log("AccessToken 만료 또는 인증 실패");
                     sessionStorage.removeItem("AccessToken");
-                    navigate("/login");
+                    navigate("/");
                 }
                 return;
             }
