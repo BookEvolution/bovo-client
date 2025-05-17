@@ -43,14 +43,14 @@ function App() {
           <InterceptorWrapper /> 
           <Routes>
             <Route path='/kakao/bovo-auth' element={<KakaoCallback />} />
-            <Route path='/login' element={<LoginLayout />}>
+            <Route path='/' element={<LoginLayout />}>
               <Route index element={<Login />}/>
             </Route>
             <Route path='/sign-up' element={<SignUpLayout />}>
               <Route path='/sign-up/basic' element={<SignUp />} />
               <Route path='/sign-up/kakao' element={<KakaoSignUp />} />
             </Route>
-            <Route path='/' element={<Layout />}>
+            <Route path='/main' element={<Layout />}>
               <Route index element={<Main />} />
               <Route path='/search' element={<BookSearch />} />
               <Route path='/search/search-detail' element={<BookSearchDetail />} />
