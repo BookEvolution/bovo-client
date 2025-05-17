@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";  // PropTypes import
 import List from '@mui/material/List';
 import styles from "./MyForum.module.css";
-import MyForumList from "./myForumList/MyForumList";
+import MyForumList from "../myForumList/MyForumList";
 
 const MyForum = ({ myChatrooms }) => {
      // myChatrooms가 null이나 빈 배열일 경우 처리

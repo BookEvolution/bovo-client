@@ -3,10 +3,10 @@ import Box from "@mui/material/Box";
 import ListItem from '@mui/material/ListItem';
 import Typography from "@mui/material/Typography";
 import styles from "./MyForumList.module.css";
-import { formatDate } from "../../../../utils/FormatDate.js";
-import { fetchMyRoomData } from "../../../../api/ForumService.js";
+import { formatDate } from "../../../utils/FormatDate.js";
+import { fetchMyRoomData } from "../../../api/ForumService.js";
 import { useDispatch } from "react-redux";
-import { addMessage } from "../../../../store/chatInfo/ChatSlice.js";
+import { addMessage } from "../../../store/chatInfo/ChatSlice.js";
 import { useNavigate } from "react-router-dom";
 
 const MyForumList = ({myChatroom}) => {
