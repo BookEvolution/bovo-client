@@ -8,7 +8,7 @@ import styles from "./MyProfileEdit.module.css";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useEditProfileMutation, useMyProfileEditQuery } from "../../api/UserApi";
-import ProfileBottomSheet from "../../components/profileImgBottomsheet/ProfileBottomSheet";
+import ProfileBottomSheet from "../../components/profileImgBottomSheet/ProfileBottomSheet";
 import LoadingSpinner from "../../components/loadingSpinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 
