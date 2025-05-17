@@ -88,7 +88,7 @@ const NoteBottomSheet = ({ open, onClose, book }) => {
     const handleDeleteSuccess = () => {
         handleDeleteModalClose();
         onClose();
-        navigate("/archive");
+        navigate("/main/archive");
     };
 
     return (

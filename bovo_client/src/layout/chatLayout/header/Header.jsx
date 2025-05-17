@@ -16,7 +16,7 @@ const Header = ({ toggleSidebar, roomName }) => {
     // ArrowBackIcon 클릭 시 처리 함수
     const handleGoBack = () => {
         dispatch(clearChat()); // 채팅 초기화
-        navigate('/forum'); // 이전 페이지로 이동
+        navigate('/main/forum'); // 이전 페이지로 이동
     };
 
     return (

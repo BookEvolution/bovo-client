@@ -7,15 +7,15 @@ const useKakaoLoginHandler = (navigate) => {
             const status = response.status;
 
             if (status === 200) {
-                navigate("/");
+                navigate("/main");
             } else if (status === 201) {
                 navigate("/sign-up/kakao");
             } else {
-                navigate("/login");
+                navigate("/");
             }
         } catch (error) {
             console.error("카카오 로그인 실패:", error);
-            navigate("/login");
+            navigate("/");
         }
     };
 

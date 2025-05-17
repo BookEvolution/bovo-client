@@ -11,7 +11,7 @@ const CompleteSignUpModal = ({ open, handleClose }) => {
 
     const handleNavigateToLogin = () => {
         handleClose();
-        navigate("/login");
+        navigate("/");
     };
 
     return (

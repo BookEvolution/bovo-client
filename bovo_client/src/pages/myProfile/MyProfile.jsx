@@ -47,7 +47,7 @@ const MyProfile = () => {
 
         await withdraw(userData.email);
         // 로그아웃 처리 후 로그인 페이지로 이동
-        navigate("/login");
+        navigate("/");
     };
 
     if (isLoading) return <p>로딩 중...</p>;

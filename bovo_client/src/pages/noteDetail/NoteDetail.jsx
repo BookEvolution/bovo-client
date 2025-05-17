@@ -125,7 +125,7 @@ const NoteDetail = () => {
         <Button
           variant="contained"
           disableElevation
-          onClick={() => navigate(`/archive/edit/${book_id}/${memo_id}`)}
+          onClick={() => navigate(`/main/archive/edit/${book_id}/${memo_id}`)}
           sx={{
             width: "15rem",
             height: "5rem",
@@ -144,7 +144,7 @@ const NoteDetail = () => {
         targetId={memo_id}
         targetType="memo"
         bookId={book?.book_id}
-        onSuccess={() => navigate(`/archive/${book?.book_id}`)}
+        onSuccess={() => navigate(`/main/archive/${book?.book_id}`)}
       />
     </Box>
   );

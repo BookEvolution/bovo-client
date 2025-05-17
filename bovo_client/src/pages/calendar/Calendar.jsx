@@ -56,7 +56,7 @@
 
 //     const handleMoveToRecord = () => {
 //         if (!selectedBook) return;
-//         navigate(`/archive/${selectedBook.book_id}`);
+//         navigate(`/main/archive/${selectedBook.book_id}`);
 //     };
 
 //     const selectedDateKey = selectedDate !== null
@@ -206,7 +206,7 @@ const MyCalendar = () => {
 
     const handleMoveToRecord = () => {
         if (!selectedBook) return;
-        navigate(`/archive/${selectedBook.book_id}`);
+        navigate(`/main/archive/${selectedBook.book_id}`);
     };
 
     const selectedDateKey = selectedDate !== null
