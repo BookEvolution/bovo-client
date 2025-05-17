@@ -55,7 +55,7 @@ const RecentBook = ({ recent_book_info, navigate }) => {
 
     return (
         <Box
-            onClick={() => navigate("/archive")}
+            onClick={() => navigate("/main/archive")}
             sx={{
                 position: "relative",
                 top: "23rem",
