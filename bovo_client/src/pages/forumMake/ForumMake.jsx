@@ -132,7 +132,7 @@ const ForumMake = () => {
                     <img src={book.thumbnail} alt={book.title} />
                 </Box>
             ) : (
-                <Link to='/search'>
+                <Link to='/main/search'>
                     <Box className={styles.addBookWrapper}>
                         <AddCircleOutlineIcon sx={{fontSize: "3rem", color: "#739CD4"}}/>
                     </Box>
