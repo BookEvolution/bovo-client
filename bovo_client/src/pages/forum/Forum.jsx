@@ -73,7 +73,7 @@ const Forum = () => {
                         }}
                     />
                 </Tabs>
-                <Link to="/forum/forum-make">
+                <Link to="/main/forum/forum-make">
                     <Button 
                         className={styles.ForumMakeBtn}
                         sx={{

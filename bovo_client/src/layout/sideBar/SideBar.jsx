@@ -13,11 +13,11 @@ import { Link } from "react-router-dom";
 
 const SideBar = ({ open, toggleDrawer, handleLogout }) => {
     const menuList = [
-        {path: '/archive', sideMenu: "나의 서재"},
-        {path: '/calendar', sideMenu: "캘린더"},
-        {path: '/forum', sideMenu: "독서 토론방"},
-        {path: '/mypage/exp', sideMenu: "퀘스트"},
-        {path: '/mypage', sideMenu: "마이페이지"},
+        {path: '/main/archive', sideMenu: "나의 서재"},
+        {path: '/main/calendar', sideMenu: "캘린더"},
+        {path: '/main/forum', sideMenu: "독서 토론방"},
+        {path: '/main/mypage/exp', sideMenu: "퀘스트"},
+        {path: '/main/mypage', sideMenu: "마이페이지"},
     ]
 
     return (
@@ -25,7 +25,7 @@ const SideBar = ({ open, toggleDrawer, handleLogout }) => {
             <Container className={styles.sideBarContainer}>
                 <Box className={styles.header}>
                     <Box className={styles.logoWrapper} onClick={toggleDrawer}>
-                        <Link to="/">
+                        <Link to="/main">
                             <img src={logoImage} alt="logo" className={styles.logoImage}/>
                         </Link>
                     </Box>

@@ -33,7 +33,7 @@ const Header = ({onLogout}) => {
                 <Box className={styles.iconContainer}>
                     {isMainPage && ( // 메인 페이지일 때만 렌더링
                         <IconButton sx={{ padding: 0 }} className={styles.iconBtn}>
-                            <Link to="/search">
+                            <Link to="/main/search">
                                 <SearchIcon sx={{ fontSize: "3rem", color: "#739CD4" }} />
                             </Link>
                         </IconButton>

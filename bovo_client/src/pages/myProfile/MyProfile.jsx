@@ -66,7 +66,7 @@ const MyProfile = () => {
             <Box className={styles.btnWrapper}>
                 <Button 
                     component={Link}
-                    to="/mypage/myprofile/edit" 
+                    to="/main/mypage/myprofile/edit" 
                     className={styles.btn} 
                     sx={{
                         backgroundColor: "#BDE5F1",
