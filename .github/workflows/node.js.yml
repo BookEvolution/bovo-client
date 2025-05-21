@@ -26,9 +26,18 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm i
-    - run: npm run build --if-present
-    - run: npm test
+        cache-dependency-path: './bovo_client/package-lock.json'
+    - name: Install dependencies
+      working-directory: ./bovo_client # npm i 명령을 실행할 디렉토리 지정
+      run: npm i
+
+    - name: Build
+      working-directory: ./bovo_client # npm run build 명령을 실행할 디렉토리 지정
+      run: npm run build --if-present
+
+    - name: Test
+      working-directory: ./bovo_client # npm test 명령을 실행할 디렉토리 지정
+      run: npm test
 
     - uses: awact/s3-action@master
       with:
