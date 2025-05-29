@@ -5,8 +5,8 @@ import { QuestButtonStyle } from '../../../constant/QuestBtnStyle';
 
 // 버튼 스타일을 결정하는 헬퍼 함수
 const getButtonStyle = (isCompleted, currentCount) => {
-    if (isCompleted && currentCount === 7) return QuestButtonStyle.completeBtn;
-    if (!isCompleted && currentCount === 7) return QuestButtonStyle.confirmBtn;
+    if (isCompleted && currentCount >= 7) return QuestButtonStyle.completeBtn;
+    if (!isCompleted && currentCount >= 7) return QuestButtonStyle.confirmBtn;
     return QuestButtonStyle.notAcquiredBtn;
 };
 

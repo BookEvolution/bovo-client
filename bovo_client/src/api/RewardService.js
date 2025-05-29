@@ -22,7 +22,7 @@ export const useRewardsQuery = () => {
 // 경험치 증가 요청 함수
 export const increaseExp = async (missionId) => {
     try {
-        const response = await api.post("/rewards/exp-increase", { mission_id: missionId });
+        const response = await api.put("/rewards/exp-increase", { mission_id: missionId });
         return response.data;
     } catch (error) {
         console.error('Error increasing experience:', error);
