@@ -3,7 +3,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import styles from "./Header.module.css";
-import logoImage from "../../assets/logo/logo.png"
+import logoImage from "../../assets/logo/logo.png";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link, useLocation } from "react-router-dom";
@@ -12,7 +12,7 @@ import SideBar from "../sideBar/SideBar";
 
 const Header = ({onLogout}) => {
     const location = useLocation(); // 현재 경로 가져오기
-    const isMainPage = location.pathname === "/"; // 메인 페이지 여부 확인
+    const isMainPage = location.pathname === "/main"; // 메인 페이지 여부 확인
     const [open, setOpen] = useState(false); // 사이드바 열림 상태 관리
 
     const toggleDrawer = () => {
