@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import api from "../../../api/Auth";
 import { addMessage } from "../../../store/chatInfo/ChatSlice";
+import { toast } from "react-toastify";
 
 const JoinChatRoomModal = ({ open, onClose, chatRoomData }) => {
     // `JoinChatRoomModal` 함수 내에서 선언
@@ -35,7 +36,7 @@ const JoinChatRoomModal = ({ open, onClose, chatRoomData }) => {
             });
             console.log(response.data);
             if (response.status === 200) {
-                alert("방에 성공적으로 참여했습니다.");
+                toast.success(`${chatInfo.chat_name} 방에 성공적으로 참여했습니다.`);
 
 
                 // 서버에서 받은 메시지를 Redux 상태에 추가
@@ -49,11 +50,11 @@ const JoinChatRoomModal = ({ open, onClose, chatRoomData }) => {
                 // Redux에 저장된 메시지를 사용하므로 navigate의 state는 필요 없음
                 navigate(`/forum/${id}`, { state: { roomName: chatInfo.chat_name } });
                 } else {
-                    alert("방 참여에 실패했습니다.");
+                    toast.error("방 참여에 실패했습니다.");
                 }
         } catch (error) {
             console.error("방 참여 오류:", error);
-            alert("방 참여 중 오류가 발생했습니다.");
+            toast.error("방 참여 중 오류가 발생했습니다.");
         }
     };
 

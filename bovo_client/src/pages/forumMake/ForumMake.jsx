@@ -17,6 +17,8 @@ import { createForumRoom } from "../../api/ForumService";
 import { useDispatch, useSelector } from "react-redux";
 import { clearBook } from "../../store/bookForum/BookSlice";
 import { useMutation } from "@tanstack/react-query";
+import { useForm, Controller } from "react-hook-form";
+import { toast } from "react-toastify";
 
 // 공통 스타일
 const inputTitleStyle = {
@@ -60,19 +62,30 @@ const datePickerStyle = {
     },
 };
 
-
 const ForumMake = () => {
-    const book = useSelector((state) => state.book.book); // Redux에서 book 정보 가져오기
+    const book = useSelector((state) => state.book.book);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [startDate, setStartDate] = useState(dayjs());
-    const [endDate, setEndDate] = useState(dayjs().add(7, "day"));
     const [isPrivate, setIsPrivate] = useState(false);
-    const [capacity, setCapacity] = useState("");
-    const [chatName, setChatName] = useState("");
-    const [chatDetail, setChatDetail] = useState("");
-    const [secretQuestion, setSecretQuestion] = useState("");
-    const [secretAnswer, setSecretAnswer] = useState("");
+
+    // React Hook Form 설정
+    const {
+        control,
+        handleSubmit,
+        getValues,
+        formState: { isSubmitting }
+    } = useForm({
+        mode: 'onSubmit', // 제출 시에만 유효성 검사 (리렌더링 최소화)
+        defaultValues: {
+            chatName: '',
+            chatDetail: '',
+            capacity: '',
+            startDate: dayjs(),
+            endDate: dayjs().add(7, "day"),
+            secretQuestion: '',
+            secretAnswer: ''
+        }
+    });
 
     const handleToggle = () => {
         setIsPrivate((prev) => !prev);
@@ -84,49 +97,107 @@ const ForumMake = () => {
             console.log('Room created!', data);
             if (data.roomId) {
                 const { chat_name } = variables.chat_info;
+                toast.success('방이 성공적으로 생성되었습니다!');
                 navigate(`/forum/${data.roomId}`, {
                     state: { roomName: chat_name }
                 });
                 dispatch(clearBook());
             } else {
-                alert("채팅방 생성에 실패했습니다.");
+                toast.error("채팅방 생성에 실패했습니다.");
             }
         },
         onError: (error) => {
             console.error('Error creating room:', error);
-            alert("방 만들기에 실패했습니다.");
+            toast.error("방 만들기에 실패했습니다.");
         },
     });
 
-    const handleSubmit = async () => {
-        if (!chatName.trim() || !chatDetail.trim() || !capacity.trim()) {
-            alert("필수 정보를 입력해주세요.");
+    // 폼 제출 성공 시
+    const onSubmit = async (data) => {
+        // 책이 선택되지 않은 경우 체크
+        if (!book) {
+            toast.error("책을 먼저 선택해주세요.");
             return;
         }
 
         const forumData = {
             book_info: {
-                book_name: book.title, // 선택된 책 정보
+                book_name: book.title,
                 book_cover: book.thumbnail,
                 book_author: book.authors.join(", ")
             },
             chat_info: {
-                chat_name: chatName,
-                chat_detail: chatDetail,
-                challenge_start_date: startDate.format("YYYY-MM-DD"),
-                challenge_end_date: endDate.format("YYYY-MM-DD"),
+                chat_name: data.chatName,
+                chat_detail: data.chatDetail,
+                challenge_start_date: data.startDate.format("YYYY-MM-DD"),
+                challenge_end_date: data.endDate.format("YYYY-MM-DD"),
                 is_secret: isPrivate,
-                secret_question: isPrivate ? secretQuestion : "",
-                secret_answer: isPrivate ? secretAnswer : "",
-                max_recruiting: parseInt(capacity)
+                secret_question: isPrivate ? data.secretQuestion : "",
+                secret_answer: isPrivate ? data.secretAnswer : "",
+                max_recruiting: parseInt(data.capacity)
             }
         };
 
         mutation.mutate(forumData);
     };
 
+    // 폼 제출 실패 시 (유효성 검사 오류)
+    const onError = (validationErrors) => {
+        console.log("error 출력", validationErrors);
+        const errorFieldNames = [];
+
+        // Object.keys()를 사용하여 에러가 있는 필드 이름들을 배열로 가져옵니다.
+        Object.keys(validationErrors).forEach((fieldName) => {
+            // 비밀방 관련 필드는 isPrivate이 true일 때만 메시지에 포함
+            if (!isPrivate && (fieldName === "secretQuestion" || fieldName === "secretAnswer")) {
+                return; // 다음 필드로 넘어감
+            }
+
+            switch (fieldName) {
+                case "chatName":
+                    errorFieldNames.push("방 제목");
+                    break;
+                case "chatDetail":
+                    errorFieldNames.push("세부 설명");
+                    break;
+                case "startDate":
+                    errorFieldNames.push("시작 날짜");
+                    break;
+                case "endDate":
+                    errorFieldNames.push("종료 날짜");
+                    break;
+                case "capacity":
+                    errorFieldNames.push("모집 인원");
+                    break;
+                case "secretQuestion":
+                    errorFieldNames.push("비밀방 질문");
+                    break;
+                case "secretAnswer":
+                    errorFieldNames.push("비밀방 답변");
+                    break;
+                default:
+                    // 알 수 없는 필드는 포함하지 않거나, 필요하다면 추가 처리
+                    break;
+            }
+        });
+
+        if (errorFieldNames.length > 0) {
+            const errorMessage = `${errorFieldNames.join(", ")}을(를) 입력해주세요.`;
+            toast.error(errorMessage);
+        } else {
+            // 예상치 못한 에러가 발생했거나, isPrivate이 false여서 비밀방 관련 에러가 무시된 경우
+            // 첫 번째 에러 메시지를 표시하거나, 일반적인 에러 메시지 표시
+            const firstError = Object.values(validationErrors)[0];
+            if (firstError?.message) {
+                toast.error(firstError.message);
+            } else {
+                toast.error("폼 입력에 오류가 있습니다. 다시 확인해주세요.");
+            }
+        }
+    };
+
     return (
-        <Box className={styles.forumMakeContainer}>
+        <form className={styles.forumMakeContainer} onSubmit={handleSubmit(onSubmit, onError)}>
             {book ? (
                 <Box className={styles.bookWrapper}>
                     <img src={book.thumbnail} alt={book.title} />
@@ -138,6 +209,7 @@ const ForumMake = () => {
                     </Box>
                 </Link>
             )}
+            {/* 방 제목 */}
             <Box className={styles.inputBox}>
                 <Typography
                     className={styles.inputTitle} 
@@ -148,17 +220,33 @@ const ForumMake = () => {
                 >
                     방 제목
                 </Typography>
-                <TextField
-                    variant="outlined"
-                    fullWidth
-                    value={chatName} 
-                    onChange={(e) => setChatName(e.target.value)}
-                    sx={{
-                        ...textFieldStyle,
-                        backgroundColor: "#E8F1F6",
+                <Controller
+                    name="chatName"
+                    control={control}
+                    rules={{
+                        required: (value) => {
+                            if (!value || !value.trim()) {
+                                return '방 제목을 입력해주세요.';
+                            }
+                            return true;
+                        }
                     }}
+                    render={({ field, fieldState: { error } }) => (
+                        <TextField
+                            {...field}
+                            variant="outlined"
+                            fullWidth
+                            error={!!error}
+                            sx={{
+                                ...textFieldStyle,
+                                backgroundColor: "#E8F1F6",
+                            }}
+                        />
+                    )}
                 />
             </Box>
+
+            {/* 세부 설명 */}
             <Box className={styles.descriptionInputBox}>
                 <Typography
                     className={styles.inputTitle} 
@@ -169,19 +257,35 @@ const ForumMake = () => {
                 >
                     세부 설명
                 </Typography>
-                <TextField
-                    variant="outlined"
-                    fullWidth
-                    multiline
-                    rows={4} // 줄 개수 지정 (4줄)
-                    value={chatDetail} 
-                    onChange={(e) => setChatDetail(e.target.value)} 
-                    sx={{
-                        ...textFieldStyle,
-                        backgroundColor: "#E8F1F6",
+                <Controller
+                    name="chatDetail"
+                    control={control}
+                    rules={{
+                        required: (value) => {
+                            if (!value || !value.trim()) {
+                                return '세부 설명을 입력해주세요.';
+                            }
+                            return true;
+                        }
                     }}
+                    render={({ field, fieldState: { error } }) => (
+                        <TextField
+                            {...field}
+                            variant="outlined"
+                            fullWidth
+                            multiline
+                            rows={4}
+                            error={!!error}
+                            sx={{
+                                ...textFieldStyle,
+                                backgroundColor: "#E8F1F6",
+                            }}
+                        />
+                    )}
                 />
             </Box>
+
+            {/* 기간 설정 */}
             <Box className={styles.inputBox}>
                 <Typography
                     className={styles.inputTitle} 
@@ -193,18 +297,33 @@ const ForumMake = () => {
                     기간 설정
                 </Typography>
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-                    <DatePicker
-                        label="시작 날짜"
-                        value={startDate}
-                        onChange={(newValue) => setStartDate(newValue)}
-                        format="YYYY.MM.DD" // 날짜 형식 변경
-                        disablePortal
-                        sx={datePickerStyle}
-                        slotProps={{
-                            textField: {
-                                inputProps: { 'aria-hidden': 'false' }, // 접근성 오류 방지
+                    <Controller
+                        name="startDate"
+                        control={control}
+                        rules={{
+                            required: '시작 날짜를 선택해주세요.',
+                            validate: (value) => {
+                                if (value && dayjs(value).isBefore(dayjs(), 'day')) {
+                                    return '시작 날짜는 오늘 이후여야 합니다.';
+                                }
+                                return true;
                             }
                         }}
+                        render={({ field, fieldState: { error } }) => (
+                            <DatePicker
+                                {...field}
+                                label="시작 날짜"
+                                format="YYYY.MM.DD"
+                                disablePortal
+                                sx={datePickerStyle}
+                                slotProps={{
+                                    textField: {
+                                        error: !!error,
+                                        inputProps: { 'aria-hidden': 'false' },
+                                    }
+                                }}
+                            />
+                        )}
                     />
                     <Typography 
                         sx={{ 
@@ -217,22 +336,39 @@ const ForumMake = () => {
                     >
                         ~
                     </Typography>
-                    {/* 종료 날짜 선택 */}
-                    <DatePicker
-                        label="종료 날짜"
-                        value={endDate}
-                        onChange={(newValue) => setEndDate(newValue)}
-                        format="YYYY.MM.DD"
-                        disablePortal
-                        sx={datePickerStyle}
-                        slotProps={{
-                            textField: {
-                                inputProps: { 'aria-hidden': 'false' }, // 접근성 오류 방지
+                    <Controller
+                        name="endDate"
+                        control={control}
+                        rules={{
+                            required: '종료 날짜를 선택해주세요.',
+                            validate: (value) => {
+                                const startDate = getValues('startDate');
+                                if (value && startDate && dayjs(value).isBefore(startDate, 'day')) {
+                                    return '종료 날짜는 시작 날짜 이후여야 합니다.';
+                                }
+                                return true;
                             }
                         }}
+                        render={({ field, fieldState: { error } }) => (
+                            <DatePicker
+                                {...field}
+                                label="종료 날짜"
+                                format="YYYY.MM.DD"
+                                disablePortal
+                                sx={datePickerStyle}
+                                slotProps={{
+                                    textField: {
+                                        error: !!error,
+                                        inputProps: { 'aria-hidden': 'false' },
+                                    }
+                                }}
+                            />
+                        )}
                     />
                 </LocalizationProvider>
             </Box>
+
+            {/* 모집 인원 */}
             <Box className={styles.inputBox}>
                 <Typography
                     className={styles.inputTitle}
@@ -243,35 +379,56 @@ const ForumMake = () => {
                 >
                     모집 인원
                 </Typography>
-                <TextField
-                    variant="outlined"
-                    fullWidth
-                    type="number"
-                    value={capacity}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        if (/^\d*$/.test(value)) { // 숫자만 허용
-                            setCapacity(value);
+                <Controller
+                    name="capacity"
+                    control={control}
+                    rules={{
+                        required: '모집 인원을 입력해주세요.',
+                        validate: (value) => {
+                            const num = parseInt(value);
+                            if (isNaN(num) || num < 2) {
+                                return '최소 2명 이상이어야 합니다.';
+                            }
+                            return true;
                         }
                     }}
-                    inputProps={{
-                        min: 1, // 최소값 설정
-                        step: 1, // 1씩 증가하도록 설정
-                        pattern: "[0-9]*", // 모바일 키보드에서 숫자 키패드가 뜨도록 설정
-                    }}
-                    sx={{
-                        ...textFieldStyle,
-                        backgroundColor: "#E8F1F6",
-                    }}
+                    render={({ field, fieldState: { error } }) => (
+                        <TextField
+                            {...field}
+                            variant="outlined"
+                            fullWidth
+                            type="number"
+                            error={!!error}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (/^\d*$/.test(value)) {
+                                    field.onChange(value);
+                                }
+                            }}
+                            inputProps={{
+                                min: 2,
+                                max: 50,
+                                step: 1,
+                                pattern: "[0-9]*",
+                            }}
+                            sx={{
+                                ...textFieldStyle,
+                                backgroundColor: "#E8F1F6",
+                            }}
+                        />
+                    )}
                 />
             </Box>
+
+            {/* 비밀방 설정 */}
             <Box className={styles.secretKeyContainer}>
                 <FormControlLabel 
                     control={<Switch checked={isPrivate} onChange={handleToggle} />}
                     label="비밀방 설정"
                     labelPlacement="start"     
                 />
-                {/* 비밀방 설정 */}
+                
+                {/* 질문 */}
                 <Box 
                     className={styles.secretInputBox}
                     sx={{
@@ -287,19 +444,33 @@ const ForumMake = () => {
                     >
                         질문
                     </Typography>
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        disabled={!isPrivate} // ✅ isPrivate가 false이면 비활성화
-                        value={secretQuestion} 
-                        onChange={(e) => setSecretQuestion(e.target.value)}
-                        sx={{
-                            ...textFieldStyle,
-                            backgroundColor: isPrivate ? "#E8F1F6": "#D9D9D9",
-                        }}
+                    <Controller
+                        name="secretQuestion"
+                        control={control}
+                        rules={isPrivate ? {
+                            required: '비밀방 질문을 입력해주세요.',
+                            minLength: {
+                                value: 3,
+                                message: '질문은 최소 3글자 이상이어야 합니다.'
+                            }
+                        } : {}}
+                        render={({ field, fieldState: { error } }) => (
+                            <TextField
+                                {...field}
+                                fullWidth
+                                variant="outlined"
+                                disabled={!isPrivate}
+                                error={!!error && isPrivate}
+                                sx={{
+                                    ...textFieldStyle,
+                                    backgroundColor: isPrivate ? "#E8F1F6": "#D9D9D9",
+                                }}
+                            />
+                        )}
                     />
-                    
                 </Box>
+
+                {/* 답변 */}
                 <Box 
                     className={styles.secretInputBox}
                     sx={{
@@ -315,16 +486,29 @@ const ForumMake = () => {
                     >
                         답변
                     </Typography>
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        disabled={!isPrivate} // ✅ isPrivate가 false이면 비활성화
-                        value={secretAnswer} 
-                        onChange={(e) => setSecretAnswer(e.target.value)}
-                        sx={{
-                            ...textFieldStyle,
-                            backgroundColor: isPrivate ? "#E8F1F6": "#D9D9D9",
-                        }}
+                    <Controller
+                        name="secretAnswer"
+                        control={control}
+                        rules={isPrivate ? {
+                            required: '비밀방 답변을 입력해주세요.',
+                            minLength: {
+                                value: 1,
+                                message: '답변을 입력해주세요.'
+                            }
+                        } : {}}
+                        render={({ field, fieldState: { error } }) => (
+                            <TextField
+                                {...field}
+                                fullWidth
+                                variant="outlined"
+                                disabled={!isPrivate}
+                                error={!!error && isPrivate}
+                                sx={{
+                                    ...textFieldStyle,
+                                    backgroundColor: isPrivate ? "#E8F1F6": "#D9D9D9",
+                                }}
+                            />
+                        )}
                     />
                 </Box>
                 <Typography
@@ -340,20 +524,22 @@ const ForumMake = () => {
 
             {/* 방 만들기 버튼 */}
             <Button 
+                type="submit"
+                disabled={isSubmitting || mutation.isPending}
                 className={styles.makeRoomBtn}
-                onClick={handleSubmit} 
                 sx={{
                     backgroundColor: "#E8F1F6",
                     borderRadius: "1.5625rem",
                     fontSize: "2rem",
                     letterSpacing: "0.02rem",
                     color: "#739CD4",
-                    fontWeight: 500
+                    fontWeight: 500,
+                    opacity: (isSubmitting || mutation.isPending) ? 0.6 : 1
                 }}
             >
-                방 만들기
+                {isSubmitting || mutation.isPending ? '방 생성 중...' : '방 만들기'}
             </Button>
-        </Box>
+        </form>
     );
 };
 

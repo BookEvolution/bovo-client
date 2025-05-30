@@ -8,6 +8,7 @@ import { increaseExp } from '../../../api/RewardService';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../../../store/queryClient/queryClient';
 import { missionKeys } from '../../../constant/QuestList';
+import { toast } from 'react-toastify';
 
 const QuestList = ({ quest }) => {
 
@@ -16,11 +17,13 @@ const QuestList = ({ quest }) => {
         mutationFn: () => increaseExp(quest.mission_id),
         onSuccess: (data) => {
             console.log('경험치 증가 성공:', data);
+            toast.success('경험치 획득 성공!!');
             // ✅ 리워드 데이터를 다시 가져오기
             queryClient.invalidateQueries(['rewards']);
         },
         onError: (error) => {
             console.error('경험치 증가 실패:', error);
+            toast.error('네트워크 오류로 경험치 획득에 실패하셨습니다.');
         }
     });
 

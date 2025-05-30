@@ -8,13 +8,16 @@
 - [4. 기술 스택](#4-기술-스택)
 - [5. 시스템 아키텍쳐](#5-시스템-아키텍쳐)
 - [6. 패키지 구조](#6-패키지-구조)
-- [7. 주요 서비스 기능](#7-주요-서비스-기능)
+- [7. 서비스 기능](#7-서비스-기능)
 - [8. 수정 사항](#8-수정-사항)
 
 ## 1. 프로젝트 소개
 
 Bovo는 독서 기록 습관 형성을 위한 플랫폼입니다.<br>
 독서에 재미를 느낄 수 있도록, 독서 기록 템플릿 제공, 퀘스트, 독서 토론을 통해 독서에 흥미를 느끼는 분 모두 사용해보세요~
+
+Netlify : [클릭하여 페이지를 방문하세요](https://bovo.netlify.app/) 
+AWS S3 : [클릭하여 페이지를 방문하세요](http://bovo-client.s3-website.ap-northeast-2.amazonaws.com)
 
 ## 2. 개발 인원 및 역할(FE)
 
@@ -130,17 +133,17 @@ README.md             : 프로젝트 Readme
 
 [맨 위로](#목차)
 
-## 7. 주요 서비스 기능
+## 7. 서비스 기능
 ### (1) 로그인 페이지
-<img src="./docResource/img/loginPage.png" alt="로그인" />
+<img src="./docResource/img/loginPage.png" alt="로그인" style="width: 25%;" />
 
 ### (2) 회원 가입 페이지
 <table style="width: 100%;">
     <tr>
-        <td align="center" style="width: 50%;">
+        <td align="center" style="width: 25%;">
             <img src="./docResource/img/signup.png" alt="회원가입 페이지">
         </td>
-        <td align="center" style="width: 50%;">
+        <td align="center" style="width: 25%;">
             <img src="./docResource/img/profileImgChoice.png" alt="프로필 이미지 선택 페이지">
         </td>
     </tr>
@@ -151,22 +154,22 @@ README.md             : 프로젝트 Readme
 </table>
 
 ### (3) 메인 페이지
-<img src="./docResource/img/mainPage.png" alt="메인 페이지" />
+<img src="./docResource/img/mainPage.png" alt="메인 페이지" style="width: 25%;" />
 
 ### (4) 도서 검색 페이지
 #### [도서 검색]
-<img src="./docResource/img/searchPage.png" alt="도서 검색 페이지">
+<img src="./docResource/img/searchPage.png" alt="도서 검색 페이지" style="width: 25%;" />
 
 #### [도서 상세 페이지]
-<img src="./docResource/img/searchDetailPage.png" alt="도서 상세 페이지">
+<img src="./docResource/img/searchDetailPage.png" alt="도서 상세 페이지" style="width: 25%;" />
 
 #### [토론방 및 내 서재 추가]
 <table style="width: 100%;">
     <tr>
-        <td align="center" style="width: 50%;">
+        <td align="center" style="width: 25%;">
             <img src="./docResource/img/forumRegistration.png" alt="토론방 도서 등록">
         </td>
-        <td align="center" style="width: 50%;">
+        <td align="center" style="width: 25%;">
             <img src="./docResource/img/archiveRegistration.png" alt="내 서재 추가">
         </td>
     </tr>
@@ -181,19 +184,19 @@ README.md             : 프로젝트 Readme
 </table>
 
 ### (5) 내 서재 페이지
-<img src="./docResource/img/archive.png" alt="내 서재 페이지">
+<img src="./docResource/img/archive.png" alt="내 서재 페이지" style="width: 25%;"/>
 
 ### (6) 도서 기록 페이지
 #### [도서 기록 리스트]
-<img src="./docResource/img/note.png" alt="도서 기록 리스트">
+<img src="./docResource/img/note.png" alt="도서 기록 리스트" style="width: 25%;" />
 
 #### [도서 기록 작성 및 템플릿 제공]
 <table style="width: 100%;">
     <tr>
-        <td align="center" style="width: 50%;">
+        <td align="center" style="width: 25%;">
             <img src="./docResource/img/writingNote.png" alt="도서 기록 작성">
         </td>
-        <td align="center" style="width: 50%;">
+        <td align="center" style="width: 25%;">
             <img src="./docResource/img/noteTemplate.png" alt="템플릿 질문">
         </td>
     </tr>
@@ -210,10 +213,10 @@ README.md             : 프로젝트 Readme
 #### [모아 보기]
 <table style="width: 100%;">
     <tr>
-        <td align="center" style="width: 50%;">
+        <td align="center" style="width: 25%;">
             <img src="./docResource/img/gatheringNote.png" alt="도서 기록 모아 보기">
         </td>
-        <td align="center" style="width: 50%;">
+        <td align="center" style="width: 25%;">
             <img src="./docResource/img/changingNoteOrder.png" alt="도서 기록 순서 변경">
         </td>
     </tr>
@@ -230,11 +233,14 @@ README.md             : 프로젝트 Readme
 ### (7) 마이페이지
 <table style="width: 100%;">
     <tr>
-        <td align="center" style="width: 50%;">
+        <td align="center" style="width: 25%;">
             <img src="./docResource/img/myPage.png" alt="마이페이지">
         </td>
-        <td align="center" style="width: 50%;">
-            <img src="./docResource/img/myProfile.png" alt="마이프로필 페이지">
+        <td align="center" style="width: 25%;">
+            <img src="./docResource/img/myProfilePage.png" alt="마이프로필 페이지">
+        </td>
+        <td align="center" style="width: 25%;">
+            <img src="./docResource/img/myProfileEdit.png" alt="마이프로필 수정 페이지">
         </td>
     </tr>
     <tr>
@@ -244,11 +250,39 @@ README.md             : 프로젝트 Readme
         <td align="center">
             마이프로필
         </td>
+        <td align="center">
+            마이프로필 수정
+        </td>
     </tr>
 </table>
 
+### (8) 퀘스트 및 독서성과 페이지
+<table style="width: 100%;">
+    <tr>
+        <td align="center" style="width: 25%;">
+            <img src="./docResource/img/expPage.png" alt="퀘스트 및 독서성과 페이지지">
+        </td>
+        <td align="center" style="width: 25%;">
+            <img src="./docResource/img/questInfo.png" alt="퀘스트 정보">
+        </td>
+        <td align="center" style="width: 25%;">
+            <img src="./docResource/img/rewardInfo.png" alt="독서 성과 메달 정보">
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            퀘스트 및 독서성과 전체 페이지
+        </td>
+        <td align="center">
+            퀘스트 정보 modal
+        </td>
+        <td align="center">
+            독서 성과 메달 수여 정보 modal
+        </td>
+    </tr>
+</table>
 
-### (8) 독서 토론방 리스트 페이지
+### (9) 독서 토론방 리스트 페이지
 <table style="width: 100%;">
     <tr>
         <td align="center" style="width: 25%;">
@@ -335,5 +369,12 @@ README.md             : 프로젝트 Readme
 (3) 데이터 통신 수정
 기존에 POST 요청으로 유저가 확인 버튼을 누르면 경험치 증가가 이루어진다 했으나<br>
 실제 서버에서 PUT 요청으로 받아들여 Rest API 방식을 수정
+
+### 2025.05.30 ForumMake 페이지(독서토론방 만들기) 수정(by 이영섭)
+useForm과 Controller를 사용하여 TextField의 reRendering 최소화
+
+### 2025.05.30 Toastify 도입(by 이영섭)
+기존 독서 토론방 만들기, 토론방 참여, 프로필 수정시 발생했던 alert 알림을
+toast 팝업으로 교체
 
 [맨 위로](#목차)
