@@ -8,6 +8,7 @@ import { fetchMyRoomData } from "../../../api/ForumService.js";
 import { useDispatch } from "react-redux";
 import { addMessage } from "../../../store/chatInfo/ChatSlice.js";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const MyForumList = ({myChatroom}) => {
     const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const MyForumList = ({myChatroom}) => {
             const response = await fetchMyRoomData(roomId);
             console.log("채팅방 참여 api", response);
             if (response.status === 200) {
-                alert("방에 성공적으로 참여했습니다.");
+                toast.success(`${myChatroom.chatroom_name}방에 성공적으로 참여했습니다.`);
     
     
                 // 서버에서 받은 메시지를 Redux 상태에 추가
@@ -34,11 +35,11 @@ const MyForumList = ({myChatroom}) => {
                 // Redux에 저장된 메시지를 사용하므로 navigate의 state는 필요 없음
                 navigate(`/forum/${roomId}`, { state: { roomName: roomName } });
             } else {
-                alert("방 참여에 실패했습니다.");
+                toast.error("방 참여에 실패했습니다.");
             }
         } catch (error) {
           console.error("방 참여 오류:", error);
-          alert("방 참여 중 오류가 발생했습니다.");
+          toast.error("방 참여 중 오류가 발생했습니다.");
         }
     };
 

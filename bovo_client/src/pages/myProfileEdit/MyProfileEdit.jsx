@@ -11,6 +11,7 @@ import { useEditProfileMutation, useMyProfileEditQuery } from "../../api/UserApi
 import ProfileBottomSheet from "../../components/profileImgBottomSheet/ProfileBottomSheet";
 import LoadingSpinner from "../../components/loadingSpinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 // 공통 textfield sx 속성(style)
@@ -92,10 +93,12 @@ const MyProfileEdit = () => {
         editProfile(updatedData, {
             onSuccess: (response) => {
                 console.log("수정된 프로필:", response);
+                toast.success("프로필 수정에 성공했습니다.")
                 navigate("/main/mypage/myprofile");
             },
             onError: (error) => {
                 console.error("프로필 수정 실패:", error);
+                toast.error("네트워크 오류로 인해 프로필 수정에 실패했습니다.");
             }
         });
     };
