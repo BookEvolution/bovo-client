@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css'
 import LoginLayout from './layout/loginLayout/LoginLayout'
 import Login from './pages/login/Login'
@@ -16,6 +17,7 @@ import { enableInterceptor } from "./api/Auth.js";
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './store/queryClient/queryClient.js'
 import LoadingSpinner from './components/loadingSpinner/LoadingSpinner.jsx'
+import { ToastContainer } from 'react-toastify';
 
 
 function App() {
@@ -77,6 +79,15 @@ function App() {
             <Route path='/*' element={<Navigate to={"/404"} />} />
           </Routes>
         </Suspense>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          pauseOnFocusLoss={false}
+          draggable
+          pauseOnHover
+          closeButton={false}
+          toastClassName={() => "toast_notify"}
+        />
       </BrowserRouter>
     </QueryClientProvider>
   )
