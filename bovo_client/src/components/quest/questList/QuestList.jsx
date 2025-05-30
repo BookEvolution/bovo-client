@@ -29,8 +29,8 @@ const QuestList = ({ quest }) => {
 
     const title = mission.title;
     const currentCount = quest?.[mission.countKey];
-    const isCompleted = quest?.[mission.completedKey] === 7 ? true : false;
-    const progress = isCompleted ? 100 : (currentCount / 7) * 100; // 7회 기준 진행률 계산
+    const isCompleted = quest?.[mission.completedKey];
+    const progress = currentCount >= 7 ? 100 : (currentCount / 7) * 100; // 7회 기준 진행률 계산
 
     // 확인 버튼 클릭 시 mutation 호출
     const handleQuestButtonClick = () => {
