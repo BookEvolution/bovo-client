@@ -16,7 +16,7 @@
 Bovo는 독서 기록 습관 형성을 위한 플랫폼입니다.<br>
 독서에 재미를 느낄 수 있도록, 독서 기록 템플릿 제공, 퀘스트, 독서 토론을 통해 독서에 흥미를 느끼는 분 모두 사용해보세요~
 
-Netlify : [클릭하여 페이지를 방문하세요](https://bovo.netlify.app/) 
+Netlify : [클릭하여 페이지를 방문하세요](https://bovo.netlify.app/) <br>
 AWS S3 : [클릭하여 페이지를 방문하세요](http://bovo-client.s3-website.ap-northeast-2.amazonaws.com)
 
 ## 2. 개발 인원 및 역할(FE)
