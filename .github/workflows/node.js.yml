@@ -39,20 +39,12 @@ jobs:
     #   working-directory: ./bovo_client # npm test 명령을 실행할 디렉토리 지정
     #   run: npm test
 
-    # --- 여기서부터 AWS 배포 부분 변경 ---
-
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4 # 최신 안정 버전 사용
+    - uses: awact/s3-action@master
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-northeast-2
-
-    - name: Deploy to S3
-      uses: aws-actions/s3-sync@v1.1.2 # 또는 최신 안정 버전 확인
-      with:
-        bucket: ${{ secrets.AWS_S3_BUCKET }}
         args: --acl public-read --follow-symlinks --delete
-        # source-dir은 working-directory를 기준으로 하기 때문에 이렇게 지정합니다.
-        # 만약 working-directory가 없었다면 `./bovo_client/dist` 가 될 것입니다.
-        source-dir: './bovo_client/dist'
+      env:
+        SOURCE_DIR: './bovo_client/dist'
+        AWS_REGION: 'ap-northeast-2'
+        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
