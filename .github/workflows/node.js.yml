@@ -40,6 +40,8 @@ jobs:
     #   run: npm test
 
     - uses: awact/s3-action@master
+      with:
+        args: --delete
       env:
           SOURCE_DIR: './bovo_client/dist'
           AWS_REGION: 'ap-northeast-2'
