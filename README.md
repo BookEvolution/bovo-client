@@ -1,6 +1,7 @@
+ReadMe
 # 프로젝트 명 'Bovo'
 
-## 🚀 목차
+## 🚀 목차 {#top}
 
 - [1. 프로젝트 소개](#1-프로젝트-소개)
 - [2. 개발 인원 및 역할(FE)](#2-개발-인원-및-역할fe)
@@ -16,7 +17,7 @@
 Bovo는 독서 기록 습관 형성을 위한 플랫폼입니다.<br>
 독서에 재미를 느낄 수 있도록, 독서 기록 템플릿 제공, 퀘스트, 독서 토론을 통해 독서에 흥미를 느끼는 분 모두 사용해보세요~
 
-Netlify : [클릭하여 페이지를 방문하세요](https://bovo.netlify.app/) <br>
+Netlify : [클릭하여 페이지를 방문하세요](https://bovo.netlify.app/) 
 AWS S3 : [클릭하여 페이지를 방문하세요](http://bovo-client.s3-website.ap-northeast-2.amazonaws.com)
 
 ## 2. 개발 인원 및 역할(FE)
@@ -28,9 +29,20 @@ AWS S3 : [클릭하여 페이지를 방문하세요](http://bovo-client.s3-websi
 
 ## 3. 프로젝트 일정
 
+| **항목** | **기간** |
+|:----------:|:----------:|
+| 프로젝트 주제 선정 및 기획 | 2025.02.03 ~ 2025.02.12 |
+| 요구사항 명세서 작성 및 디자인 | 2025.02.13 ~ 2025.02.16 |
+| API 명세서 작성 | 2025.02.19 ~ 2025.02.20 |
+| boilerplate 작성 | 2025.02.21 ~ 2025.02.24 |
+| 개발 | 2025.02.25 ~ 2025.03.19 |
+| refactoring | 2025.03.21 ~ 2025.05.12 |
+| 화면단 배포 | 2025.05.12 ~ 2025.05.21 |
+| 디버깅 및 refactoring | 2025.05.21 ~ 현재 |
+
 <img src="./docResource/img/develop_plan.jpg" alt="프로젝트 일정">
 
-[맨 위로](#목차)
+[맨 위로](#top)
 
 ## 4. 기술 스택
 
@@ -91,13 +103,13 @@ AWS S3 : [클릭하여 페이지를 방문하세요](http://bovo-client.s3-websi
 ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)
 ![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)
 
-[맨 위로](#목차)
+[맨 위로](#top)
 
 ## 5. 시스템 아키텍쳐
 
-<img src="./docResource/img/SystemArchitecture.png" alt="system_architecture">
+<img src="./docResource/img/systemArchitecture.png" alt="system_architecture">
 
-[맨 위로](#목차)
+[맨 위로](#top)
 
 ## 6. 패키지 구조
 ```bash
@@ -131,11 +143,11 @@ docResource           : ReadMe 관련 사용할 이미지/영상
 README.md             : 프로젝트 Readme
 ```
 
-[맨 위로](#목차)
+[맨 위로](#top)
 
 ## 7. 서비스 기능
 ### (1) 로그인 페이지
-<img src="./docResource/img/loginPage.png" alt="로그인" style="width: 25%;" />
+<img src="./docResource/img/loginPage.png" alt="로그인" style="width: 40%;" />
 
 ### (2) 회원 가입 페이지
 <table style="width: 100%;">
@@ -154,14 +166,14 @@ README.md             : 프로젝트 Readme
 </table>
 
 ### (3) 메인 페이지
-<img src="./docResource/img/mainPage.png" alt="메인 페이지" style="width: 25%;" />
+<img src="./docResource/img/mainPage.png" alt="메인 페이지" style="width: 40%;" />
 
 ### (4) 도서 검색 페이지
 #### [도서 검색]
-<img src="./docResource/img/searchPage.png" alt="도서 검색 페이지" style="width: 25%;" />
+<img src="./docResource/img/searchPage.png" alt="도서 검색 페이지" style="width: 40%;" />
 
 #### [도서 상세 페이지]
-<img src="./docResource/img/searchDetailPage.png" alt="도서 상세 페이지" style="width: 25%;" />
+<img src="./docResource/img/searchDetailPage.png" alt="도서 상세 페이지" style="width: 40%;" />
 
 #### [토론방 및 내 서재 추가]
 <table style="width: 100%;">
@@ -310,7 +322,7 @@ README.md             : 프로젝트 Readme
 
 ### (9) 독서 토론방(채팅)
 
-[맨 위로](#목차)
+[맨 위로](#top)
 
 ## 8. 수정 사항
 ### 2025.05.29 메인페이지 SearchIcon 수정(by 이영섭)
@@ -340,7 +352,7 @@ README.md             : 프로젝트 Readme
 로 수정
 
 ### 2025.05.29 Exp 페이지 수정(by 이영섭)
-(1) 퀘스트 진행률 value 수정<br>
+**(1) 퀘스트 진행률 value 수정**<br>
 기존 진행률 조건은
 ```
     const progress = isCompleted ? 100 : (currentCount / 7) * 100; 
@@ -353,7 +365,7 @@ README.md             : 프로젝트 Readme
 ```
 로 수정
 
-(2) QuestButton 수정
+**(2) QuestButton 수정**
 ```
     if (isCompleted && currentCount === 7) return QuestButtonStyle.completeBtn;
     if (!isCompleted && currentCount === 7) return QuestButtonStyle.confirmBtn;
@@ -366,7 +378,7 @@ README.md             : 프로젝트 Readme
 ```
 로 조건 수정
 
-(3) 데이터 통신 수정
+**(3) 데이터 통신 수정**<br>
 기존에 POST 요청으로 유저가 확인 버튼을 누르면 경험치 증가가 이루어진다 했으나<br>
 실제 서버에서 PUT 요청으로 받아들여 Rest API 방식을 수정
 
@@ -377,4 +389,10 @@ useForm과 Controller를 사용하여 TextField의 reRendering 최소화
 기존 독서 토론방 만들기, 토론방 참여, 프로필 수정시 발생했던 alert 알림을
 toast 팝업으로 교체
 
-[맨 위로](#목차)
+### 2025.06.02 독서 토론방 페이지의 메시지 입력창 컴포넌트 분리(by 이영섭)
+독서 토론방(채팅방)에서 메시지 보내기 버튼 클릭 후 버튼이 사라지는 현상이 발생됨에 따라<br>
+메시지 입력의 TextField, button들을 각 컴포넌트로 분리 및 root element에 css style 적용으로
+문제해결<br>
+> 해당 문제 해결 관련 블로그 글 : https://velog.io/@herjun802/MUI-CSS-in-JS%EC%99%80-class%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-csswith-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0-%EA%B3%BC%EC%A0%95
+
+[맨 위로](#top)
