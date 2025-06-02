@@ -1,4 +1,3 @@
-ChatInputContainer
 import PropTypes from 'prop-types';
 import React, { useState, useCallback } from 'react';
 import Box from '@mui/material/Box';
