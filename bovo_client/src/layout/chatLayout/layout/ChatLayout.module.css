@@ -7,22 +7,3 @@
     align-items: center;
     justify-content: space-between;
 }
-
-.inputContainer {
-    width: 43.125rem;
-    height: 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 1.5rem;
-}
-
-.addBtn {
-    width: 3.5rem;
-    height: 3.5rem;
-}
-
-.msgBtn {
-    width: 3.5rem;
-    height: 3.5rem;
-}
