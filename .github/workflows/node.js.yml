@@ -31,9 +31,15 @@ jobs:
       working-directory: ./bovo_client # npm i 명령을 실행할 디렉토리 지정
       run: npm i
 
-    - name: Build
+    - name: Build # 기존 Build 스텝을 수정
       working-directory: ./bovo_client # npm run build 명령을 실행할 디렉토리 지정
       run: npm run build --if-present
+      env: # <<<--- 이 env 블록을 추가합니다!
+        VITE_BACKEND_API_URL: ${{secrets.VITE_BACKEND_API_URL}}
+        VITE_KAKAO_LOGIN_API_KEY: ${{ secrets.VITE_KAKAO_LOGIN_API_KEY }} # PR에서 에러가 계속된다면, 이 값을 dummy_key_for_pr_test 등으로 임시 변경 고려
+        VITE_KAKAO_REDIRECT_URI: ${{ secrets.VITE_KAKAO_REDIRECT_URI }}
+        VITE_WS_API_URL: ${{ secrets.VITE_WS_API_URL }}
+        VITE_BACKEND_SEARCH_API_URL: ${{ secrets.VITE_BACKEND_SEARCH_API_URL }}
 
     # - name: Test
     #   working-directory: ./bovo_client # npm test 명령을 실행할 디렉토리 지정
