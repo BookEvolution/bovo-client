@@ -17,7 +17,7 @@ ReadMe
 Bovo는 독서 기록 습관 형성을 위한 플랫폼입니다.<br>
 독서에 재미를 느낄 수 있도록, 독서 기록 템플릿 제공, 퀘스트, 독서 토론을 통해 독서에 흥미를 느끼는 분 모두 사용해보세요~
 
-Netlify : [클릭하여 페이지를 방문하세요](https://bovo.netlify.app/) 
+Netlify : [클릭하여 페이지를 방문하세요](https://bovo.netlify.app/)<br>
 AWS S3 : [클릭하여 페이지를 방문하세요](http://bovo-client.s3-website.ap-northeast-2.amazonaws.com)
 
 ## 2. 개발 인원 및 역할(FE)
@@ -117,7 +117,7 @@ AWS S3 : [클릭하여 페이지를 방문하세요](http://bovo-client.s3-websi
     └─ workflows
         └─ node.js.yml
 bovo_client
-    └─ src
+    ├─ src
         ├─  api      : 데이터 통신 함수
         │    └─ ...
         ├─  assets      : 로고, 이미지 파일
@@ -134,10 +134,11 @@ bovo_client
         │      └─ ...
         ├─  store : Redux toolkit
         │      └─ ...
-        ├─  utils : util 함수
+        └─  utils : util 함수
         │      └─ ...
         ├─  App.jsx : routing처리
         └─  main.jsx
+    └─ netlify.toml : netlify 설정 관련 toml 파일일
 docResource           : ReadMe 관련 사용할 이미지/영상
     └─ ...
 README.md             : 프로젝트 Readme
@@ -196,11 +197,11 @@ README.md             : 프로젝트 Readme
 </table>
 
 ### (5) 내 서재 페이지
-<img src="./docResource/img/archive.png" alt="내 서재 페이지" style="width: 25%;"/>
+<img src="./docResource/img/archive.png" alt="내 서재 페이지" style="width: 40%;"/>
 
 ### (6) 도서 기록 페이지
 #### [도서 기록 리스트]
-<img src="./docResource/img/note.png" alt="도서 기록 리스트" style="width: 25%;" />
+<img src="./docResource/img/note.png" alt="도서 기록 리스트" style="width: 40%;" />
 
 #### [도서 기록 작성 및 템플릿 제공]
 <table style="width: 100%;">
@@ -393,6 +394,18 @@ toast 팝업으로 교체
 독서 토론방(채팅방)에서 메시지 보내기 버튼 클릭 후 버튼이 사라지는 현상이 발생됨에 따라<br>
 메시지 입력의 TextField, button들을 각 컴포넌트로 분리 및 root element에 css style 적용으로
 문제해결<br>
-> 해당 문제 해결 관련 블로그 글 : https://velog.io/@herjun802/MUI-CSS-in-JS%EC%99%80-class%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-csswith-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0-%EA%B3%BC%EC%A0%95
+> 해당 문제 해결 관련 설명 글<br> 
+https://velog.io/@herjun802/MUI-CSS-in-JS%EC%99%80-class%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-csswith-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0-%EA%B3%BC%EC%A0%95
+
+
+### 2025.06.03 환경 변수 누락 관련 yml 파일 수정 및 aws 설정 변경(by 이영섭)
+> 해당 문제 해결 관련 설명 글<br> 
+https://velog.io/@herjun802/Github-Action-%EC%98%A4%EB%A5%98-%ED%95%B4%EA%B2%B0
+
+### 2025.06.07 Netlify 관련 Mixed Content error 해결(by 이영섭)
+netlify.toml 설정 파일을 통해 Mixed Content error 해결
+> 해당 문제 해결 관련 설명 글<br>
+https://velog.io/@herjun802/Mixed-Content-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0
+
 
 [맨 위로](#top)
