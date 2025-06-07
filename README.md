@@ -107,7 +107,7 @@ AWS S3 : [클릭하여 페이지를 방문하세요](http://bovo-client.s3-websi
 
 ## 5. 시스템 아키텍쳐
 
-<img src="./docResource/img/systemArchitecture.png" alt="system_architecture">
+![system_architecture](./docResource/img/systemArchitecture.png)
 
 [맨 위로](#top)
 
