@@ -351,6 +351,7 @@ README.md             : 프로젝트 Readme
 [맨 위로](#top)
 
 ## 8. 수정 사항
+
 ### 2025.05.29 메인페이지 SearchIcon 수정(by 이영섭)
 배포 후 진입점 문제에 따라 메인페이지 경로를 /에서 /main 경로로 수정<br>
 이에 따라 Layout내의 SearchIcon이 나타나는 조건문을
