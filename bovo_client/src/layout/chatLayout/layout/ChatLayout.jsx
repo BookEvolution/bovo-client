@@ -13,6 +13,7 @@ import { addMessage, clearChat } from "../../../store/chatInfo/ChatSlice.js";
 import { deleteChatRoomUser, fetchUserList, getMemos } from "../../../api/ForumService.js";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import ChatInputContainer from '../../../components/chat/chatInputContainer/ChatInputContainer.jsx';
+import { toast } from 'react-toastify';
 
 const ChatLayout = () => {
     const dispatch = useDispatch();
@@ -38,7 +39,12 @@ const ChatLayout = () => {
         enabled: false  // 초기에는 실행하지 않음
     });
 
-    const { data: memos, refetch: refetchMemos } = useQuery({
+    const { 
+        data: memos, 
+        refetch: refetchMemos, 
+        isPending: memosLoading, // 로딩 중 상태
+        isError: memosError // 에러 발생 상태
+    } = useQuery({
         queryKey : ['memos', roomId],
         queryFn : () => getMemos(roomId),
         enabled: false // 초기에는 실행하지 않음
@@ -69,11 +75,12 @@ const ChatLayout = () => {
     // 기록 공유 모달 오픈 관련 함수
     const handleOpenModal = useCallback(async () => {
         try {
-            refetchMemos();  // 메모 목록 refetch
+            await refetchMemos();  // 메모 목록 refetch
             setSelectedMemos([]);  // 모달 열 때 선택된 메모 초기화
             setModalOpen(true);  // 모달 열기
         } catch (error) {
             console.error("메모 데이터를 가져오는 데 실패했습니다:", error);
+            toast.error("메모 데이터를 가져오는 데 실패했습니다");
         }
     }, [refetchMemos]); // refetchMemos만 의존성에 추가
 
@@ -167,7 +174,9 @@ const ChatLayout = () => {
                 onClose={handleCloseModal}
                 handleSelectMemo={handleSelectMemo} // memo 선택 함수 추가
                 handleShareMemo={handleShareMemo} // 확인 버튼 클릭 시 호출되는 함수
-                memos={memos}  // 메모 데이터를 전달 
+                memos={memos}  // 메모 데이터를 전달
+                isLoading={memosLoading} // ⭐ 로딩 상태 전달
+                isError={memosError}     // ⭐ 에러 상태 전달 
             />
             {/* 채팅방 나가기 모달 */}
             <DeleteChatRoomModal 
