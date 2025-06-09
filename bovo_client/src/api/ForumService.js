@@ -32,7 +32,7 @@ export const fetchChatRoomData = async (roomId) => {
 // 나의토론방 참여를 위한 데이터 요청
 export const fetchMyRoomData = async (roomId) => {
     const response = await api.get(`/chatrooms/my/${roomId}`);
-    return response.data;
+    return response;
 };
 
 // 토론방 참여 후 userList 데이터 정보 요청
