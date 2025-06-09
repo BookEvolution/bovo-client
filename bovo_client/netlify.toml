@@ -3,3 +3,12 @@
   to = "http://43.200.154.68:8080/:splat" 
   status = 200
   force = true
+
+# WebSocket 프록시 추가
+# 프론트엔드는 wss://your-netlify-app.netlify.app/ws-chat 으로 요청을 보내고,
+# Netlify는 이 요청을 백엔드 ws://43.200.154.68:8080/ws-chat 으로 전달합니다.
+[[redirects]]
+  from = "/ws-chat/*" # 프론트엔드에서 사용할 WebSocket 경로 (예: /ws-chat)
+  to = "ws://43.200.154.68:8080/:splat" # 실제 백엔드 WebSocket 서버 주소
+  status = 200
+  force = true

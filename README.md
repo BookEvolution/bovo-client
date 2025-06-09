@@ -18,6 +18,7 @@ Bovo는 독서 기록 습관 형성을 위한 플랫폼입니다.<br>
 독서에 재미를 느낄 수 있도록, 독서 기록 템플릿 제공, 퀘스트, 독서 토론을 통해 독서에 흥미를 느끼는 분 모두 사용해보세요~
 
 Netlify : [클릭하여 페이지를 방문하세요](https://bovo.netlify.app/)<br>
+
 AWS S3 : [클릭하여 페이지를 방문하세요](http://bovo-client.s3-website.ap-northeast-2.amazonaws.com)
 
 ## 2. 개발 인원 및 역할(FE)
@@ -107,7 +108,7 @@ AWS S3 : [클릭하여 페이지를 방문하세요](http://bovo-client.s3-websi
 
 ## 5. 시스템 아키텍쳐
 
-![system_architecture](./docResource/img/systemArchitecture.png)
+![system_architecture](./docResource/img/system_architecture.png)
 
 [맨 위로](#top)
 
@@ -273,7 +274,7 @@ README.md             : 프로젝트 Readme
 <table style="width: 100%;">
     <tr>
         <td align="center" style="width: 25%;">
-            <img src="./docResource/img/expPage.png" alt="퀘스트 및 독서성과 페이지지">
+            <img src="./docResource/img/expPage.png" alt="퀘스트 및 독서성과 페이지">
         </td>
         <td align="center" style="width: 25%;">
             <img src="./docResource/img/questInfo.png" alt="퀘스트 정보">
@@ -322,10 +323,35 @@ README.md             : 프로젝트 Readme
 </table>
 
 ### (9) 독서 토론방(채팅)
+<table style="width: 100%;">
+    <tr>
+        <td align="center" style="width: 25%;">
+            <img src="./docResource/img/forumChat.png" alt="독서 토론방">
+        </td>
+        <td align="center" style="width: 25%;">
+            <img src="./docResource/img/readingShareModal.png" alt="독서 기록 공유 모달">
+        </td>
+        <td align="center" style="width: 25%;">
+            <img src="./docResource/img/userList.png" alt="독서 토론방 내 유저 리스트">
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            독서 토론방 내 화면
+        </td>
+        <td align="center">
+            독서 기록 공유 modal
+        </td>
+        <td align="center">
+            독서 토론방 내 유저 리스트
+        </td>
+    </tr>
+</table>
 
 [맨 위로](#top)
 
 ## 8. 수정 사항
+
 ### 2025.05.29 메인페이지 SearchIcon 수정(by 이영섭)
 배포 후 진입점 문제에 따라 메인페이지 경로를 /에서 /main 경로로 수정<br>
 이에 따라 Layout내의 SearchIcon이 나타나는 조건문을
@@ -397,7 +423,6 @@ toast 팝업으로 교체
 > 해당 문제 해결 관련 설명 글<br> 
 https://velog.io/@herjun802/MUI-CSS-in-JS%EC%99%80-class%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-csswith-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0-%EA%B3%BC%EC%A0%95
 
-
 ### 2025.06.03 환경 변수 누락 관련 yml 파일 수정 및 aws 설정 변경(by 이영섭)
 > 해당 문제 해결 관련 설명 글<br> 
 https://velog.io/@herjun802/Github-Action-%EC%98%A4%EB%A5%98-%ED%95%B4%EA%B2%B0
@@ -407,5 +432,22 @@ netlify.toml 설정 파일을 통해 Mixed Content error 해결
 > 해당 문제 해결 관련 설명 글<br>
 https://velog.io/@herjun802/Mixed-Content-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0
 
+
+### 2025.06.09 내 토론방 리스트에서 토론방 참여하기 디버깅 완료(by 이영섭)
+FetchMyRoomData 함수(데이터 통신 함수)의 반환 데이터를 response.data에서 response로 변경하여 내 토론방 리스트에서 토론방 참여 기능 구현 완료<br>
+> 해당 문제 해결 관련 설명 글<br>
+https://velog.io/@herjun802/Axios-%EC%9D%91%EB%8B%B5-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0
+
+### 2025.06.09 Websocket connection 실패 문제 해결(by 이영섭)
+채팅방 입장시 websocket connection하는 api 경로를 `wss`에서 `ws`로 수정
+> 해당 문제 해결 관련 설명 글<br>
+https://velog.io/@herjun802/Websocket-%EC%97%B0%EA%B2%B0-%EC%8B%A4%ED%8C%A8-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0
+
+### 2025.06.10 독서 기록 공유 버튼 문제 해결 및 상태별 조건부 랜더링(by 이영섭)
+독서 토론방(채팅방)에서 독서 기록 공유 버튼 클릭시 TypeError 발생<br>
+이에 따라 refetch 함수에 await를 사용하여 해결<br>
+또한, 상태별(isLoading, isError, data) 조건부 rendering을 통해 유저 경험 향상<br>
+> 해당 문제 해결 관련 설명 글<br> 
+https://velog.io/@herjun802/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EC%9D%98-awaitwith-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0
 
 [맨 위로](#top)

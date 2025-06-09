@@ -21,25 +21,36 @@ const MyForumList = ({myChatroom}) => {
             const response = await fetchMyRoomData(roomId);
             console.log("채팅방 참여 api", response);
             if (response.status === 200) {
-                toast.success(`${myChatroom.chatroom_name}방에 성공적으로 참여했습니다.`);
-    
-    
-                // 서버에서 받은 메시지를 Redux 상태에 추가
-                response.data.forEach((message) => {
-                    dispatch(addMessage(message));
-                });
+                // 서버 응답 데이터 (response.data)가 유효한 배열인지 확인
+                if (response.data && Array.isArray(response.data)) {
+                    if (response.data.length > 0) {
+                        toast.success(`${myChatroom.chatroom_name}방에 성공적으로 참여했습니다.`);
+                        // 서버에서 받은 메시지를 Redux 상태에 추가
+                        response.data.forEach((message) => {
+                            dispatch(addMessage(message));
+                        });
+                    } else {
+                        // 메시지가 없는 빈 채팅방에 입장 성공
+                        toast.success(`${myChatroom.chatroom_name}방에 성공적으로 참여했습니다.`);
+                    }
 
-                // 서버에서 받은 메시지를 sessionStorage에도 저장 (새로고침 시 복원 가능)
-                sessionStorage.setItem("chatMessages", JSON.stringify(response));
-                
-                // Redux에 저장된 메시지를 사용하므로 navigate의 state는 필요 없음
-                navigate(`/forum/${roomId}`, { state: { roomName: roomName } });
+                    // 서버에서 받은 메시지를 sessionStorage에도 저장
+                    sessionStorage.setItem("chatMessages", JSON.stringify(response.data)); // ⭐ response.data만 저장
+
+                    navigate(`/forum/${roomId}`, { state: { roomName: roomName } });
+                } else {
+                    // response.data가 배열이 아니거나 예기치 않은 형식인 경우
+                    console.error("서버 응답 데이터 형식이 올바르지 않습니다:", response.data);
+                    toast.error("방 참여에 실패했습니다: 유효하지 않은 응답 데이터.");
+                }
             } else {
-                toast.error("방 참여에 실패했습니다.");
+                // HTTP 상태 코드가 200이 아닌 경우 (예: 404, 500 등)
+                toast.error(`방 참여에 실패했습니다. (상태 코드: ${response.status})`);
             }
         } catch (error) {
-          console.error("방 참여 오류:", error);
-          toast.error("방 참여 중 오류가 발생했습니다.");
+            // 네트워크 오류나 fetchMyRoomData에서 발생한 기타 오류 처리
+            console.error("방 참여 중 오류 발생:", error);
+            toast.error("방 참여 중 오류가 발생했습니다.");
         }
     };
 

@@ -11,7 +11,6 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutIcon from '@mui/icons-material/Logout';
 import styles from "./Sidebar.module.css";
-import profileImages from '../../../constant/ProfileImg';
 
 const Sidebar = ({ open, toggleSidebar, roomName, handleExitClick, userList}) => {
     return (
@@ -46,7 +45,7 @@ const Sidebar = ({ open, toggleSidebar, roomName, handleExitClick, userList}) =>
                             userList.map((user, index) => (
                                 <ListItem key={index} className={styles.userListItem}>
                                     <ListItemAvatar className={styles.userAvatar}>
-                                        <Avatar src={profileImages[user.profileImageId] ? profileImages[user.profileImageId].src : ""} sx={{ width: "4rem", height: "4rem" }} />
+                                        <Avatar src={user.profilePictures} sx={{ width: "4rem", height: "4rem" }} />
                                     </ListItemAvatar>
                                     <Typography sx={{ fontSize: "1.5rem" }}>
                                         {user.nickname}

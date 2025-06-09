@@ -45,7 +45,10 @@ jobs:
     #   working-directory: ./bovo_client # npm test 명령을 실행할 디렉토리 지정
     #   run: npm test
 
-    - uses: awact/s3-action@master
+    # ⭐ Deploy to S3 only on push to main branch
+    - name: Deploy to S3
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main' # <-- Add this condition
+      uses: awact/s3-action@master
       with:
         args: --delete
       env:
