@@ -47,7 +47,7 @@ const SideBar = ({ open, toggleDrawer, handleLogout }) => {
                     {/* 서비스 정보 */}
                     <ListItem  
                         component={Link} 
-                        to="/mypage/service-info" 
+                        to="/main/mypage/service-info" 
                         className={styles.bottom_btn} 
                         onClick={toggleDrawer}
                         sx={{ color: 'text.primary' }}

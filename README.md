@@ -17,7 +17,7 @@ ReadMe
 Bovo는 독서 기록 습관 형성을 위한 플랫폼입니다.<br>
 독서에 재미를 느낄 수 있도록, 독서 기록 템플릿 제공, 퀘스트, 독서 토론을 통해 독서에 흥미를 느끼는 분 모두 사용해보세요~
 
-Netlify : [클릭하여 페이지를 방문하세요](https://bovo.netlify.app/)<br>
+Netlify(테스트트) : [클릭하여 페이지를 방문하세요](https://bovo.netlify.app/)<br>
 
 AWS S3 : [클릭하여 페이지를 방문하세요](http://bovo-client.s3-website.ap-northeast-2.amazonaws.com)
 
@@ -461,10 +461,11 @@ https://velog.io/@herjun802/%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%B2%84%EB%B8%94%EB%A7
 
 #### 2. aria-hidden 경고 해결
 
-자손 요소에 focus가 유지되는 상태에서 부모요소에 aria-hidden이 적용됨으로써 브라우저 콘솔에 접근성 문제에 대한 에러 발생<br>
-이에 따라<br>
+자손 요소에 focus가 유지되는 상태에서 부모요소에 aria-hidden이 적용됨으로써 브라우저 콘솔에 접근성 문제에 대한 에러 발생. 이에 따라<br>
 (1) 독서 기록 공유 모달의 dialog와 같은 경우 disableRestoreFocus prop 사용<br>
 (2) 독서 토론방 만들기 페이지의 DatePicker의 경우 body태그로 focus가 이동하도록 만들어 자동적으로 DatePicker의 focus를 잃게 만드는 커스텀 함수를 적용<br>
 
+
+### 2025.06.12 경로 수정에 따른 sideBar link의 path 경로 수정정(by 이영섭)
 
 [맨 위로](#top)
