@@ -3,30 +3,18 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
 import Typography from "@mui/material/Typography";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import styles from "./TemplateListItem.module.css";
 import { memo, useState } from "react";
+import MemoCheckbox from "../memoCheckbox/MemoCheckbox";
 
 const TemplateListItem = ({ checked, handleCheckboxChange, memo }) => {
     const [expanded, setExpanded] = useState(false);
 
-    const handleAccordionChange = (panel) => (event, isExpanded) => {
+    const handleAccordionChange = (event, isExpanded) => {
         // Accordion이 열리거나 닫히는 동작을 제어
         setExpanded(isExpanded);
-    };
-
-    const handleCheckboxChangeWithPrevent = (e) => {
-        e.stopPropagation(); // 클릭 이벤트가 Accordion에 전달되지 않도록 막기
-        handleCheckboxChange(e.target.checked); // **체크박스 상태 변경** (변경된 부분)
-    };
-
-    const handleAccordionSummaryClick = (e) => {
-        // 클릭 이벤트가 AccordionSummary에만 전파되도록
-        e.stopPropagation(); 
     };
 
     return (
@@ -37,18 +25,18 @@ const TemplateListItem = ({ checked, handleCheckboxChange, memo }) => {
                 transition: "background-color 0.3s ease", // 부드러운 배경색 변경 효과
             }}
         >
-            <Accordion expanded={expanded} onChange={handleAccordionChange("panel1")}>
+            <Accordion expanded={expanded} onChange={handleAccordionChange}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon sx={{ fontSize: "2.625rem" }} />} // 화살표 아이콘
                     aria-controls="panel1a-content"
                     id="panel1a-header"
-                    onClick={handleAccordionSummaryClick} // 화살표 클릭 시만 열림/닫힘
+                    // ✅ 이제 AccordionSummary의 onClick 핸들러는 필요 없습니다.
+                    // MemoCheckbox에서 이미 stopPropagation을 처리했기 때문입니다.
+                    // AccordionSummary 클릭 시 Accordion 토글은 onChange를 통해 자연스럽게 작동합니다.
                 >
-                    <Checkbox
-                        checked={checked}
-                        onChange={handleCheckboxChangeWithPrevent}
-                        icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: "2rem" }} />}
-                        checkedIcon={<CheckBoxIcon sx={{ fontSize: "2rem", color: "#739CD4" }} />}
+                    <MemoCheckbox 
+                        checked={checked} 
+                        onChange={handleCheckboxChange} // ✅ handleCheckboxChange는 부모로부터 받은 함수 그대로 사용
                     />
                     <Typography
                         sx={{

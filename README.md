@@ -450,4 +450,21 @@ https://velog.io/@herjun802/Websocket-%EC%97%B0%EA%B2%B0-%EC%8B%A4%ED%8C%A8-%EB%
 > 해당 문제 해결 관련 설명 글<br> 
 https://velog.io/@herjun802/%EB%B9%84%EB%8F%99%EA%B8%B0-%ED%95%A8%EC%88%98%EC%9D%98-awaitwith-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0
 
+### 2025.06.11 ~ 06.12 독서 기록 공유 모달의 이벤트 버블링 현상 억제와 aria-hidden 해결(by 이영섭)
+#### 1. 독서 기록 공유 모달의 이벤트 버블링 현상 억제
+
+기존 독서 기록 공유 모달에서는 Checkbox 체크시 Accordion의 확장/축소 이벤트가 발생<br>
+이에 따라 MemoCheckbox라는 별도의 컴포넌트로 분리를 통해 해결<br>
+> 해당 문제 해결 관련 설명 글<br> 
+https://velog.io/@herjun802/%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EB%B2%84%EB%B8%94%EB%A7%81event-bubbling-%ED%98%84%EC%83%81%EA%B3%BC-%EC%96%B5%EC%A0%9C
+
+
+#### 2. aria-hidden 경고 해결
+
+자손 요소에 focus가 유지되는 상태에서 부모요소에 aria-hidden이 적용됨으로써 브라우저 콘솔에 접근성 문제에 대한 에러 발생<br>
+이에 따라<br>
+(1) 독서 기록 공유 모달의 dialog와 같은 경우 disableRestoreFocus prop 사용<br>
+(2) 독서 토론방 만들기 페이지의 DatePicker의 경우 body태그로 focus가 이동하도록 만들어 자동적으로 DatePicker의 focus를 잃게 만드는 커스텀 함수를 적용<br>
+
+
 [맨 위로](#top)
