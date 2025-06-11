@@ -72,7 +72,8 @@ const ReadingShareModal = ({
         <Dialog 
             open={open} 
             onClose={onClose} 
-            fullWidth 
+            fullWidth
+            disableRestoreFocus 
             sx={{
                 "& .MuiDialog-paper": {
                   width: "36.5625rem",

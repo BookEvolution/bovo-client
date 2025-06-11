@@ -196,6 +196,15 @@ const ForumMake = () => {
         }
     };
 
+    // 날짜 선택 모달이 닫힐 때 포커스를 이동시키는 함수
+    const handleDatePickerClose = () => {
+        // DatePicker 입력 필드에서 포커스를 제거 (blur 처리)하거나
+        // 다른 의미 있는 요소 (예: 다음 폼 필드나 제출 버튼)로 포커스를 옮길 수 있습니다.
+        // 여기서는 body에 포커스를 줘서 포커스를 날리는 방식을 사용합니다.
+        // 또는 특정 버튼이나 텍스트 필드로 포커스를 명시적으로 옮길 수도 있습니다.
+        document.body.focus();
+    };
+
     return (
         <form className={styles.forumMakeContainer} onSubmit={handleSubmit(onSubmit, onError)}>
             {book ? (
@@ -319,9 +328,9 @@ const ForumMake = () => {
                                 slotProps={{
                                     textField: {
                                         error: !!error,
-                                        inputProps: { 'aria-hidden': 'false' },
                                     }
                                 }}
+                                onClose={handleDatePickerClose}
                             />
                         )}
                     />
@@ -359,9 +368,9 @@ const ForumMake = () => {
                                 slotProps={{
                                     textField: {
                                         error: !!error,
-                                        inputProps: { 'aria-hidden': 'false' },
                                     }
                                 }}
+                                onClose={handleDatePickerClose}
                             />
                         )}
                     />
